@@ -1,4 +1,5 @@
-# Project Name
+# First Love Camp App
+[![Netlify Status](https://api.netlify.com/api/v1/badges/4d8f3955-2c44-499a-8fb3-aba0850ed1e6/deploy-status)](https://app.netlify.com/sites/fl-camp-app/deploys)
 
 This is a React project bootstrapped with Vite, Chakra UI, and TypeScript.
 
