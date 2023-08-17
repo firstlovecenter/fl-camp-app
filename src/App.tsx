@@ -3,6 +3,7 @@ import Navigation from './components/Navigation'
 import { AuthProvider } from 'contexts/AuthContext'
 import PrivateRoute from 'auth/PrivateRoute'
 import { authRoutes } from 'auth/authRoutes'
+import { directoryRoutes } from 'pages/directory/directoryRoutes'
 import { LoadingPage, PageNotFound } from '@jaedag/admin-portal-react-core'
 import { Suspense } from 'react'
 
@@ -13,7 +14,7 @@ const App = () => {
         <Navigation />
         <Suspense fallback={<LoadingPage />}>
           <Routes>
-            {[...authRoutes].map((route, i) => (
+            {[...authRoutes, ...directoryRoutes].map((route, i) => (
               <Route
                 key={i}
                 path={route.path}

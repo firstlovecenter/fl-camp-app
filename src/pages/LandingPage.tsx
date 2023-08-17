@@ -18,43 +18,7 @@ const LandingPage = () => {
   const { currentUser, logout } = useAuth()
   const navigate = useNavigate()
 
-  const handleLogout = async () => {
-    setError('')
-
-    try {
-      await logout()
-      navigate('/login')
-    } catch (error) {
-      setError('Failed to log out')
-    }
-  }
-
-  return (
-    <Center height="60vh">
-      <Container textAlign="center">
-        <Card>
-          <CardHeader>Profile</CardHeader>
-          <CardBody>
-            {error && (
-              <Alert status="error">
-                <AlertIcon />
-                <AlertTitle>Error!</AlertTitle>
-                <AlertDescription>{error}</AlertDescription>
-              </Alert>
-            )}
-            <Text>Email: {currentUser.email}</Text>
-
-            <Button marginTop={2} onClick={() => navigate('/update-profile')}>
-              Update Profile
-            </Button>
-          </CardBody>
-        </Card>
-        <Button variant="link" onClick={handleLogout}>
-          Log Out
-        </Button>
-      </Container>
-    </Center>
-  )
+  return <div>Welcome Camper!</div>
 }
 
 export default LandingPage
