@@ -1,4 +1,4 @@
-import { Container, Text, Center } from '@chakra-ui/layout'
+import { Container, Text, Center, Box } from '@chakra-ui/layout'
 import React, { useState } from 'react'
 import { useAuth } from 'contexts/AuthContext'
 import {
@@ -18,7 +18,11 @@ const LandingPage = () => {
   const { currentUser, logout } = useAuth()
   const navigate = useNavigate()
 
-  return <div>Welcome Camper!</div>
+  return (
+    <Box bg="body.bg">
+      <div>Welcome Camper!</div>
+    </Box>
+  )
 }
 
 export default LandingPage

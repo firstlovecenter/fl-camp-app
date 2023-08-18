@@ -12,11 +12,13 @@ import {
   CardHeader,
 } from '@chakra-ui/react'
 import { useNavigate } from 'react-router-dom'
+import useCustomColorMode from '../hooks/useCustomColors'
 
 const ProfilePage = () => {
   const [error, setError] = useState('')
   const { currentUser, logout } = useAuth()
   const navigate = useNavigate()
+  const { bg } = useCustomColorMode()
 
   const handleLogout = async () => {
     setError('')
@@ -30,7 +32,7 @@ const ProfilePage = () => {
   }
 
   return (
-    <Center height="60vh">
+    <Center height="60vh" color={bg}>
       <Container textAlign="center">
         <Card>
           <CardHeader>Profile</CardHeader>

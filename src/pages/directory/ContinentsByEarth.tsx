@@ -13,7 +13,7 @@ const ContinentsByEarth = () => {
   ]
   return (
     <Container>
-      <Heading my={6}>Continents</Heading>
+      <Heading my={6}>Breakdown by Continents</Heading>
       {menuItems.map((item, index) => (
         <MenuCard
           number={item.number}

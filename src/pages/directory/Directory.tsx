@@ -4,6 +4,7 @@ import { Container, Heading } from '@chakra-ui/react'
 
 const Directory = () => {
   const menuItems = [{ number: 1, title: 'Earth' }]
+
   return (
     <Container>
       <Heading my={6}>Directory</Heading>

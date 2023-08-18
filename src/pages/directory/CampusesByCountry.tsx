@@ -13,13 +13,13 @@ const CampusesByCountry = () => {
   ]
   return (
     <Container>
-      <Heading my={6}>Campus</Heading>
+      <Heading my={6}>Breakdown by Campus</Heading>
       {menuItems.map((item, index) => (
         <MenuCard
           number={item.number}
           title={item.title}
           key={index}
-          route={''}
+          route={'/add-an-admin'}
         />
       ))}
     </Container>
