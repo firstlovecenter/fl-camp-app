@@ -4,6 +4,7 @@ import { LazyRouteTypes } from './auth-types'
 const Login = lazy(() => import('./LogIn'))
 const Signup = lazy(() => import('./SignUp'))
 const LandingPage = lazy(() => import('../pages/LandingPage'))
+const ProfilePage = lazy(() => import('../pages/ProfilePage'))
 const ForgotPassword = lazy(() => import('./ForgotPassword'))
 const UpdateProfile = lazy(() => import('./UpdateProfile'))
 
@@ -29,6 +30,12 @@ export const authRoutes: LazyRouteTypes[] = [
   {
     path: '/',
     element: LandingPage,
+    placeholder: false,
+    roles: ['all'],
+  },
+  {
+    path: '/profile',
+    element: ProfilePage,
     placeholder: false,
     roles: ['all'],
   },

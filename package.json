@@ -42,8 +42,9 @@
     "@jaedag/admin-portal-react-core": "^2.0.7",
     "@vitejs/plugin-react": "^3.1.0",
     "execa": "^4.0.2",
-    "firebase": "^9.21.0",
+    "firebase-tools": "^12.4.8",
     "firebaseui": "^6.0.2",
+    "firestore": "^1.1.6",
     "framer-motion": "^10.15.2",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
@@ -51,6 +52,7 @@
     "react-icons": "^4.10.1",
     "react-router-dom": "^6.3.0",
     "react-spinners": "^0.13.8",
+    "reactfire": "^4.2.3",
     "web-vitals": "^0.2.4",
     "yup": "^1.1.1"
   },
