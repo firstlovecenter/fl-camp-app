@@ -9,7 +9,15 @@ import {
 import { useNavigate } from 'react-router-dom'
 import useCustomColorMode from '../hooks/useCustomColors'
 
-const MenuCard = ({ number, title, route }) => {
+const MenuCard = ({
+  number,
+  title,
+  route,
+}: {
+  number: number
+  title: string
+  route: string
+}) => {
   const navigate = useNavigate()
   const { cardBackground } = useCustomColorMode()
   return (
