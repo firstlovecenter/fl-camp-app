@@ -27,7 +27,12 @@ const MenuCard = ({
 }) => {
   const navigate = useNavigate()
   const { setReferenceId, setContinentId, setCountryId, setCampusId } = useId()
-  const { cardBackground } = useCustomColorMode()
+  const {
+    cardBackground,
+    cardPaidRegistrationsText,
+    cardRegistrationsText,
+    cardSubtitle,
+  } = useCustomColorMode()
 
   const handleClick = () => {
     switch (type) {
@@ -61,13 +66,15 @@ const MenuCard = ({
 
       <StatGroup>
         <Stat>
-          <StatNumber color="#ebe86d">{registrations}</StatNumber>
-          <StatLabel color="#cbced6">Registrations</StatLabel>
+          <StatNumber color={cardRegistrationsText}>{registrations}</StatNumber>
+          <StatLabel color={cardSubtitle}>Registrations</StatLabel>
         </Stat>
 
         <Stat>
-          <StatNumber color="#66c083">{paidRegistrations}</StatNumber>
-          <StatLabel color="#cbced6">Paid Registrations</StatLabel>
+          <StatNumber color={cardPaidRegistrationsText}>
+            {paidRegistrations}
+          </StatNumber>
+          <StatLabel color={cardSubtitle}>Paid Registrations</StatLabel>
         </Stat>
       </StatGroup>
     </Box>
