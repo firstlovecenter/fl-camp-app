@@ -57,6 +57,7 @@ export const IdContextProvider = ({ children }: { children: ReactNode }) => {
 
   const setCountId = (countryId: string) => {
     setCountryId(countryId)
+
     sessionStorage.setItem('countryId', countryId)
   }
 
@@ -80,7 +81,7 @@ export const IdContextProvider = ({ children }: { children: ReactNode }) => {
       setCountryId: setCountId,
       setCampusId: setCampId,
     }),
-    [referenceId, continentId]
+    [referenceId, continentId, countryId, campusId]
   )
 
   return <IdContext.Provider value={value}>{children}</IdContext.Provider>

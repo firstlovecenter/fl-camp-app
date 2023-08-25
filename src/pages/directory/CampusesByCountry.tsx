@@ -57,7 +57,7 @@ const CampusesByCountry = () => {
           id={item.id}
           type={type}
           key={index}
-          route={'/add-an-admin'}
+          route={'/campus-profile'}
         />
       ))}
     </Container>
