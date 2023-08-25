@@ -7,7 +7,7 @@ import { db } from 'firebase'
 import { useId } from 'contexts/IdContext'
 import { CountryPageDetails } from 'utils/ProfileDataTypes'
 
-const CampusProfile = () => {
+const CountryProfile = () => {
   const navigate = useNavigate()
 
   const [pageDetails, setPageDetails] = useState<CountryPageDetails>({
@@ -78,4 +78,4 @@ const CampusProfile = () => {
   )
 }
 
-export default CampusProfile
+export default CountryProfile
