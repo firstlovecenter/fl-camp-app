@@ -10,16 +10,21 @@ import { useNavigate } from 'react-router-dom'
 import useCustomColorMode from '../hooks/useCustomColors'
 
 const MenuCard = ({
-  number,
-  title,
+  paidRegistrations,
+  registrations,
+  name,
+  id,
   route,
 }: {
-  number: number
-  title: string
+  paidRegistrations: number
+  registrations: string
+  name: string
+  id: string
   route: string
 }) => {
   const navigate = useNavigate()
   const { cardBackground } = useCustomColorMode()
+
   return (
     <Box
       onClick={() => navigate(route)}
@@ -29,18 +34,18 @@ const MenuCard = ({
       bg={cardBackground}
     >
       <Text fontSize="2xl" fontWeight="bold" mr={4}>
-        {title}
+        {name}
       </Text>
 
       <StatGroup>
         <Stat>
-          <StatNumber color="#ebe86d">{number}</StatNumber>
+          <StatNumber color="#ebe86d">{registrations}</StatNumber>
           <StatLabel color="#cbced6">Registrations</StatLabel>
         </Stat>
 
         <Stat>
-          <StatNumber color="#66c083">{number}</StatNumber>
-          <StatLabel color="#cbced6">Paid</StatLabel>
+          <StatNumber color="#66c083">{paidRegistrations}</StatNumber>
+          <StatLabel color="#cbced6">Paid Registrations</StatLabel>
         </Stat>
       </StatGroup>
     </Box>
