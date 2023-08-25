@@ -33,7 +33,6 @@ const Directory = () => {
 
   const fetchData = async () => {
     const res = await queryEarth()
-    console.log(res)
     setMenuItems(res)
   }
 

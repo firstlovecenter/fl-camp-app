@@ -30,7 +30,6 @@ const MenuCard = ({
   const { cardBackground } = useCustomColorMode()
 
   const handleClick = () => {
-    console.log('id', id, 'name', name)
     switch (type) {
       case 'earth':
         setReferenceId(id)
@@ -39,7 +38,6 @@ const MenuCard = ({
         setContinentId(id)
         break
       case 'countries':
-        // console.log('country id', id)
         setCountryId(id)
         break
       case 'campuses':

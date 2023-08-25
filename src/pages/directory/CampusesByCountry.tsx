@@ -12,7 +12,6 @@ const CampusesByCountry = () => {
 
   const [menuItems, setMenuItems] = useState<CampusesDataItem[]>([])
   const menuList = async (type: string) => {
-    console.log('country nine', countryId)
     const q = query(collection(db, type), where('countryRef', '==', countryId))
 
     const querySnapshot = await getDocs(q)
@@ -39,7 +38,7 @@ const CampusesByCountry = () => {
 
   const fetchData = async () => {
     const res = await menuList(type)
-    console.log(res)
+
     setMenuItems(res)
   }
 

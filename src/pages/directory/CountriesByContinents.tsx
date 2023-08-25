@@ -41,7 +41,6 @@ const CountriesByContinent = () => {
 
   const fetchData = async () => {
     const res = await menuList(type)
-    console.log(res)
     setMenuItems(res)
   }
 
