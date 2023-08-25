@@ -6,6 +6,7 @@ import {
   type ThemeConfig,
   type StyleFunctionProps,
 } from '@chakra-ui/react'
+import { mode } from '@chakra-ui/theme-tools'
 
 // 2. Add your color mode config
 const config: ThemeConfig = {
@@ -20,7 +21,7 @@ const colors = {
 
 const styles = {
   global: (props: StyleFunctionProps) => ({
-    body: { bg: '#15181f' },
+    body: { bg: mode('#f4f4f4', '#15181f')(props) },
   }),
 }
 
