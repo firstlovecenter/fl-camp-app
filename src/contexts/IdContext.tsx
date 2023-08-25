@@ -7,22 +7,22 @@ import React, {
 } from 'react'
 
 interface IdContextType {
-  referenceId: string
+  earthId: string
   continentId: string
   countryId: string
   campusId: string
-  setReferenceId: (referenceId: string) => void
+  setEarthId: (earthId: string) => void
   setContinentId: (continentId: string) => void
   setCountryId: (continentId: string) => void
   setCampusId: (continentId: string) => void
 }
 
 const IdContext = createContext<IdContextType>({
-  referenceId: '',
+  earthId: '',
   continentId: '',
   countryId: '',
   campusId: '',
-  setReferenceId: () => null,
+  setEarthId: () => null,
   setContinentId: () => null,
   setCountryId: () => null,
   setCampusId: () => null,
@@ -33,13 +33,13 @@ export const useId = () => {
 }
 
 export const IdContextProvider = ({ children }: { children: ReactNode }) => {
-  const [referenceId, setReferenceId] = useState<string>(
-    sessionStorage.getItem('referenceId') ?? ''
+  const [earthId, setEarthId] = useState<string>(
+    sessionStorage.getItem('earthId') ?? ''
   )
 
-  const setRefId = (referenceId: string) => {
-    setReferenceId(referenceId)
-    sessionStorage.setItem('referenceId', referenceId)
+  const setRefId = (earthId: string) => {
+    setEarthId(earthId)
+    sessionStorage.setItem('earthId', earthId)
   }
 
   const [continentId, setContinentId] = useState<string>(
@@ -72,16 +72,16 @@ export const IdContextProvider = ({ children }: { children: ReactNode }) => {
 
   const value = useMemo(
     () => ({
-      referenceId,
+      earthId,
       continentId,
       countryId,
       campusId,
-      setReferenceId: setRefId,
+      setEarthId: setRefId,
       setContinentId: setContId,
       setCountryId: setCountId,
       setCampusId: setCampId,
     }),
-    [referenceId, continentId, countryId, campusId]
+    [earthId, continentId, countryId, campusId]
   )
 
   return <IdContext.Provider value={value}>{children}</IdContext.Provider>

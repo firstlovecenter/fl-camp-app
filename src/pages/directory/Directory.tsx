@@ -3,7 +3,7 @@ import MenuCard from '../../components/MenuCard'
 import { Container, Heading } from '@chakra-ui/react'
 import { collection, getDocs } from '@firebase/firestore'
 import { db } from 'firebase'
-import { DataItem } from 'utils/types'
+import { DataItem } from 'utils/MenuDataTypes'
 
 const Directory = () => {
   const [menuItems, setMenuItems] = useState<DataItem[]>([])
@@ -51,7 +51,7 @@ const Directory = () => {
           id={item.id}
           key={index}
           type={'earth'}
-          route={'/continents-by-earth'}
+          route={'/earth-profile'}
         />
       ))}
     </Container>

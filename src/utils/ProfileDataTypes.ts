@@ -13,4 +13,13 @@ interface ContinentPageDetails extends PageDetails {
   countries: number
 }
 
-export type { PageDetails, CountryPageDetails, ContinentPageDetails }
+interface EarthPageDetails extends PageDetails {
+  continents: number
+}
+
+export type {
+  PageDetails,
+  CountryPageDetails,
+  ContinentPageDetails,
+  EarthPageDetails,
+}

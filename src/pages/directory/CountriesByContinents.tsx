@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import MenuCard from '../../components/MenuCard'
 import { Container, Heading } from '@chakra-ui/react'
-import { CountriesDataItem } from 'utils/types'
+import { CountriesDataItem } from 'utils/MenuDataTypes'
 import { useId } from 'contexts/IdContext'
 import { query, collection, where, getDocs } from '@firebase/firestore'
 import { db } from 'firebase'

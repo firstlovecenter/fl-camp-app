@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import MenuCard from '../../components/MenuCard'
 import { Container, Heading } from '@chakra-ui/react'
 import { useId } from 'contexts/IdContext'
-import { CampusesDataItem } from 'utils/types'
+import { CampusesDataItem } from 'utils/MenuDataTypes'
 import { query, collection, where, getDocs } from '@firebase/firestore'
 import { db } from 'firebase'
 
