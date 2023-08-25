@@ -9,4 +9,8 @@ interface CountryPageDetails extends PageDetails {
   campuses: number
 }
 
-export type { PageDetails, CountryPageDetails }
+interface ContinentPageDetails extends PageDetails {
+  countries: number
+}
+
+export type { PageDetails, CountryPageDetails, ContinentPageDetails }

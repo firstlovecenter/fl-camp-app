@@ -57,7 +57,7 @@ const ContinentsByEarth = () => {
           name={item.name}
           key={index}
           type={type}
-          route={'/countries-by-continent'}
+          route={'/continent-profile'}
         />
       ))}
     </Container>

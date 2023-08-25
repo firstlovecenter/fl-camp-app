@@ -61,7 +61,7 @@ const CountryProfile = () => {
             number={pageDetails.paidRegistrations}
             title={'Paid Registrations'}
           />
-          <DetailsCard number={pageDetails.campuses} title={'Countries'} />
+          <DetailsCard number={pageDetails.campuses} title={'Campuses'} />
           <Stack direction="column" spacing={1}>
             <Button
               colorScheme="yellow"

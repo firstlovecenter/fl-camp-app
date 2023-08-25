@@ -5,32 +5,32 @@ import { useNavigate } from 'react-router-dom'
 import { doc, getDoc } from '@firebase/firestore'
 import { db } from 'firebase'
 import { useId } from 'contexts/IdContext'
-import { CountryPageDetails } from 'utils/ProfileDataTypes'
+import { ContinentPageDetails } from 'utils/ProfileDataTypes'
 
-const CampusProfile = () => {
+const ContinentProfile = () => {
   const navigate = useNavigate()
 
-  const [pageDetails, setPageDetails] = useState<CountryPageDetails>({
+  const [pageDetails, setPageDetails] = useState<ContinentPageDetails>({
     registrations: 0,
     paidRegistrations: 0,
-    campuses: 0,
+    countries: 0,
     name: '',
     id: '',
   })
 
-  const { countryId } = useId()
+  const { continentId } = useId()
 
   const campusDetails = async () => {
-    const docRef = doc(db, 'countries', countryId)
+    const docRef = doc(db, 'continents', continentId)
     const docSnap = await getDoc(docRef)
 
     if (docSnap.exists()) {
-      const res: CountryPageDetails = {
+      const res: ContinentPageDetails = {
         id: docSnap.id,
         paidRegistrations: docSnap?.data()?.paidRegistrations,
         registrations: docSnap?.data()?.registrations,
         name: docSnap?.data()?.name,
-        campuses: 2,
+        countries: 2,
       }
       setPageDetails(res)
     } else {
@@ -51,7 +51,7 @@ const CampusProfile = () => {
     <Container>
       <Box>
         <Heading mt={6}>{pageDetails.name}</Heading>
-        <Text>Country</Text>
+        <Text>Continent</Text>
         <Box my={6}>
           <DetailsCard
             number={pageDetails.registrations}
@@ -61,15 +61,15 @@ const CampusProfile = () => {
             number={pageDetails.paidRegistrations}
             title={'Paid Registrations'}
           />
-          <DetailsCard number={pageDetails.campuses} title={'Countries'} />
+          <DetailsCard number={pageDetails.countries} title={'Countries'} />
           <Stack direction="column" spacing={1}>
             <Button
               colorScheme="yellow"
               variant="solid"
-              onClick={() => navigate('/campuses-by-country')}
+              onClick={() => navigate('/countries-by-continent')}
               my={3}
             >
-              View All Campuses
+              View All Countries
             </Button>
           </Stack>
         </Box>
@@ -78,4 +78,4 @@ const CampusProfile = () => {
   )
 }
 
-export default CampusProfile
+export default ContinentProfile
