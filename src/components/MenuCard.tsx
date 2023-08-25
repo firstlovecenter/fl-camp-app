@@ -8,6 +8,7 @@ import {
 } from '@chakra-ui/react'
 import { useNavigate } from 'react-router-dom'
 import useCustomColorMode from '../hooks/useCustomColors'
+import { useId } from 'contexts/IdContext'
 
 const MenuCard = ({
   paidRegistrations,
@@ -15,19 +16,42 @@ const MenuCard = ({
   name,
   id,
   route,
+  type,
 }: {
   paidRegistrations: number
-  registrations: string
+  registrations: number
   name: string
   id: string
   route: string
+  type: string
 }) => {
   const navigate = useNavigate()
+  const { setReferenceId, setContinentId, setCountryId, setCampusId } = useId()
   const { cardBackground } = useCustomColorMode()
+
+  const handleClick = () => {
+    console.log('id', id, 'name', name)
+    switch (type) {
+      case 'earth':
+        setReferenceId(id)
+        break
+      case 'continents':
+        setContinentId(id)
+        break
+      case 'countries':
+        // console.log('country id', id)
+        setCountryId(id)
+        break
+      case 'campuses':
+        setCampusId(id)
+        break
+    }
+    navigate(route)
+  }
 
   return (
     <Box
-      onClick={() => navigate(route)}
+      onClick={() => handleClick()}
       p={4}
       borderRadius="md"
       mb={3}

@@ -6,15 +6,14 @@ import { db } from 'firebase'
 import { DataItem } from 'utils/types'
 
 const Directory = () => {
-  const originalmenuItems = [{ number: 1, title: 'Earth' }]
   const [menuItems, setMenuItems] = useState<DataItem[]>([])
   const queryEarth = async () => {
     // const firestore = useFirestore()
-    const earthCollection = await getDocs(collection(db, 'countries'))
+    const earthCollection = await getDocs(collection(db, 'earth'))
 
     const res: {
       id: string
-      paidRegistrations: any
+      paidRegistrations: number
       registrations: any
       name: any
     }[] = []
@@ -47,9 +46,12 @@ const Directory = () => {
       <Heading my={6}>Directory</Heading>
       {menuItems.map((item, index) => (
         <MenuCard
-          number={item.number}
-          title={item.title}
+          registrations={item.registrations}
+          paidRegistrations={item.paidRegistrations}
+          name={item.name}
+          id={item.id}
           key={index}
+          type={'earth'}
           route={'/continents-by-earth'}
         />
       ))}
