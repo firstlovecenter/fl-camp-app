@@ -1,24 +1,62 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import MenuCard from '../../components/MenuCard'
 import { Container, Heading } from '@chakra-ui/react'
+import { useId } from 'contexts/IdContext'
+import { collection, getDocs, query, where } from '@firebase/firestore'
+import { db } from 'firebase'
+import { ContinentsDataItem, DataItem } from 'utils/types'
 
 const ContinentsByEarth = () => {
-  const menuItems = [
-    { number: 500, title: 'Africa' },
-    { number: 2, title: 'Europe' },
-    { number: 3, title: 'Asia' },
-    { number: 4, title: 'North America' },
-    { number: 4, title: 'South America' },
-    { number: 4, title: 'Australia' },
-  ]
+  const { referenceId } = useId()
+  const type = 'continents'
+
+  const [menuItems, setMenuItems] = useState<ContinentsDataItem[]>([])
+  const menuList = async (type: string) => {
+    const q = query(collection(db, type), where('earthId', '==', referenceId))
+
+    const querySnapshot = await getDocs(q)
+
+    const res: {
+      id: string
+      paidRegistrations: number
+      registrations: number
+      name: string
+    }[] = []
+
+    querySnapshot.forEach((item) => {
+      res.push({
+        id: item.id,
+        paidRegistrations: item.data().paidRegistrations,
+        registrations: item.data().registrations,
+        name: item.data().name,
+        ...item.data(),
+      })
+    })
+
+    return res
+  }
+
+  const fetchData = async () => {
+    const res = await menuList(type)
+    console.log(res)
+    setMenuItems(res)
+  }
+
+  useEffect(() => {
+    fetchData()
+  }, [])
+
   return (
     <Container>
       <Heading my={6}>Breakdown by Continents</Heading>
       {menuItems.map((item, index) => (
         <MenuCard
-          number={item.number}
-          title={item.title}
+          paidRegistrations={item.paidRegistrations}
+          registrations={item.registrations}
+          id={item.id}
+          name={item.name}
           key={index}
+          type={type}
           route={'/countries-by-continent'}
         />
       ))}

@@ -6,11 +6,20 @@ interface DataItem {
 }
 
 interface ContinentsDataItem extends DataItem {
-  earthRef: string
+  earthRef?: string
 }
 
 interface CountriesDataItem extends DataItem {
-  continentRef: string
+  continentRef?: string
 }
 
-export type { DataItem, ContinentsDataItem, CountriesDataItem }
+interface CampusesDataItem extends DataItem {
+  countryRef?: string
+}
+
+export type {
+  DataItem,
+  ContinentsDataItem,
+  CountriesDataItem,
+  CampusesDataItem,
+}
