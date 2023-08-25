@@ -59,7 +59,7 @@ const CountriesByContinent = () => {
           id={item.id}
           type={type}
           key={index}
-          route={'/campuses-by-country'}
+          route={'/country-profile'}
         />
       ))}
     </Container>

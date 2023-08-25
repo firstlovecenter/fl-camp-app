@@ -6,6 +6,7 @@ const ContinentsByEarth = lazy(() => import('./ContinentsByEarth'))
 const CountriesByContinent = lazy(() => import('./CountriesByContinents'))
 const CampusesByCountry = lazy(() => import('./CampusesByCountry'))
 const CampusProfile = lazy(() => import('./profiles/CampusProfile'))
+const CountryProfile = lazy(() => import('./profiles/CountryProfile'))
 
 export const directoryRoutes: LazyRouteTypes[] = [
   {
@@ -35,6 +36,12 @@ export const directoryRoutes: LazyRouteTypes[] = [
   {
     path: '/campus-profile',
     element: CampusProfile,
+    placeholder: true,
+    roles: ['all'],
+  },
+  {
+    path: '/country-profile',
+    element: CountryProfile,
     placeholder: true,
     roles: ['all'],
   },
