@@ -26,7 +26,7 @@ const MenuCard = ({
   type: string
 }) => {
   const navigate = useNavigate()
-  const { setReferenceId, setContinentId, setCountryId, setCampusId } = useId()
+  const { setEarthId, setContinentId, setCountryId, setCampusId } = useId()
   const {
     cardBackground,
     cardPaidRegistrationsText,
