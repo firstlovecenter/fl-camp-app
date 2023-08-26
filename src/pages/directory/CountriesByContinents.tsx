@@ -39,12 +39,16 @@ const CountriesByContinent = () => {
     return res
   }
 
-  const fetchData = async () => {
-    const res = await menuList(type)
-    setMenuItems(res)
-  }
-
   useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const res = await menuList(type)
+        setMenuItems(res)
+      } catch (error) {
+        console.log(error)
+      }
+    }
+
     fetchData()
   }, [])
 
