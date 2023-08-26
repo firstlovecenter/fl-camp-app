@@ -7,6 +7,7 @@ import { DataItem } from 'utils/types'
 
 const Directory = () => {
   const [menuItems, setMenuItems] = useState<DataItem[]>([])
+
   const queryEarth = async () => {
     // const firestore = useFirestore()
     const earthCollection = await getDocs(collection(db, 'earth'))
@@ -14,8 +15,8 @@ const Directory = () => {
     const res: {
       id: string
       paidRegistrations: number
-      registrations: any
-      name: any
+      registrations: number
+      name: string
     }[] = []
 
     earthCollection.forEach((item) => {
@@ -31,12 +32,16 @@ const Directory = () => {
     return res
   }
 
-  const fetchData = async () => {
-    const res = await queryEarth()
-    setMenuItems(res)
-  }
-
   useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const res = await queryEarth()
+        setMenuItems(res)
+      } catch (error) {
+        console.log(error)
+      }
+    }
+
     fetchData()
   }, [])
 

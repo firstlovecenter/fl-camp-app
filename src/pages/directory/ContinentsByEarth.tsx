@@ -4,7 +4,7 @@ import { Container, Heading } from '@chakra-ui/react'
 import { useId } from 'contexts/IdContext'
 import { collection, getDocs, query, where } from '@firebase/firestore'
 import { db } from 'firebase'
-import { ContinentsDataItem, DataItem } from 'utils/types'
+import { ContinentsDataItem } from 'utils/types'
 
 const ContinentsByEarth = () => {
   const { referenceId } = useId()
