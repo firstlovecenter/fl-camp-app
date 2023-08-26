@@ -33,7 +33,6 @@ const CampusProfile = () => {
     const docSnap = await getDoc(docRef)
 
     if (docSnap.exists()) {
-      console.log('Document data:', docSnap.data())
       const res: PageDetails = {
         id: docSnap.id,
         paidRegistrations: docSnap?.data()?.paidRegistrations,
