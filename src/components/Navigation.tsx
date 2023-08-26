@@ -14,13 +14,11 @@ import React from 'react'
 import { GiHamburgerMenu } from 'react-icons/gi'
 import { useNavigate } from 'react-router-dom'
 import { ColorModeSwitcher } from '../components/ColorModeSwitcher'
-import useCustomColorMode from '../hooks/useCustomColors'
 
 function Navigation() {
   const { isOpen, onOpen, onClose } = useDisclosure()
   const btnRef = React.useRef(null)
   const navigate = useNavigate()
-  const { bg } = useCustomColorMode()
 
   const menuItems = [
     {
@@ -63,7 +61,6 @@ function Navigation() {
             {menuItems.map((item) => (
               <Button
                 key={item.name}
-                bg={bg}
                 paddingY={8}
                 marginY={2}
                 width="100%"
