@@ -10,7 +10,7 @@ import {
 } from '@chakra-ui/react'
 import { useNavigate } from 'react-router-dom'
 import useCustomColorMode from '../hooks/useCustomColors'
-import { useId } from 'contexts/IdContext'
+import { useChurchId } from 'contexts/IdContext'
 
 const MenuCard = ({
   paidRegistrations,
@@ -28,7 +28,8 @@ const MenuCard = ({
   type: string
 }) => {
   const navigate = useNavigate()
-  const { setEarthId, setContinentId, setCountryId, setCampusId } = useId()
+  const { setEarthId, setContinentId, setCountryId, setCampusId } =
+    useChurchId()
   const {
     cardBackground,
     cardPaidRegistrationsText,
