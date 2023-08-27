@@ -1,5 +1,7 @@
 import {
   Box,
+  Skeleton,
+  SkeletonText,
   Stat,
   StatGroup,
   StatLabel,
@@ -33,6 +35,7 @@ const MenuCard = ({
     cardRegistrationsText,
     cardSubtitle,
   } = useCustomColorMode()
+  const loading = !name || !registrations || !paidRegistrations
 
   const handleClick = () => {
     switch (type) {
@@ -61,20 +64,34 @@ const MenuCard = ({
       bg={cardBackground}
     >
       <Text fontSize="2xl" fontWeight="bold" mr={4}>
-        {name}
+        <SkeletonText isLoaded={!loading}>{name}</SkeletonText>
       </Text>
 
       <StatGroup>
         <Stat>
-          <StatNumber color={cardRegistrationsText}>{registrations}</StatNumber>
-          <StatLabel color={cardSubtitle}>Registrations</StatLabel>
+          <StatNumber color={cardRegistrationsText}>
+            <Skeleton isLoaded={!loading} noOfLines={2} marginY={2}>
+              {registrations}
+            </Skeleton>
+          </StatNumber>
+          <StatLabel color={cardSubtitle}>
+            <SkeletonText isLoaded={!loading} noOfLines={1} marginY={2}>
+              Registrations
+            </SkeletonText>
+          </StatLabel>
         </Stat>
 
         <Stat>
           <StatNumber color={cardPaidRegistrationsText}>
-            {paidRegistrations}
+            <Skeleton isLoaded={!loading} noOfLines={2} marginY={2}>
+              {paidRegistrations}
+            </Skeleton>
           </StatNumber>
-          <StatLabel color={cardSubtitle}>Paid Registrations</StatLabel>
+          <StatLabel color={cardSubtitle}>
+            <SkeletonText isLoaded={!loading} noOfLines={1} marginY={2}>
+              Paid Registrations
+            </SkeletonText>
+          </StatLabel>
         </Stat>
       </StatGroup>
     </Box>

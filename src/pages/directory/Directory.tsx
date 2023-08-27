@@ -4,12 +4,12 @@ import { Container, Heading } from '@chakra-ui/react'
 import { collection, getDocs } from '@firebase/firestore'
 import { db } from 'firebase'
 import { DataItem } from 'utils/MenuDataTypes'
+import { menuItemsPlaceholder } from 'utils/placeholders'
 
 const Directory = () => {
   const [menuItems, setMenuItems] = useState<DataItem[]>([])
 
   const queryEarth = async () => {
-    // const firestore = useFirestore()
     const earthCollection = await getDocs(collection(db, 'earth'))
 
     const res: {
@@ -59,6 +59,22 @@ const Directory = () => {
           route={'/earth-profile'}
         />
       ))}
+
+      {menuItems.length === 0 && (
+        <>
+          {menuItemsPlaceholder.map((item, index) => (
+            <MenuCard
+              registrations={item.registrations}
+              paidRegistrations={item.paidRegistrations}
+              name={item.name}
+              id={item.id}
+              key={index}
+              type={'earth'}
+              route={'/continents-by-earth'}
+            />
+          ))}
+        </>
+      )}
     </Container>
   )
 }
