@@ -2,12 +2,12 @@ import React, { useEffect, useState } from 'react'
 import MenuCard from '../../components/MenuCard'
 import { Container, Heading } from '@chakra-ui/react'
 import { CountriesDataItem } from 'utils/types'
-import { useId } from 'contexts/IdContext'
+import { useChurchId } from 'contexts/IdContext'
 import { query, collection, where, getDocs } from '@firebase/firestore'
 import { db } from 'firebase'
 
 const CountriesByContinent = () => {
-  const { continentId } = useId()
+  const { continentId } = useChurchId()
   const type = 'countries'
 
   const [menuItems, setMenuItems] = useState<CountriesDataItem[]>([])

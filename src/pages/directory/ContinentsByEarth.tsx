@@ -1,18 +1,18 @@
 import React, { useEffect, useState } from 'react'
 import MenuCard from '../../components/MenuCard'
 import { Container, Heading } from '@chakra-ui/react'
-import { useId } from 'contexts/IdContext'
+import { useChurchId } from 'contexts/IdContext'
 import { collection, getDocs, query, where } from '@firebase/firestore'
 import { db } from 'firebase'
 import { ContinentsDataItem } from 'utils/types'
 
 const ContinentsByEarth = () => {
-  const { referenceId } = useId()
+  const { earthId } = useChurchId()
   const type = 'continents'
 
   const [menuItems, setMenuItems] = useState<ContinentsDataItem[]>([])
   const menuList = async (type: string) => {
-    const q = query(collection(db, type), where('earthId', '==', referenceId))
+    const q = query(collection(db, type), where('earthId', '==', earthId))
 
     const querySnapshot = await getDocs(q)
 
