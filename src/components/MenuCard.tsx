@@ -28,7 +28,7 @@ const MenuCard = ({
   type: string
 }) => {
   const navigate = useNavigate()
-  const { setReferenceId, setContinentId, setCountryId, setCampusId } = useId()
+  const { setEarthId, setContinentId, setCountryId, setCampusId } = useId()
   const {
     cardBackground,
     cardPaidRegistrationsText,
@@ -40,7 +40,7 @@ const MenuCard = ({
   const handleClick = () => {
     switch (type) {
       case 'earth':
-        setReferenceId(id)
+        setEarthId(id)
         break
       case 'continents':
         setContinentId(id)
