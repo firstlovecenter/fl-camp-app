@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import MenuCard from '../../components/MenuCard'
 import { Container, Heading } from '@chakra-ui/react'
-import { CountriesDataItem } from 'utils/types'
+import { CountriesDataItem } from 'utils/MenuDataTypes'
 import { useChurchId } from 'contexts/IdContext'
 import { query, collection, where, getDocs } from '@firebase/firestore'
 import { db } from 'firebase'
@@ -39,12 +39,16 @@ const CountriesByContinent = () => {
     return res
   }
 
-  const fetchData = async () => {
-    const res = await menuList(type)
-    setMenuItems(res)
-  }
-
   useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const res = await menuList(type)
+        setMenuItems(res)
+      } catch (error) {
+        console.log(error)
+      }
+    }
+
     fetchData()
   }, [])
 
@@ -59,7 +63,7 @@ const CountriesByContinent = () => {
           id={item.id}
           type={type}
           key={index}
-          route={'/campuses-by-country'}
+          route={'/country-profile'}
         />
       ))}
     </Container>
