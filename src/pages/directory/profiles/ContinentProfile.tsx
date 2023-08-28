@@ -5,20 +5,13 @@ import { useNavigate } from 'react-router-dom'
 import { doc, getDoc } from '@firebase/firestore'
 import { db } from 'firebase'
 import { useChurchId } from 'contexts/IdContext'
+import { ContinentPageDetails } from 'utils/ProfileDataTypes'
 
-interface PageDetails {
-  registrations: number
-  paidRegistrations: number
-  countries: number
-  name: string
-  id: string
-}
-
-const CampusProfile = () => {
+const ContinentProfile = () => {
   const navigate = useNavigate()
-  const { campusId } = useChurchId()
+  const { continentId } = useChurchId()
 
-  const [pageDetails, setPageDetails] = useState<PageDetails>({
+  const [pageDetails, setPageDetails] = useState<ContinentPageDetails>({
     registrations: 0,
     paidRegistrations: 0,
     countries: 0,
@@ -27,11 +20,11 @@ const CampusProfile = () => {
   })
 
   const campusDetails = async () => {
-    const docRef = doc(db, 'campuses', campusId)
+    const docRef = doc(db, 'continents', continentId)
     const docSnap = await getDoc(docRef)
 
     if (docSnap.exists()) {
-      const res: PageDetails = {
+      const res: ContinentPageDetails = {
         id: docSnap.id,
         paidRegistrations: docSnap?.data()?.paidRegistrations,
         registrations: docSnap?.data()?.registrations,
@@ -57,7 +50,7 @@ const CampusProfile = () => {
     <Container>
       <Box>
         <Heading mt={6}>{pageDetails.name}</Heading>
-        <Text>Campus</Text>
+        <Text>Continent</Text>
         <Box my={6}>
           <DetailsCard
             number={pageDetails.registrations}
@@ -67,15 +60,15 @@ const CampusProfile = () => {
             number={pageDetails.paidRegistrations}
             title={'Paid Registrations'}
           />
-
+          <DetailsCard number={pageDetails.countries} title={'Countries'} />
           <Stack direction="column" spacing={1}>
             <Button
               colorScheme="yellow"
               variant="solid"
-              onClick={() => navigate('/add-admin')}
+              onClick={() => navigate('/countries-by-continent')}
               my={3}
             >
-              Add An Admin
+              View All Countries
             </Button>
           </Stack>
         </Box>
@@ -84,4 +77,4 @@ const CampusProfile = () => {
   )
 }
 
-export default CampusProfile
+export default ContinentProfile
