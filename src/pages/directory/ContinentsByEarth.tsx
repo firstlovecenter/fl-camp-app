@@ -4,7 +4,7 @@ import { Container, Heading } from '@chakra-ui/react'
 import { useChurchId } from 'contexts/IdContext'
 import { collection, getDocs, query, where } from '@firebase/firestore'
 import { db } from 'firebase'
-import { ContinentsDataItem } from 'utils/types'
+import { ContinentsDataItem } from 'utils/MenuDataTypes'
 
 const ContinentsByEarth = () => {
   const { earthId } = useChurchId()
@@ -36,13 +36,16 @@ const ContinentsByEarth = () => {
     return res
   }
 
-  const fetchData = async () => {
-    const res = await menuList(type)
-
-    setMenuItems(res)
-  }
-
   useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const res = await menuList(type)
+        setMenuItems(res)
+      } catch (error) {
+        console.log(error)
+      }
+    }
+
     fetchData()
   }, [])
 
@@ -57,7 +60,7 @@ const ContinentsByEarth = () => {
           name={item.name}
           key={index}
           type={type}
-          route={'/countries-by-continent'}
+          route={'/continent-profile'}
         />
       ))}
     </Container>
