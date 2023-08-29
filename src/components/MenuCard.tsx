@@ -64,9 +64,11 @@ const MenuCard = ({
       mb={3}
       bg={cardBackground}
     >
-      <Text fontSize="2xl" fontWeight="bold" mr={4}>
-        <SkeletonText isLoaded={!loading}>{name}</SkeletonText>
-      </Text>
+      <SkeletonText isLoaded={!loading}>
+        <Text fontSize="2xl" fontWeight="bold" mr={4}>
+          {name}
+        </Text>
+      </SkeletonText>
 
       <StatGroup>
         <Stat>
