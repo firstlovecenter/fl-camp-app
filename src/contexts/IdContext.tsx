@@ -7,22 +7,22 @@ import React, {
 } from 'react'
 
 interface IdContextType {
-  earthId: string
+  planetId: string
   continentId: string
   countryId: string
   campusId: string
-  setEarthId: (earthId: string) => void
+  setPlanetId: (planetId: string) => void
   setContinentId: (continentId: string) => void
   setCountryId: (continentId: string) => void
   setCampusId: (continentId: string) => void
 }
 
 const IdContext = createContext<IdContextType>({
-  earthId: '',
+  planetId: '',
   continentId: '',
   countryId: '',
   campusId: '',
-  setEarthId: () => null,
+  setPlanetId: () => null,
   setContinentId: () => null,
   setCountryId: () => null,
   setCampusId: () => null,
@@ -33,8 +33,8 @@ export const useChurchId = () => {
 }
 
 export const IdContextProvider = ({ children }: { children: ReactNode }) => {
-  const [earthId, setEarthId] = useState<string>(
-    sessionStorage.getItem('earthId') ?? ''
+  const [planetId, setPlanetId] = useState<string>(
+    sessionStorage.getItem('planetId') ?? ''
   )
 
   const [continentId, setContinentId] = useState<string>(
@@ -49,9 +49,9 @@ export const IdContextProvider = ({ children }: { children: ReactNode }) => {
     sessionStorage.getItem('campusId') ?? ''
   )
 
-  const setRefId = (earthId: string) => {
-    setEarthId(earthId)
-    sessionStorage.setItem('earthId', earthId)
+  const setRefId = (planetId: string) => {
+    setPlanetId(planetId)
+    sessionStorage.setItem('planetId', planetId)
   }
 
   const setContId = (continentId: string) => {
@@ -72,16 +72,16 @@ export const IdContextProvider = ({ children }: { children: ReactNode }) => {
 
   const value = useMemo(
     () => ({
-      earthId,
+      planetId,
       continentId,
       countryId,
       campusId,
-      setEarthId: setRefId,
+      setPlanetId: setRefId,
       setContinentId: setContId,
       setCountryId: setCountId,
       setCampusId: setCampId,
     }),
-    [earthId, continentId, countryId, campusId]
+    [planetId, continentId, countryId, campusId]
   )
 
   return <IdContext.Provider value={value}>{children}</IdContext.Provider>

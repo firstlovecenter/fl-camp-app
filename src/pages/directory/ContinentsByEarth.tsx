@@ -6,14 +6,14 @@ import { useFirestore, useFirestoreCollectionData } from 'reactfire'
 import { ApolloWrapper } from '@jaedag/admin-portal-react-core'
 
 const ContinentsByEarth = () => {
-  const { earthId } = useChurchId()
+  const { planetId } = useChurchId()
   const type = 'continents'
 
   const firestore = useFirestore()
   const continentsCollection = collection(firestore, type)
   const continentsQuery = query(
     continentsCollection,
-    where('earthId', '==', earthId)
+    where('planetRef', '==', planetId)
     // orderBy('name', 'asc')
   )
 

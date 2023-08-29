@@ -11,10 +11,10 @@ import { ApolloWrapper } from '@jaedag/admin-portal-react-core'
 
 const EarthProfile = () => {
   const navigate = useNavigate()
-  const { earthId } = useChurchId()
+  const { planetId } = useChurchId()
 
   const firestore = useFirestore()
-  const ref = doc(firestore, 'earth', earthId)
+  const ref = doc(firestore, 'earth', planetId)
   const { status, data: earth } = useFirestoreDocData(ref)
 
   const loading = !earth
