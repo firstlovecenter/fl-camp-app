@@ -28,7 +28,7 @@ const MenuCard = ({
   type: string
 }) => {
   const navigate = useNavigate()
-  const { setEarthId, setContinentId, setCountryId, setCampusId } =
+  const { setPlanetId, setContinentId, setCountryId, setCampusId } =
     useChurchId()
   const {
     cardBackground,
@@ -41,7 +41,7 @@ const MenuCard = ({
   const handleClick = () => {
     switch (type) {
       case 'earth':
-        setEarthId(id)
+        setPlanetId(id)
         break
       case 'continents':
         setContinentId(id)
