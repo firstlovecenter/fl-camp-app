@@ -1,69 +1,58 @@
-import React, { useEffect, useState } from 'react'
 import MenuCard from '../../components/MenuCard'
 import { Container, Heading } from '@chakra-ui/react'
 import { useChurchId } from 'contexts/IdContext'
-import { CampusesDataItem } from 'utils/MenuDataTypes'
-import { query, collection, where, getDocs } from '@firebase/firestore'
-import { db } from 'firebase'
+import { query, collection, where, doc } from '@firebase/firestore'
+import {
+  useFirestore,
+  useFirestoreCollectionData,
+  useFirestoreDocData,
+} from 'reactfire'
+import { ApolloWrapper } from '@jaedag/admin-portal-react-core'
 
 const CampusesByCountry = () => {
   const { countryId } = useChurchId()
   const type = 'campuses'
 
-  const [menuItems, setMenuItems] = useState<CampusesDataItem[]>([])
-  const menuList = async (type: string) => {
-    const q = query(collection(db, type), where('countryRef', '==', countryId))
+  const firestore = useFirestore()
 
-    const querySnapshot = await getDocs(q)
+  const ref = doc(firestore, 'countries', countryId)
+  const { data: country } = useFirestoreDocData(ref)
 
-    const res: {
-      id: string
-      paidRegistrations: number
-      registrations: number
-      name: string
-    }[] = []
+  const campusesCollection = collection(firestore, type)
+  const campusesQuery = query(
+    campusesCollection,
+    where('countryRef', '==', countryId)
+    // orderBy('name', 'asc')
+  )
 
-    querySnapshot.forEach((item) => {
-      res.push({
-        id: item.id,
-        paidRegistrations: item.data().paidRegistrations,
-        registrations: item.data().registrations,
-        name: item.data().name,
-        ...item.data(),
-      })
-    })
+  const { status, data: campuses } = useFirestoreCollectionData(campusesQuery, {
+    idField: 'id',
+  })
 
-    return res
+  const loading = !campuses || !country
+
+  let error = ''
+  if (status === 'error') {
+    error = 'Error'
   }
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const res = await menuList(type)
-        setMenuItems(res)
-      } catch (error) {
-        console.log(error)
-      }
-    }
-
-    fetchData()
-  }, [])
-
   return (
-    <Container>
-      <Heading my={6}>Breakdown by Campus</Heading>
-      {menuItems.map((item, index) => (
-        <MenuCard
-          paidRegistrations={item.paidRegistrations}
-          registrations={item.registrations}
-          name={item.name}
-          id={item.id}
-          type={type}
-          key={index}
-          route={'/campus-profile'}
-        />
-      ))}
-    </Container>
+    <ApolloWrapper data={campuses} loading={loading} error={error}>
+      <Container>
+        <Heading my={6}>Campuses in {country?.name}</Heading>
+        {campuses?.map((item, index) => (
+          <MenuCard
+            paidRegistrations={item.paidRegistrations}
+            registrations={item.registrations}
+            name={item.name}
+            id={item.id}
+            type={type}
+            key={index}
+            route={'/campus-profile'}
+          />
+        ))}
+      </Container>
+    </ApolloWrapper>
   )
 }
 

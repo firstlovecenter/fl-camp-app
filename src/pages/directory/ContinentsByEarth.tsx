@@ -1,69 +1,53 @@
-import React, { useEffect, useState } from 'react'
 import MenuCard from '../../components/MenuCard'
 import { Container, Heading } from '@chakra-ui/react'
 import { useChurchId } from 'contexts/IdContext'
-import { collection, getDocs, query, where } from '@firebase/firestore'
-import { db } from 'firebase'
-import { ContinentsDataItem } from 'utils/MenuDataTypes'
+import { collection, query, where } from '@firebase/firestore'
+import { useFirestore, useFirestoreCollectionData } from 'reactfire'
+import { ApolloWrapper } from '@jaedag/admin-portal-react-core'
 
 const ContinentsByEarth = () => {
   const { earthId } = useChurchId()
   const type = 'continents'
 
-  const [menuItems, setMenuItems] = useState<ContinentsDataItem[]>([])
-  const menuList = async (type: string) => {
-    const q = query(collection(db, type), where('earthId', '==', earthId))
+  const firestore = useFirestore()
+  const continentsCollection = collection(firestore, type)
+  const continentsQuery = query(
+    continentsCollection,
+    where('earthId', '==', earthId)
+    // orderBy('name', 'asc')
+  )
 
-    const querySnapshot = await getDocs(q)
+  const { status, data: continents } = useFirestoreCollectionData(
+    continentsQuery,
+    {
+      idField: 'id',
+    }
+  )
 
-    const res: {
-      id: string
-      paidRegistrations: number
-      registrations: number
-      name: string
-    }[] = []
+  const loading = !continents
 
-    querySnapshot.forEach((item) => {
-      res.push({
-        id: item.id,
-        paidRegistrations: item.data().paidRegistrations,
-        registrations: item.data().registrations,
-        name: item.data().name,
-        ...item.data(),
-      })
-    })
-
-    return res
+  let error = ''
+  if (status === 'error') {
+    error = 'Error'
   }
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const res = await menuList(type)
-        setMenuItems(res)
-      } catch (error) {
-        console.log(error)
-      }
-    }
-
-    fetchData()
-  }, [])
-
   return (
-    <Container>
-      <Heading my={6}>Breakdown by Continents</Heading>
-      {menuItems.map((item, index) => (
-        <MenuCard
-          paidRegistrations={item.paidRegistrations}
-          registrations={item.registrations}
-          id={item.id}
-          name={item.name}
-          key={index}
-          type={type}
-          route={'/continent-profile'}
-        />
-      ))}
-    </Container>
+    <ApolloWrapper data={continents} loading={loading} error={error}>
+      <Container>
+        <Heading my={6}>Continents By Earth</Heading>
+        {continents?.map((item, index) => (
+          <MenuCard
+            paidRegistrations={item.paidRegistrations}
+            registrations={item.registrations}
+            id={item.id}
+            name={item.name}
+            key={index}
+            type={type}
+            route={'/continent-profile'}
+          />
+        ))}
+      </Container>
+    </ApolloWrapper>
   )
 }
 
