@@ -13,32 +13,34 @@ import { getFirestore } from 'firebase/firestore'
 const App = () => {
   const firestoreInstance = getFirestore(useFirebaseApp())
   return (
-    <IdContextProvider>
-      <AuthProvider>
-        <BrowserRouter>
-          <Navigation />
-          <Suspense fallback={<LoadingPage />}>
-            <Routes>
-              {[...authRoutes, ...directoryRoutes].map((route, i) => (
-                <Route
-                  key={i}
-                  path={route.path}
-                  element={
-                    <PrivateRoute
-                      roles={route.roles}
-                      placeholder={route.placeholder}
-                    >
-                      <route.element />
-                    </PrivateRoute>
-                  }
-                />
-              ))}
-              <Route path="*" element={<PageNotFound />} />
-            </Routes>
-          </Suspense>
-        </BrowserRouter>
-      </AuthProvider>
-    </IdContextProvider>
+    <FirestoreProvider sdk={firestoreInstance}>
+      <IdContextProvider>
+        <AuthProvider>
+          <BrowserRouter>
+            <Navigation />
+            <Suspense fallback={<LoadingPage />}>
+              <Routes>
+                {[...authRoutes, ...directoryRoutes].map((route, i) => (
+                  <Route
+                    key={i}
+                    path={route.path}
+                    element={
+                      <PrivateRoute
+                        roles={route.roles}
+                        placeholder={route.placeholder}
+                      >
+                        <route.element />
+                      </PrivateRoute>
+                    }
+                  />
+                ))}
+                <Route path="*" element={<PageNotFound />} />
+              </Routes>
+            </Suspense>
+          </BrowserRouter>
+        </AuthProvider>
+      </IdContextProvider>
+    </FirestoreProvider>
   )
 }
 
