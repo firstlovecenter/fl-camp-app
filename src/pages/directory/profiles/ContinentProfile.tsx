@@ -2,78 +2,56 @@ import React, { useEffect, useState } from 'react'
 import { Box, Button, Container, Heading, Stack, Text } from '@chakra-ui/react'
 import DetailsCard from '../../../components/DetailsCard'
 import { useNavigate } from 'react-router-dom'
-import { doc, getDoc } from '@firebase/firestore'
-import { db } from 'firebase'
+import { doc } from '@firebase/firestore'
 import { useChurchId } from 'contexts/IdContext'
-import { ContinentPageDetails } from 'utils/ProfileDataTypes'
+import { useFirestore, useFirestoreDocData } from 'reactfire'
+import { ApolloWrapper } from '@jaedag/admin-portal-react-core'
 
 const ContinentProfile = () => {
   const navigate = useNavigate()
   const { continentId } = useChurchId()
 
-  const [pageDetails, setPageDetails] = useState<ContinentPageDetails>({
-    registrations: 0,
-    paidRegistrations: 0,
-    countries: 0,
-    name: '',
-    id: '',
-  })
+  const firestore = useFirestore()
+  const ref = doc(firestore, 'continents', continentId)
+  const { status, data: continents } = useFirestoreDocData(ref)
 
-  const campusDetails = async () => {
-    const docRef = doc(db, 'continents', continentId)
-    const docSnap = await getDoc(docRef)
+  const loading = !continents
 
-    if (docSnap.exists()) {
-      const res: ContinentPageDetails = {
-        id: docSnap.id,
-        paidRegistrations: docSnap?.data()?.paidRegistrations,
-        registrations: docSnap?.data()?.registrations,
-        name: docSnap?.data()?.name,
-        countries: 2,
-      }
-      setPageDetails(res)
-    } else {
-      // docSnap.data() will be undefined in this case
-      console.log('No such document!')
-    }
+  let error = ''
+  if (status === 'error') {
+    error = 'Error'
   }
-
-  const fetchData = async () => {
-    await campusDetails()
-  }
-
-  useEffect(() => {
-    fetchData()
-  }, [])
 
   return (
-    <Container>
-      <Box>
-        <Heading mt={6}>{pageDetails.name}</Heading>
-        <Text>Continent</Text>
-        <Box my={6}>
-          <DetailsCard
-            number={pageDetails.registrations}
-            title={'Registrations'}
-          />
-          <DetailsCard
-            number={pageDetails.paidRegistrations}
-            title={'Paid Registrations'}
-          />
-          <DetailsCard number={pageDetails.countries} title={'Countries'} />
-          <Stack direction="column" spacing={1}>
-            <Button
-              colorScheme="yellow"
-              variant="solid"
-              onClick={() => navigate('/countries-by-continent')}
-              my={3}
-            >
-              View All Countries
-            </Button>
-          </Stack>
+    <ApolloWrapper data={continents} loading={loading} error={error}>
+      <Container>
+        <Box>
+          <Heading mt={6}>{continents?.name}</Heading>
+          <Text>Continent</Text>
+          <Box my={6}>
+            <DetailsCard
+              number={continents?.registrations}
+              title={'Registrations'}
+            />
+            <DetailsCard
+              number={continents?.paidRegistrations}
+              title={'Paid Registrations'}
+            />
+            <DetailsCard number={continents?.countries} title={'Countries'} />
+            <Stack direction="column" spacing={1}>
+              <Button
+                colorScheme="yellow"
+                variant="solid"
+                onClick={() => navigate('/countries-by-continent')}
+                my={3}
+              >
+                View All Countries
+              </Button>
+            </Stack>
+          </Box>
         </Box>
-      </Box>
-    </Container>
+      </Container>
+    </ApolloWrapper>
   )
 }
 
