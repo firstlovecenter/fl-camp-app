@@ -1,81 +1,62 @@
 import React, { useEffect, useState } from 'react'
 import MenuCard from '../../components/MenuCard'
 import { Container, Heading } from '@chakra-ui/react'
-import { collection, getDocs } from '@firebase/firestore'
+import { collection, getDocs, query, orderBy } from '@firebase/firestore'
 import { db } from 'firebase'
 import { DataItem } from 'utils/MenuDataTypes'
 import { menuItemsPlaceholder } from 'utils/placeholders'
+import { useFirestore, useFirestoreCollectionData } from 'reactfire'
+import { ApolloWrapper } from '@jaedag/admin-portal-react-core'
 
 const Directory = () => {
-  const [menuItems, setMenuItems] = useState<DataItem[]>([])
+  const firestore = useFirestore()
+  const earthCollection = collection(firestore, 'earth')
+  const earthQuery = query(earthCollection, orderBy('name', 'asc'))
 
-  const queryEarth = async () => {
-    const earthCollection = await getDocs(collection(db, 'earth'))
+  const { status, data: earth } = useFirestoreCollectionData(earthQuery, {
+    idField: 'id',
+  })
 
-    const res: {
-      id: string
-      paidRegistrations: number
-      registrations: number
-      name: string
-    }[] = []
+  const loading = !earth
 
-    earthCollection.forEach((item) => {
-      res.push({
-        id: item.id,
-        paidRegistrations: item.data().paidRegistrations,
-        registrations: item.data().registrations,
-        name: item.data().name,
-        ...item.data(),
-      })
-    })
-
-    return res
+  let error = ''
+  if (status === 'error') {
+    error = 'Error'
   }
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const res = await queryEarth()
-        setMenuItems(res)
-      } catch (error) {
-        console.log(error)
-      }
-    }
-
-    fetchData()
-  }, [])
-
   return (
-    <Container>
-      <Heading my={6}>Directory</Heading>
-      {menuItems.map((item, index) => (
-        <MenuCard
-          registrations={item.registrations}
-          paidRegistrations={item.paidRegistrations}
-          name={item.name}
-          id={item.id}
-          key={index}
-          type={'earth'}
-          route={'/earth-profile'}
-        />
-      ))}
+    <ApolloWrapper data={earth} loading={loading} error={error}>
+      <Container>
+        <Heading my={6}>Directory</Heading>
+        {earth?.map((item, index) => (
+          <MenuCard
+            registrations={item.registrations}
+            paidRegistrations={item.paidRegistrations}
+            name={item.name}
+            id={item.id}
+            key={index}
+            type={'earth'}
+            route={'/earth-profile'}
+          />
+        ))}
 
-      {menuItems.length === 0 && (
-        <>
-          {menuItemsPlaceholder.map((item, index) => (
-            <MenuCard
-              registrations={item.registrations}
-              paidRegistrations={item.paidRegistrations}
-              name={item.name}
-              id={item.id}
-              key={index}
-              type={'earth'}
-              route={'/continents-by-earth'}
-            />
-          ))}
-        </>
-      )}
-    </Container>
+        {earth?.length === 0 && (
+          <>
+            {menuItemsPlaceholder.map((item, index) => (
+              <MenuCard
+                registrations={item.registrations}
+                paidRegistrations={item.paidRegistrations}
+                name={item.name}
+                id={item.id}
+                key={index}
+                type={'earth'}
+                route={'/continents-by-earth'}
+              />
+            ))}
+          </>
+        )}
+      </Container>
+    </ApolloWrapper>
   )
 }
 
