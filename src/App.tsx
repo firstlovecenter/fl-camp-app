@@ -7,7 +7,7 @@ import { directoryRoutes } from 'pages/directory/directoryRoutes'
 import { LoadingPage, PageNotFound } from '@jaedag/admin-portal-react-core'
 import { Suspense } from 'react'
 import { IdContextProvider } from 'contexts/IdContext'
-import { useFirebaseApp } from 'reactfire'
+import { FirestoreProvider, useFirebaseApp } from 'reactfire'
 import { getFirestore } from 'firebase/firestore'
 
 const App = () => {
