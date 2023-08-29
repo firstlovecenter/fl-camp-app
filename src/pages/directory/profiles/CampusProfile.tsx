@@ -5,6 +5,8 @@ import { useNavigate } from 'react-router-dom'
 import { doc, getDoc } from '@firebase/firestore'
 import { db } from 'firebase'
 import { useChurchId } from 'contexts/IdContext'
+import { useFirestore, useFirestoreDocData } from 'reactfire'
+import { ApolloWrapper } from '@jaedag/admin-portal-react-core'
 
 interface PageDetails {
   registrations: number
@@ -18,69 +20,47 @@ const CampusProfile = () => {
   const navigate = useNavigate()
   const { campusId } = useChurchId()
 
-  const [pageDetails, setPageDetails] = useState<PageDetails>({
-    registrations: 0,
-    paidRegistrations: 0,
-    countries: 0,
-    name: '',
-    id: '',
-  })
+  const firestore = useFirestore()
+  const ref = doc(firestore, 'campuses', campusId)
+  const { status, data: campus } = useFirestoreDocData(ref)
 
-  const campusDetails = async () => {
-    const docRef = doc(db, 'campuses', campusId)
-    const docSnap = await getDoc(docRef)
+  const loading = !campus
 
-    if (docSnap.exists()) {
-      const res: PageDetails = {
-        id: docSnap.id,
-        paidRegistrations: docSnap?.data()?.paidRegistrations,
-        registrations: docSnap?.data()?.registrations,
-        name: docSnap?.data()?.name,
-        countries: 2,
-      }
-      setPageDetails(res)
-    } else {
-      // docSnap.data() will be undefined in this case
-      console.log('No such document!')
-    }
+  let error = ''
+  if (status === 'error') {
+    error = 'Error'
   }
-
-  const fetchData = async () => {
-    await campusDetails()
-  }
-
-  useEffect(() => {
-    fetchData()
-  }, [])
 
   return (
-    <Container>
-      <Box>
-        <Heading mt={6}>{pageDetails.name}</Heading>
-        <Text>Campus</Text>
-        <Box my={6}>
-          <DetailsCard
-            number={pageDetails.registrations}
-            title={'Registrations'}
-          />
-          <DetailsCard
-            number={pageDetails.paidRegistrations}
-            title={'Paid Registrations'}
-          />
+    <ApolloWrapper data={campus} loading={loading} error={error}>
+      <Container>
+        <Box>
+          <Heading mt={6}>{campus?.name}</Heading>
+          <Text>Campus</Text>
+          <Box my={6}>
+            <DetailsCard
+              number={campus?.registrations}
+              title={'Registrations'}
+            />
+            <DetailsCard
+              number={campus?.paidRegistrations}
+              title={'Paid Registrations'}
+            />
 
-          <Stack direction="column" spacing={1}>
-            <Button
-              colorScheme="yellow"
-              variant="solid"
-              onClick={() => navigate('/add-admin')}
-              my={3}
-            >
-              Add An Admin
-            </Button>
-          </Stack>
+            <Stack direction="column" spacing={1}>
+              <Button
+                colorScheme="yellow"
+                variant="solid"
+                onClick={() => navigate('/add-admin')}
+                my={3}
+              >
+                Add An Admin
+              </Button>
+            </Stack>
+          </Box>
         </Box>
-      </Box>
-    </Container>
+      </Container>
+    </ApolloWrapper>
   )
 }
 
