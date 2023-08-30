@@ -1,14 +1,16 @@
 interface Camp {
   name: string
   type: string
-  date: string
   roomOption: string
   role: string
+  startDate: string
+  endDate: string
   registrationStatus?: string
   paymentStatus?: string
-  campStatus?: string
+  campStatus?: boolean
 }
 
 interface Role {
   role: string
+  name: string
 }
