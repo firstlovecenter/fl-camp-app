@@ -11,7 +11,7 @@ import {
 } from 'reactfire'
 import { collection, query, doc, getDoc } from 'firebase/firestore'
 
-const CamperHomePage = () => {
+const AdminHomePage = () => {
   const [error, setError] = useState('')
   const { currentUser, logout } = useAuth()
   const navigate = useNavigate()
@@ -93,4 +93,4 @@ const CamperHomePage = () => {
   )
 }
 
-export default CamperHomePage
+export default AdminHomePage

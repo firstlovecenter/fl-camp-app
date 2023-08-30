@@ -8,3 +8,7 @@ interface Camp {
   paymentStatus?: string
   campStatus?: string
 }
+
+interface Role {
+  role: string
+}
