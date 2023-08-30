@@ -4,6 +4,7 @@ import { AuthProvider } from 'contexts/AuthContext'
 import PrivateRoute from 'auth/PrivateRoute'
 import { authRoutes } from 'auth/authRoutes'
 import { directoryRoutes } from 'pages/directory/directoryRoutes'
+import { homeRoutes } from 'pages/home/homeRoutes'
 import { LoadingPage, PageNotFound } from '@jaedag/admin-portal-react-core'
 import { Suspense } from 'react'
 import { IdContextProvider } from 'contexts/IdContext'
@@ -20,20 +21,22 @@ const App = () => {
             <Navigation />
             <Suspense fallback={<LoadingPage />}>
               <Routes>
-                {[...authRoutes, ...directoryRoutes].map((route, i) => (
-                  <Route
-                    key={i}
-                    path={route.path}
-                    element={
-                      <PrivateRoute
-                        roles={route.roles}
-                        placeholder={route.placeholder}
-                      >
-                        <route.element />
-                      </PrivateRoute>
-                    }
-                  />
-                ))}
+                {[...authRoutes, ...directoryRoutes, ...homeRoutes].map(
+                  (route, i) => (
+                    <Route
+                      key={i}
+                      path={route.path}
+                      element={
+                        <PrivateRoute
+                          roles={route.roles}
+                          placeholder={route.placeholder}
+                        >
+                          <route.element />
+                        </PrivateRoute>
+                      }
+                    />
+                  )
+                )}
                 <Route path="*" element={<PageNotFound />} />
               </Routes>
             </Suspense>
