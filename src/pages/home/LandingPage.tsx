@@ -1,17 +1,7 @@
 import { Container, Text, Center, Box } from '@chakra-ui/layout'
 import React, { useState } from 'react'
 import { useAuth } from 'contexts/AuthContext'
-import {
-  Alert,
-  AlertDescription,
-  AlertIcon,
-  AlertTitle,
-  Button,
-  Card,
-  CardBody,
-  CardHeader,
-  Heading,
-} from '@chakra-ui/react'
+import { Heading } from '@chakra-ui/react'
 import { useNavigate } from 'react-router-dom'
 import CampCard from 'components/CampCard'
 import {
@@ -73,6 +63,7 @@ const LandingPage = () => {
     paymentStatus: 'Paid',
     role: 'Camper',
     roomOption: 'Wise As Serpents - Room 12',
+    campStatus: '',
   }
 
   camps.push(campAdmin)

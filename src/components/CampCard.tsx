@@ -19,16 +19,7 @@ const CampCard = ({
   registrationStatus,
   paymentStatus,
   campStatus,
-}: {
-  name: string
-  type: string
-  date: string
-  roomOption: string
-  role: string
-  registrationStatus?: string
-  paymentStatus?: string
-  campStatus?: string
-}) => {
+}: Camp) => {
   const { cardBackground } = useCustomColorMode()
   return (
     <Card
