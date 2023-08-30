@@ -9,18 +9,23 @@ import {
   Text,
 } from '@chakra-ui/react'
 import useCustomColorMode from '../hooks/useCustomColors'
+import { formatDateRange } from 'utils/utils'
 
 const CampCard = ({
   name,
   type,
-  date,
   roomOption,
   role,
   registrationStatus,
   paymentStatus,
   campStatus,
+  startDate,
+  endDate,
 }: Camp) => {
   const { cardBackground } = useCustomColorMode()
+
+  const date = formatDateRange(startDate, endDate)
+
   return (
     <Card
       //   onClick={() => handleClick()}
@@ -41,7 +46,7 @@ const CampCard = ({
               <>
                 <Tag colorScheme="whatsapp">{registrationStatus}</Tag>
                 <Tag colorScheme="red">{paymentStatus}</Tag>
-                <Tag colorScheme="orange">{roomOption}</Tag>
+                {roomOption && <Tag colorScheme="orange">{roomOption}</Tag>}
               </>
             )}
           </Wrap>
