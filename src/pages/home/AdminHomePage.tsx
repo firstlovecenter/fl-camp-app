@@ -15,10 +15,9 @@ import {
   getDocs,
 } from 'firebase/firestore'
 import { ApolloWrapper } from '@jaedag/admin-portal-react-core'
-import { parseRegistrationOptions } from 'utils/utils'
 
 const AdminHomePage = () => {
-  const { currentUser, logout } = useAuth()
+  const { currentUser } = useAuth()
 
   const [camps, setcamps] = useState<FetchedCampData[]>([])
   const [loading, setLoading] = useState(true)
@@ -43,34 +42,19 @@ const AdminHomePage = () => {
           campsData?.map(async (camp) => {
             const campee = await getDoc(doc(firestore, 'camps', camp.id))
 
-            const q = query(
-              collection(db, 'registrations'),
-              where('email', '==', email),
-              where('camp', '==', camp.id)
-            )
-
-            const querySnapshot = await getDocs(q)
-            const registrationDetails = parseRegistrationOptions(querySnapshot)
-
             fetchedCamps.push({
               id: camp.id,
-              registrationStatus: 'Registered',
-              paymentStatus: registrationDetails[0]?.paymentStatus
-                ? 'Paid'
-                : 'Not Paid',
-              role: 'Camper',
-              roomOption: '',
+              role: 'Admin',
               name: campee.data()?.name,
               campLevel: campee.data()?.campLevel,
               startDate: campee.data()?.startDate,
               endDate: campee.data()?.endDate,
-              campStatus: false,
+              campStatus: campee.data()?.campStatus,
             })
           })
         )
       }
 
-      // console.log(fetchedCamps)
       setcamps(fetchedCamps)
       setLoading(false)
     }
@@ -88,12 +72,12 @@ const AdminHomePage = () => {
               <CampCard
                 name={camp?.name}
                 type={camp?.campLevel}
-                registrationStatus={camp?.registrationStatus}
-                paymentStatus={camp?.paymentStatus}
+                registrationStatus={''}
+                paymentStatus={''}
                 role={camp?.role}
                 startDate={camp?.startDate}
                 endDate={camp?.endDate}
-                roomOption={camp?.roomOption}
+                roomOption={''}
                 key={index}
                 campStatus={camp?.campStatus}
               />

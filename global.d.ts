@@ -16,14 +16,17 @@ interface Role {
 }
 
 interface FetchedCampData {
-  registrationStatus: string
-  paymentStatus: string
   role: string
-  roomOption: string
   id: string
   name: string
   campLevel: string
   startDate: string
   endDate: string
   campStatus: boolean
+}
+
+interface FetchedCampDataCamper extends FetchedCampData {
+  registrationStatus: string
+  paymentStatus: string
+  roomOption: string
 }

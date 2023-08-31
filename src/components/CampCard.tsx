@@ -9,7 +9,7 @@ import {
   Text,
 } from '@chakra-ui/react'
 import useCustomColorMode from '../hooks/useCustomColors'
-import { formatDateRange } from 'utils/utils'
+import { capitalizeFirstLetter, formatDateRange } from 'utils/utils'
 
 const CampCard = ({
   name,
@@ -23,7 +23,6 @@ const CampCard = ({
   endDate,
 }: Camp) => {
   const { cardBackground } = useCustomColorMode()
-
   const date = formatDateRange(startDate, endDate)
 
   return (
@@ -37,9 +36,13 @@ const CampCard = ({
         <Stack>
           <Heading size="md">{name}</Heading>
           <Wrap>
-            <Tag colorScheme="telegram">{type} Camp</Tag>
+            <Tag colorScheme="telegram">{capitalizeFirstLetter(type)} Camp</Tag>
             {/* admin stuff */}
-            {role === 'Admin' && <Tag colorScheme="whatsapp">{campStatus}</Tag>}
+            {role === 'Admin' && (
+              <Tag colorScheme={campStatus ? 'whatsapp' : 'red'}>
+                {campStatus ? 'Active' : 'Ended'}
+              </Tag>
+            )}
 
             {/* camper stuff */}
             {role === 'Camper' && (
