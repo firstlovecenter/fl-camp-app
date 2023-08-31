@@ -17,19 +17,6 @@ import { db } from 'firebase'
 import { parseRegistrationOptions } from 'utils/utils'
 import { ApolloWrapper } from '@jaedag/admin-portal-react-core'
 
-type FetchedCampData = {
-  registrationStatus: string
-  paymentStatus: string
-  role: string
-  roomOption: string
-  id: string
-  name: string
-  campLevel: string
-  startDate: string
-  endDate: string
-  campStatus: boolean
-}
-
 const CamperHomePage = () => {
   const { currentUser, logout } = useAuth()
 
