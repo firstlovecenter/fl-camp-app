@@ -34,7 +34,7 @@ export const formatDateRange = (
   const endDate = new Date(endDateTimestamp)
 
   // Format day with 'st', 'nd', 'rd', or 'th'
-  const formatDay = (day) => {
+  const formatDay = (day: number) => {
     if (day >= 11 && day <= 13) {
       return `${day}th`
     }
