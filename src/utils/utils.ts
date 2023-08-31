@@ -67,3 +67,8 @@ export const formatDateRange = (
     return `${startDay} ${startMonth} ${startYear} - ${endDay} ${endMonth} ${endYear}`
   }
 }
+
+export const capitalizeFirstLetter = (str: string) => {
+  // Using replace method with regEx
+  return str.charAt(0).toUpperCase() + str.slice(1)
+}

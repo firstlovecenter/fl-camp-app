@@ -14,8 +14,8 @@ const RoleCard = ({ role, name }: Role) => {
     >
       <CardHeader>
         <Flex flex="1" gap="4" alignItems="center" flexWrap="wrap">
-          <Avatar name={name} src="https://bit.ly/sage-adebayo" />
-
+          <Avatar name={name} />
+          {/* this is for if we get pictures of memebers into the app src="https://bit.ly/sage-adebayo" */}
           <Box>
             <Heading size="sm">
               Continue as {role === 'campAdmin' ? 'an Admin' : 'a Camper'}

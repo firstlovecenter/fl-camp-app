@@ -20,7 +20,7 @@ import { ApolloWrapper } from '@jaedag/admin-portal-react-core'
 const CamperHomePage = () => {
   const { currentUser, logout } = useAuth()
 
-  const [camps, setcamps] = useState<FetchedCampData[]>([])
+  const [camps, setcamps] = useState<FetchedCampDataCamper[]>([])
   const [loading, setLoading] = useState(true)
 
   const email = currentUser?.email || ''
@@ -37,7 +37,7 @@ const CamperHomePage = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      const fetchedCamps: FetchedCampData[] = []
+      const fetchedCamps: FetchedCampDataCamper[] = []
       if (Array.isArray(campsData)) {
         await Promise.all(
           campsData?.map(async (camp) => {
