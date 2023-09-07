@@ -33,7 +33,12 @@ const RoleCard = ({ role, name }: Role) => {
       break
   }
   return (
-    <Card maxW="md" onClick={() => navigate(route)} bg={profileCardBackground}>
+    <Card
+      maxW="md"
+      onClick={() => navigate(route)}
+      bg={profileCardBackground}
+      mb={2}
+    >
       <CardHeader>
         <HStack>
           <Center>
