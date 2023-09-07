@@ -11,6 +11,9 @@ import {
   Text,
   Box,
   Container,
+  SimpleGrid,
+  Center,
+  Stack,
 } from '@chakra-ui/react'
 import RoleCard from 'components/RoleCard'
 import {
@@ -43,18 +46,28 @@ const LandingPage = () => {
     <ApolloWrapper data={user?.roles} loading={loading}>
       <Box bg="body.bg">
         <Container my={6}>
-          <Heading mb={4}>Welcome Camper!</Heading>
-          {user?.roles ? (
-            user.roles.map((role: string, index: number) => (
-              <RoleCard
-                role={role}
-                name={user?.firstName + ' ' + user?.lastName}
-                key={index}
-              />
-            ))
-          ) : (
-            <Text>You have no roles.</Text>
-          )}
+          <Stack direction="column">
+            <Box mb={3}>
+              <Center>
+                <Heading>Welcome {user?.firstName}!</Heading>
+              </Center>
+              <Center>
+                <Text>Select a Profile to start with</Text>
+              </Center>
+            </Box>
+
+            {user?.roles ? (
+              user.roles.map((role: string, index: number) => (
+                <RoleCard
+                  role={role}
+                  name={user?.firstName + ' ' + user?.lastName}
+                  key={index}
+                />
+              ))
+            ) : (
+              <Text>You have no roles.</Text>
+            )}
+          </Stack>
         </Container>
       </Box>
     </ApolloWrapper>
