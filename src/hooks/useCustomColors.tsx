@@ -7,6 +7,12 @@ const useCustomColors = () => {
   const cardRegistrationsText = useColorModeValue('#6d70eb', '#ebe86d')
   const cardPaidRegistrationsText = useColorModeValue('#66c083', '#66c083')
   const cardSubtitle = useColorModeValue('#cbced6', '#cbced6')
+  const profileCardBackground = useColorModeValue('#fff', '#252937')
+  const homePageCardBackground = useColorModeValue('#2c2a1e', '#1e202c')
+  const homePageCardTextEmphasis = useColorModeValue('#1e202c', '#7DDB86')
+  const homePageCardSubtitle = useColorModeValue('#7DDB86', '#5C6CA5')
+  const homePageCardText = useColorModeValue('#7DDB86', '#8A92A6')
+  const homePageOptionsSubtitle = useColorModeValue('#7DDB86', '#9AC2FF')
 
   return {
     bg,
@@ -15,6 +21,12 @@ const useCustomColors = () => {
     cardRegistrationsText,
     cardPaidRegistrationsText,
     cardSubtitle,
+    profileCardBackground,
+    homePageCardBackground,
+    homePageCardText,
+    homePageCardTextEmphasis,
+    homePageCardSubtitle,
+    homePageOptionsSubtitle,
   }
 }
 
