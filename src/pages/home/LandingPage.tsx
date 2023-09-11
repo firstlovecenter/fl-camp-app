@@ -1,22 +1,7 @@
-import {
-  Card,
-  CardHeader,
-  Flex,
-  Avatar,
-  Heading,
-  IconButton,
-  CardBody,
-  CardFooter,
-  Button,
-  Text,
-  Box,
-  Container,
-} from '@chakra-ui/react'
+import { Heading, Text, Box, Container } from '@chakra-ui/react'
 import RoleCard from 'components/RoleCard'
-import { useFirestore, useFirestoreDocData } from 'reactfire'
-import { doc } from 'firebase/firestore'
 
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from 'contexts/AuthContext'
 import { ApolloWrapper } from '@jaedag/admin-portal-react-core'
@@ -25,26 +10,32 @@ const LandingPage = () => {
   // const [error, setError] = useState('')
   const { currentUser, logout } = useAuth()
   const navigate = useNavigate()
+  const [roles, setRoles] = useState<Role[]>([])
 
-  const email = currentUser?.email || ''
+  const loading = !roles
 
-  const firestore = useFirestore()
+  useEffect(() => {
+    const getRoles = async () => {
+      const token = await currentUser?.getIdTokenResult()
+      if (token?.claims?.roles) {
+        console.log(token.claims.roles)
+        setRoles(token.claims.roles)
+      }
+    }
 
-  const ref = doc(firestore, 'users', email)
-  const { data: user, status } = useFirestoreDocData(ref)
-
-  const loading = status === 'loading' ? false : true
+    getRoles()
+  }, [])
 
   return (
-    <ApolloWrapper data={user?.roles} loading={loading}>
+    <ApolloWrapper data={roles} loading={loading}>
       <Box bg="body.bg">
         <Container my={6}>
           <Heading mb={4}>Welcome Camper!</Heading>
-          {user?.roles ? (
-            user.roles.map((role: Role, index: number) => (
+          {roles ? (
+            roles.map((role: Role, index: number) => (
               <RoleCard
                 role={role}
-                name={user?.firstName + ' ' + user?.lastName}
+                name={currentUser?.displayName || ''}
                 key={index}
               />
             ))
