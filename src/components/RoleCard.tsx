@@ -12,7 +12,12 @@ import useCustomColors from 'hooks/useCustomColors'
 
 import { useNavigate } from 'react-router-dom'
 
-const RoleCard = ({ role, name }: Role) => {
+type RoleCardProps = {
+  role: Role
+  name: string
+}
+
+const RoleCard = ({ role, name }: RoleCardProps) => {
   const navigate = useNavigate()
   const { profileCardBackground } = useCustomColors()
 

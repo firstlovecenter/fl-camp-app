@@ -28,7 +28,7 @@ const App = () => {
                       path={route.path}
                       element={
                         <PrivateRoute
-                          roles={route.roles}
+                          roles={route.roles ?? ['all']}
                           placeholder={route.placeholder}
                         >
                           <route.element />
