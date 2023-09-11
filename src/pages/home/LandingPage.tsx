@@ -41,7 +41,7 @@ const LandingPage = () => {
         <Container my={6}>
           <Heading mb={4}>Welcome Camper!</Heading>
           {user?.roles ? (
-            user.roles.map((role: string, index: number) => (
+            user.roles.map((role: Role, index: number) => (
               <RoleCard
                 role={role}
                 name={user?.firstName + ' ' + user?.lastName}

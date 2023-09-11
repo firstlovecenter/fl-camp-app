@@ -10,10 +10,7 @@ interface Camp {
   campStatus?: boolean
 }
 
-interface Role {
-  role: string
-  name: string
-}
+type Role = 'campCamper' | 'campAdmin' | 'globalAdmin' | 'all' | 'test'
 
 interface FetchedCampData {
   role: string

@@ -1,30 +1,48 @@
 import { useAuth } from 'contexts/AuthContext'
 import LogIn from './LogIn'
-import { PageNotFound } from '@jaedag/admin-portal-react-core'
+import { UnauthMsg } from './UnauthMsg'
 
 interface ProtectedRouteProps {
   children: JSX.Element
-  roles: string[]
+  roles: Role[]
+  roleBased?: boolean
   placeholder?: boolean
+}
+
+export const isAuthorised = (permittedRoles: Role[], userRoles: Role[]) => {
+  if (permittedRoles?.includes('all')) {
+    return true
+  }
+
+  return permittedRoles?.some((r) => userRoles.includes(r))
 }
 
 const PrivateRoute: (props: ProtectedRouteProps) => JSX.Element = (props) => {
   const { children, roles, placeholder } = props
   const { currentUser } = useAuth()
 
-  if (placeholder) {
-    return children
-  }
+  let userRoles: Role[] = []
 
   if (!currentUser) {
     return <LogIn />
   }
 
-  if (roles.includes('all')) {
-    return children
+  if (currentUser) {
+    currentUser
+      .getIdTokenResult()
+      .then((token) => {
+        userRoles = token?.claims?.roles
+      })
+      .catch((error) => {
+        console.error('Error fetching token:', error)
+      })
   }
 
-  return <PageNotFound />
+  if (isAuthorised(roles, userRoles)) {
+    return children
+  } else {
+    return <UnauthMsg />
+  }
 }
 
 export default PrivateRoute
