@@ -13,6 +13,7 @@ const useCustomColors = () => {
   const homePageCardSubtitle = useColorModeValue('#7DDB86', '#5C6CA5')
   const homePageCardText = useColorModeValue('#7DDB86', '#8A92A6')
   const homePageOptionsSubtitle = useColorModeValue('#7DDB86', '#9AC2FF')
+  const userCardBackground = useColorModeValue('#fff', '#171C22')
 
   return {
     bg,
@@ -27,6 +28,7 @@ const useCustomColors = () => {
     homePageCardTextEmphasis,
     homePageCardSubtitle,
     homePageOptionsSubtitle,
+    userCardBackground,
   }
 }
 
