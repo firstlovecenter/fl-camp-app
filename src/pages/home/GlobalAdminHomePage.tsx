@@ -30,6 +30,7 @@ import {
 } from 'firebase/firestore'
 import { db } from 'firebase'
 import { ApolloWrapper } from '@jaedag/admin-portal-react-core'
+import { useNavigate } from 'react-router-dom'
 
 interface CampCounts {
   totalCount: number
@@ -41,7 +42,7 @@ const GlobalAdminHomePage = () => {
     totalCount: 0,
     activeTotalCount: 0,
   })
-
+  const navigate = useNavigate()
   const {
     bg,
     homePageCardBackground,
@@ -179,6 +180,21 @@ const GlobalAdminHomePage = () => {
                 <Text fontSize="lg">Global Camp Stats</Text>
                 <Text fontSize="sm" color={homePageOptionsSubtitle}>
                   View Statistics for Camps globally
+                </Text>
+              </CardBody>
+            </Card>
+          </Box>
+          <Box mt={2}>
+            <Card
+              borderLeft="4px"
+              borderColor="blue.500"
+              bg="gray.800"
+              onClick={() => navigate('/users')}
+            >
+              <CardBody>
+                <Text fontSize="lg">Add Users</Text>
+                <Text fontSize="sm" color={homePageOptionsSubtitle}>
+                  Add users to the camp app
                 </Text>
               </CardBody>
             </Card>
