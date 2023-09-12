@@ -1,53 +1,86 @@
 import {
   Card,
   CardHeader,
-  Avatar,
   Box,
-  Center,
   Text,
   HStack,
   Image,
   Skeleton,
 } from '@chakra-ui/react'
 import useCustomColors from 'hooks/useCustomColors'
-import { ReactElement, JSXElementConstructor, ReactNode } from 'react'
-
+import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
-const UserListCard = ({ name }: { name: string }) => {
+type UserListProps = {
+  name: string
+  role: string[]
+}
+
+const findHighestPriorityRole = (roles: string[]) => {
+  if (!Array.isArray(roles) || roles.length === 0) {
+    return 'Member'
+  }
+
+  const priorityList = ['globalAdmin', 'campAdmin', 'campCamper']
+
+  for (const role of priorityList) {
+    if (roles.includes(role)) {
+      switch (role) {
+        case 'globalAdmin':
+          return 'Global Admin'
+        case 'campAdmin':
+          return 'Admin'
+        default:
+          return 'Member'
+      }
+    }
+  }
+
+  return 'Member'
+}
+
+const UserListCard = ({ name, role }: UserListProps) => {
   const navigate = useNavigate()
+  const [imageLoaded, setImageLoaded] = useState<boolean>(false)
   const { homePageCardBackground } = useCustomColors()
-  const loading = !name
+
+  const loading = !name && imageLoaded
+
+  const roleText = findHighestPriorityRole(role)
 
   return (
-    <Skeleton isLoaded={!loading}>
-      <Card
-        maxW="md"
-        onClick={() => navigate('/user-profile')}
-        bg={homePageCardBackground}
-        mb={2}
-        borderRadius={10}
-      >
+    <Card
+      maxW="md"
+      onClick={() => navigate('/user-profile')}
+      bg={homePageCardBackground}
+      mb={2}
+      borderRadius={10}
+    >
+      <Skeleton isLoaded={!loading}>
         <CardHeader>
-          <HStack>
-            <Image
-              maxW={{ base: '20%', sm: '20px' }}
-              maxH={{ base: '20%', sm: '20px' }}
-              borderRadius="lg"
-              src="https://bit.ly/dan-abramov"
-              alt="Dan Abramov"
-              fallbackSrc="https://via.placeholder.com/150"
-            />
-            <Box pl={2}>
-              <Text fontSize="lg">
-                <b>{name}</b>
-              </Text>
-              <Text>Role</Text>
-            </Box>
-          </HStack>
+          <Skeleton isLoaded={imageLoaded}>
+            <HStack>
+              <Image
+                maxW={{ base: '20%', sm: '20px' }}
+                maxH={{ base: '20%', sm: '20px' }}
+                borderRadius="lg"
+                src="https://bit.ly/dan-abramov"
+                // alt="Dan Abramov"
+                loading="lazy"
+                onLoad={() => setImageLoaded(true)} // Set imageLoaded to true when the image is loaded
+              />
+
+              <Box pl={2}>
+                <Text fontSize="lg">
+                  <b>{name}</b>
+                </Text>
+                <Text>{roleText}</Text>
+              </Box>
+            </HStack>
+          </Skeleton>
         </CardHeader>
-      </Card>
-    </Skeleton>
+      </Skeleton>
+    </Card>
   )
 }
 
