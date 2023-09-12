@@ -1,6 +1,7 @@
 import { useAuth } from 'contexts/AuthContext'
 import LogIn from './LogIn'
 import { UnauthMsg } from './UnauthMsg'
+import { useEffect, useState } from 'react'
 
 interface ProtectedRouteProps {
   children: JSX.Element
@@ -17,25 +18,28 @@ export const isAuthorised = (permittedRoles: Role[], userRoles: Role[]) => {
   return permittedRoles?.some((r) => userRoles.includes(r))
 }
 
-const PrivateRoute: (props: ProtectedRouteProps) => JSX.Element = (props) => {
+const PrivateRoute: React.FC<ProtectedRouteProps> = (props) => {
   const { children, roles, placeholder } = props
   const { currentUser } = useAuth()
+  const [userRoles, setUserRoles] = useState<Role[]>([])
 
-  let userRoles: Role[] = []
+  useEffect(() => {
+    const fetchUserRoles = async () => {
+      try {
+        if (currentUser) {
+          const token = await currentUser.getIdTokenResult()
+          setUserRoles(token?.claims?.roles || [])
+        }
+      } catch (error) {
+        console.error('Error fetching token:', error)
+      }
+    }
+
+    fetchUserRoles()
+  }, [currentUser])
 
   if (!currentUser) {
     return <LogIn />
-  }
-
-  if (currentUser) {
-    currentUser
-      .getIdTokenResult()
-      .then((token) => {
-        userRoles = token?.claims?.roles
-      })
-      .catch((error) => {
-        console.error('Error fetching token:', error)
-      })
   }
 
   if (isAuthorised(roles, userRoles)) {
