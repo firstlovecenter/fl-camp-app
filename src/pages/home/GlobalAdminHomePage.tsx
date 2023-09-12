@@ -18,6 +18,8 @@ import {
   Tag,
   SkeletonText,
   Skeleton,
+  Flex,
+  Spacer,
 } from '@chakra-ui/react'
 import React, { useEffect, useState } from 'react'
 import useCustomColors from 'hooks/useCustomColors'
@@ -77,8 +79,8 @@ const GlobalAdminHomePage = () => {
     <ApolloWrapper data={campCounts} loading={loading}>
       <Container px={6}>
         <Box mt={6}>
-          <SimpleGrid columns={3} spacing={4}>
-            <Box bg={bg} height="80px"></Box> <Box bg={bg} height="80px"></Box>{' '}
+          <Flex minWidth="max-content" alignItems="center" gap="2">
+            <Spacer />
             <Center>
               <Wrap>
                 <WrapItem>
@@ -90,7 +92,7 @@ const GlobalAdminHomePage = () => {
                 </WrapItem>
               </Wrap>
             </Center>
-          </SimpleGrid>
+          </Flex>
         </Box>
         <Box>
           <Heading>Welcome</Heading>

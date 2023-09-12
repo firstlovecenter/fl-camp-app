@@ -1,30 +1,46 @@
-import { Container, Heading, Box, Button, Center } from '@chakra-ui/react'
-import { SearchMemberCard } from '@jaedag/admin-portal-react-core'
+import { Container, Heading, Box, Button, Center, Text } from '@chakra-ui/react'
+import {
+  ApolloWrapper,
+  SearchMemberCard,
+} from '@jaedag/admin-portal-react-core'
 import UserListCard from '../../components/UserListCard'
 import React from 'react'
+import { useFirestore, useFirestoreCollectionData } from 'reactfire'
+import { collection } from '@firebase/firestore'
 
 const UserList = () => {
-  const member = {
-    id: 'abcd',
-    firstName: 'John',
-    lastName: 'Doe',
-    pictureURL: 'https://bit.ly/dan-abramov',
-  }
+  const firestore = useFirestore()
+  const userCollection = collection(firestore, 'users')
+  const { status, data: users } = useFirestoreCollectionData(userCollection, {
+    idField: 'id',
+  })
+
+  const loading = !users
 
   return (
-    <Container px={6}>
-      <Box mt={6}>
-        <Heading>Users</Heading>
-      </Box>
-      <Box>
-        <Center>
-          <Button>Add New User</Button>
-        </Center>
-        <Box mt={4}>
-          <UserListCard name="David Dag" />
+    <ApolloWrapper loading={loading} data={users}>
+      <Container px={6}>
+        <Box mt={6}>
+          <Heading>Users</Heading>
+          <Text>All Users</Text>
         </Box>
-      </Box>
-    </Container>
+        <Box>
+          <Center>
+            <Button width="100%" my={4} py={7} colorScheme="telegram">
+              Add A User
+            </Button>
+          </Center>
+          <Box mt={4}>
+            {users?.map((user, index) => (
+              <UserListCard
+                name={user?.firstName + ' ' + user?.lastName}
+                key={index}
+              />
+            ))}
+          </Box>
+        </Box>
+      </Container>
+    </ApolloWrapper>
   )
 }
 
