@@ -15,8 +15,6 @@ const UserList = () => {
     idField: 'id',
   })
 
-  console.log('users', users)
-
   const loading = !users
 
   return (

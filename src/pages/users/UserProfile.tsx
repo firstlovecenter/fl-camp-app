@@ -1,13 +1,5 @@
 import React from 'react'
-import {
-  Container,
-  Box,
-  Flex,
-  Image,
-  VStack,
-  Center,
-  Stack,
-} from '@chakra-ui/react'
+import { Container, Box, Image, Center, Stack } from '@chakra-ui/react'
 import useClickCard from 'hooks/useClickCard'
 
 const UserProfile = () => {
