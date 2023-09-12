@@ -15,6 +15,8 @@ const UserList = () => {
     idField: 'id',
   })
 
+  console.log('users', users)
+
   const loading = !users
 
   return (
@@ -33,6 +35,7 @@ const UserList = () => {
           <Box mt={4}>
             {users?.map((user, index) => (
               <UserListCard
+                id={user?.id}
                 name={user?.firstName + ' ' + user?.lastName}
                 key={index}
                 role={user?.roles}

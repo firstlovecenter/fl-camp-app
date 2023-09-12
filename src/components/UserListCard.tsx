@@ -10,8 +10,10 @@ import {
 import useCustomColors from 'hooks/useCustomColors'
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import useClickCard from 'hooks/useClickCard'
 
 type UserListProps = {
+  id: string
   name: string
   role: string[]
 }
@@ -39,7 +41,7 @@ const findHighestPriorityRole = (roles: string[]) => {
   return 'Member'
 }
 
-const UserListCard = ({ name, role }: UserListProps) => {
+const UserListCard = ({ name, role, id }: UserListProps) => {
   const navigate = useNavigate()
   const [imageLoaded, setImageLoaded] = useState<boolean>(false)
   const { homePageCardBackground } = useCustomColors()
@@ -47,11 +49,18 @@ const UserListCard = ({ name, role }: UserListProps) => {
   const loading = !name && imageLoaded
 
   const roleText = findHighestPriorityRole(role)
+  const { clickCard } = useClickCard()
+
+  const handleClick = () => {
+    const card = { id: id, type: 'User' }
+    clickCard(card)
+    navigate('/user-profile')
+  }
 
   return (
     <Card
       maxW="md"
-      onClick={() => navigate('/user-profile')}
+      onClick={() => handleClick()}
       bg={homePageCardBackground}
       mb={2}
       borderRadius={10}

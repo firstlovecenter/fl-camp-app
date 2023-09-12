@@ -8,8 +8,10 @@ import {
   Center,
   Stack,
 } from '@chakra-ui/react'
+import useClickCard from 'hooks/useClickCard'
 
 const UserProfile = () => {
+  const { userId } = useClickCard()
   return (
     <Container p={6}>
       <Stack>
@@ -24,7 +26,7 @@ const UserProfile = () => {
             />
           </Box>
         </Center>
-        <Box>First Name</Box>
+        <Box>First Name - {userId}</Box>
       </Stack>
     </Container>
   )
