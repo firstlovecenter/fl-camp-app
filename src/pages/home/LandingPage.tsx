@@ -18,7 +18,6 @@ const LandingPage = () => {
     const getRoles = async () => {
       const token = await currentUser?.getIdTokenResult()
       if (token?.claims?.roles) {
-        console.log(token.claims.roles)
         setRoles(token.claims.roles)
       }
     }
