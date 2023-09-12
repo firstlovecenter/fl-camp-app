@@ -35,6 +35,7 @@ const UserList = () => {
               <UserListCard
                 name={user?.firstName + ' ' + user?.lastName}
                 key={index}
+                role={user?.roles}
               />
             ))}
           </Box>
