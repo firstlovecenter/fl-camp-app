@@ -149,11 +149,12 @@ const GlobalAdminHomePage = () => {
               borderLeft="4px"
               borderColor="red.500"
               bg={homePageCardBackground}
+              onClick={() => navigate('/users')}
             >
               <CardBody>
-                <Text fontSize="lg">Manage Admins</Text>
+                <Text fontSize="lg">Add Users</Text>
                 <Text fontSize="sm" color={homePageOptionsSubtitle}>
-                  Add Admins for continents
+                  Add Users
                 </Text>
               </CardBody>
             </Card>
@@ -182,21 +183,6 @@ const GlobalAdminHomePage = () => {
                 <Text fontSize="lg">Global Camp Stats</Text>
                 <Text fontSize="sm" color={homePageOptionsSubtitle}>
                   View Statistics for Camps globally
-                </Text>
-              </CardBody>
-            </Card>
-          </Box>
-          <Box mt={2}>
-            <Card
-              borderLeft="4px"
-              borderColor="blue.500"
-              bg="gray.800"
-              onClick={() => navigate('/users')}
-            >
-              <CardBody>
-                <Text fontSize="lg">Add Users</Text>
-                <Text fontSize="sm" color={homePageOptionsSubtitle}>
-                  Add users to the camp app
                 </Text>
               </CardBody>
             </Card>
