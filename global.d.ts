@@ -27,3 +27,10 @@ interface FetchedCampDataCamper extends FetchedCampData {
   paymentStatus: string
   roomOption: string
 }
+
+interface UserData {
+  firstName: string
+  id: string
+  lastName: string
+  roles: string[]
+}
