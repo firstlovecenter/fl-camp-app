@@ -1,12 +1,9 @@
 import { Container, Heading, Box, Button, Center, Text } from '@chakra-ui/react'
-import {
-  ApolloWrapper,
-  SearchMemberCard,
-} from '@jaedag/admin-portal-react-core'
-import UserListCard from '../../components/UserListCard'
+import { ApolloWrapper } from '@jaedag/admin-portal-react-core'
 import React from 'react'
 import { useFirestore, useFirestoreCollectionData } from 'reactfire'
 import { collection } from '@firebase/firestore'
+import UserSearch from 'components/UserSearch'
 
 const UserList = () => {
   const firestore = useFirestore()
@@ -30,16 +27,7 @@ const UserList = () => {
               Add A User
             </Button>
           </Center>
-          <Box mt={4}>
-            {users?.map((user, index) => (
-              <UserListCard
-                id={user?.id}
-                name={user?.firstName + ' ' + user?.lastName}
-                key={index}
-                role={user?.roles}
-              />
-            ))}
-          </Box>
+          <UserSearch users={users} />
         </Box>
       </Container>
     </ApolloWrapper>
