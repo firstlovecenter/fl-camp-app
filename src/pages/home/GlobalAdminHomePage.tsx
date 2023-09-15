@@ -152,9 +152,9 @@ const GlobalAdminHomePage = () => {
               onClick={() => navigate('/users')}
             >
               <CardBody>
-                <Text fontSize="lg">Add Users</Text>
+                <Text fontSize="lg">Manage Users</Text>
                 <Text fontSize="sm" color={homePageOptionsSubtitle}>
-                  Add Users
+                  Add admins, members
                 </Text>
               </CardBody>
             </Card>

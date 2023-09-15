@@ -59,7 +59,6 @@ const UserListCard = ({ name, role, id }: UserListProps) => {
 
   return (
     <Card
-      maxW="md"
       onClick={() => handleClick()}
       bg={homePageCardBackground}
       mb={2}
