@@ -35,25 +35,26 @@ const UserSearch = ({ users }: UserSearchProp) => {
   }
 
   return (
-    <div>
-      <Container className="mt-3">
-        <form onSubmit={handleSubmit(onSubmit)}>
-          <FormControl>
-            <Controller
-              name="userSearch"
-              control={control}
-              render={({ field }) => (
-                <Input
-                  {...field}
-                  id="userSearch"
-                  placeholder="Search User"
-                  aria-describedby="User Search"
-                />
-              )}
-            />
-          </FormControl>
-        </form>
-      </Container>
+    // <div>
+    <Box>
+      <form onSubmit={handleSubmit(onSubmit)}>
+        <FormControl my={1}>
+          <Controller
+            name="userSearch"
+            control={control}
+            render={({ field }) => (
+              <Input
+                {...field}
+                id="userSearch"
+                placeholder="Search User"
+                aria-describedby="User Search"
+                py={6}
+                variant="filled"
+              />
+            )}
+          />
+        </FormControl>
+      </form>
 
       <Box mt={4}>
         {userData?.map((user, index) => (
@@ -65,7 +66,7 @@ const UserSearch = ({ users }: UserSearchProp) => {
           />
         ))}
       </Box>
-    </div>
+    </Box>
   )
 }
 
