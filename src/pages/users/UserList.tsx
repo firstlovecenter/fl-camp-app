@@ -14,6 +14,12 @@ const UserList = () => {
 
   const loading = !users
 
+  const usersData: UserData[] = []
+
+  users?.forEach((user: any) => {
+    usersData.push(user)
+  })
+
   return (
     <ApolloWrapper loading={loading} data={users}>
       <Container px={6}>
@@ -27,7 +33,7 @@ const UserList = () => {
               Add A User
             </Button>
           </Center>
-          <UserSearch users={users} />
+          <UserSearch users={usersData} />
         </Box>
       </Container>
     </ApolloWrapper>
