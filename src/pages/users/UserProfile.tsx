@@ -26,6 +26,7 @@ import { doc, collection } from 'firebase/firestore'
 import { ApolloWrapper } from '@jaedag/admin-portal-react-core'
 import useCustomColors from 'hooks/useCustomColors'
 import UserCampsCard from 'components/UserCampsCard'
+
 const UserProfile = () => {
   const firestore = useFirestore()
   const { userId } = useClickCard()

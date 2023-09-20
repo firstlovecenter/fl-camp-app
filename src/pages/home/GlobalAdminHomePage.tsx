@@ -21,17 +21,19 @@ import {
 } from '@chakra-ui/react'
 import React, { useEffect, useState } from 'react'
 import useCustomColors from 'hooks/useCustomColors'
-
 import {
   collection,
   getCountFromServer,
   query,
   where,
+  doc,
 } from 'firebase/firestore'
+import { useFirestore, useFirestoreDocData } from 'reactfire'
 import { db } from 'firebase'
 import { ApolloWrapper } from '@jaedag/admin-portal-react-core'
 import { useNavigate } from 'react-router-dom'
 import { useUserContext } from 'contexts/UserContext'
+import { useAuth } from 'contexts/AuthContext'
 
 interface CampCounts {
   totalCount: number
@@ -39,8 +41,8 @@ interface CampCounts {
 }
 
 const GlobalAdminHomePage = () => {
-  const { userProfile } = useUserContext()
-  console.log('userProfile', userProfile)
+  const { currentUser } = useAuth()
+  const firestore = useFirestore()
   const [campCounts, setCampCounts] = useState<CampCounts>({
     totalCount: 0,
     activeTotalCount: 0,
@@ -53,6 +55,11 @@ const GlobalAdminHomePage = () => {
     homePageCardSubtitle,
     homePageOptionsSubtitle,
   } = useCustomColors()
+
+  const email = currentUser.email as string
+
+  const ref = doc(firestore, 'users', email)
+  const { status, data: user } = useFirestoreDocData(ref)
 
   useEffect(() => {
     const getCampsCount = async () => {
@@ -74,7 +81,9 @@ const GlobalAdminHomePage = () => {
     getCampsCount()
   }, [])
 
-  const loading = !campCounts.totalCount || !campCounts.activeTotalCount
+  const loading =
+    !campCounts.totalCount || !campCounts.activeTotalCount || !user
+
   return (
     <ApolloWrapper data={campCounts} loading={loading}>
       <Container px={6}>
@@ -85,8 +94,8 @@ const GlobalAdminHomePage = () => {
               <Wrap>
                 <WrapItem>
                   <Avatar
-                    name="Dan Abrahmov"
-                    src="https://bit.ly/dan-abramov"
+                    name={user?.firstName + ' ' + user?.lastName}
+                    src={user?.image_url}
                     size="lg"
                   />
                 </WrapItem>
