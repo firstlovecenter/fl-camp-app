@@ -16,6 +16,7 @@ type UserListProps = {
   id: string
   name: string
   role: string[]
+  image: string
 }
 
 const findHighestPriorityRole = (roles: string[]) => {
@@ -41,12 +42,12 @@ const findHighestPriorityRole = (roles: string[]) => {
   return 'Member'
 }
 
-const UserListCard = ({ name, role, id }: UserListProps) => {
+const UserListCard = ({ name, role, id, image }: UserListProps) => {
   const navigate = useNavigate()
   const [imageLoaded, setImageLoaded] = useState<boolean>(false)
   const { homePageCardBackground } = useCustomColors()
 
-  const loading = !name && imageLoaded
+  const loading = !name
 
   const roleText = findHighestPriorityRole(role)
   const { clickCard } = useClickCard()
@@ -72,10 +73,12 @@ const UserListCard = ({ name, role, id }: UserListProps) => {
                 maxW={{ base: '20%', sm: '20px' }}
                 maxH={{ base: '20%', sm: '20px' }}
                 borderRadius="lg"
-                src="https://bit.ly/dan-abramov"
-                // alt="Dan Abramov"
+                src={image}
+                // alt={name}
                 loading="lazy"
+                fallbackSrc="https://via.placeholder.com/150"
                 onLoad={() => setImageLoaded(true)} // Set imageLoaded to true when the image is loaded
+                onError={() => setImageLoaded(true)} // Set imageLoaded to true when the image is loaded
               />
 
               <Box pl={2}>

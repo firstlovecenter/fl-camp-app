@@ -33,4 +33,5 @@ interface UserData {
   id: string
   lastName: string
   roles: string[]
+  image_url: string
 }
