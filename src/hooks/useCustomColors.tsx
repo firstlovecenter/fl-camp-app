@@ -15,6 +15,7 @@ const useCustomColors = () => {
   const homePageOptionsSubtitle = useColorModeValue('#7DDB86', '#9AC2FF')
   const userCardBackground = useColorModeValue('#fff', '#171C22')
   const dropdownBackground = useColorModeValue('#fff', '#282D35')
+  const userCardStroke = useColorModeValue('#e2e8f0', '#374151')
 
   return {
     bg,
@@ -31,6 +32,7 @@ const useCustomColors = () => {
     homePageOptionsSubtitle,
     userCardBackground,
     dropdownBackground,
+    userCardStroke,
   }
 }
 
