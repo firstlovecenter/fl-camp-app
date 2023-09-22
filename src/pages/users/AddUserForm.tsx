@@ -1,6 +1,15 @@
-import { Box, Button, Container, Heading, Text } from '@chakra-ui/react'
+import {
+  Box,
+  Button,
+  Container,
+  Heading,
+  Text,
+  Alert,
+  AlertIcon,
+  AlertDescription,
+} from '@chakra-ui/react'
 import { ImageUpload, Input, Select } from '@jaedag/admin-portal-react-core'
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import * as Yup from 'yup'
 import 'yup-phone-lite'
 import { yupResolver } from '@hookform/resolvers/yup'
@@ -9,18 +18,22 @@ import { Controller, useForm } from 'react-hook-form'
 import { PhoneNumberInput } from 'components/PhoneNumberInput/PhoneNumberInput'
 import Countries from '../../utils/countries.json'
 import { CountryCode } from 'libphonenumber-js/types'
-
-type FormOptions = {
-  key: string
-  value: string
-}[]
+import {
+  getAuth,
+  createUserWithEmailAndPassword,
+  sendPasswordResetEmail,
+} from 'firebase/auth'
+import { doc, setDoc } from 'firebase/firestore'
+import { useFirestore } from 'reactfire'
+import { useNavigate } from 'react-router-dom'
 
 const AddUserForm = () => {
   const [error, setError] = useState('')
-  const [continents, setContinents] = useState<FormOptions>([])
+  const [showAlert, setShowAlert] = useState(false)
+  const navigate = useNavigate()
 
-  const [countries, setCountries] = useState<FormOptions>([])
-  const [campuses, setCampuses] = useState<FormOptions>([])
+  const auth = getAuth()
+  const firestore = useFirestore()
 
   const convertedCodes: string[] = Countries.map((country) => country.code)
   const countryCodes: CountryCode[] = convertedCodes as CountryCode[]
@@ -66,10 +79,36 @@ const AddUserForm = () => {
 
   const onSubmit = async (values: typeof initialValues) => {
     try {
-      // const result = await helloWorld()
-      // console.log(result)
-    } catch (error) {
-      console.log('function error', error)
+      const userCredential = await createUserWithEmailAndPassword(
+        auth,
+        values?.email,
+        import.meta.env.VITE_DEFAULT_PASSWORD
+      )
+
+      if (userCredential) {
+        await sendPasswordResetEmail(auth, email)
+
+        const data = {
+          firstName: values?.firstName,
+          lastName: values?.lastName,
+          email: values?.email,
+          phone: values?.phone,
+          dob: values?.dob.toISOString().slice(0, 10),
+          image_url: values?.pictureUrl,
+        }
+
+        const resulter = await setDoc(
+          doc(firestore, 'users', values?.email),
+          data
+        )
+
+        navigate('/users')
+      }
+    } catch (error: any) {
+      if (error?.code === 'auth/email-already-in-use') {
+        setError('Email already in use')
+        setShowAlert(true)
+      }
     }
 
     console.log(values)
@@ -143,9 +182,9 @@ const AddUserForm = () => {
             uploadPreset="developer-tests"
             cloudinaryAccount="firstlovecenter"
             user={{
-              id: email,
-              firstName: firstName,
-              lastName: lastName,
+              id: email ?? '',
+              firstName: firstName ?? '',
+              lastName: lastName ?? '',
             }}
             setValue={setValue}
             control={control}
@@ -154,6 +193,13 @@ const AddUserForm = () => {
             aria-describedby="ImageUpload"
           />
         </Box>
+
+        {showAlert && (
+          <Alert status="error">
+            <AlertIcon />
+            <AlertDescription>{error}</AlertDescription>
+          </Alert>
+        )}
 
         <Button
           marginTop={10}
