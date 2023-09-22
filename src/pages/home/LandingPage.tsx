@@ -5,6 +5,7 @@ import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from 'contexts/AuthContext'
 import { ApolloWrapper } from '@jaedag/admin-portal-react-core'
+import { Role } from '../../../global'
 
 const LandingPage = () => {
   // const [error, setError] = useState('')
@@ -30,7 +31,7 @@ const LandingPage = () => {
       <Box bg="body.bg">
         <Container my={6}>
           <Heading mb={4}>Welcome Camper!</Heading>
-          {roles ? (
+          {roles.length > 0 ? (
             roles.map((role: Role, index: number) => (
               <RoleCard
                 role={role}
@@ -39,7 +40,10 @@ const LandingPage = () => {
               />
             ))
           ) : (
-            <Text>You have no roles.</Text>
+            <Text>
+              Unfotunately you have no roles. Kindly contact the global admin to
+              assign you correctly
+            </Text>
           )}
         </Container>
       </Box>
