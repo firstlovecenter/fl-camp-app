@@ -56,7 +56,7 @@ const GlobalAdminHomePage = () => {
     homePageOptionsSubtitle,
   } = useCustomColors()
 
-  const email = currentUser.email as string
+  const email = currentUser?.email || ' '
 
   const ref = doc(firestore, 'users', email)
   const { status, data: user } = useFirestoreDocData(ref)

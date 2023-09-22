@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import {
   Container,
   Box,
@@ -14,8 +14,13 @@ import {
   StackDivider,
   CardBody,
   IconButton,
+  SkeletonCircle,
+  Menu,
+  MenuButton,
+  MenuList,
+  MenuItem,
 } from '@chakra-ui/react'
-import { DeleteIcon } from '@chakra-ui/icons'
+import { FaEllipsisH } from 'react-icons/fa'
 import useClickCard from 'hooks/useClickCard'
 import {
   useFirestore,
@@ -26,8 +31,10 @@ import { doc, collection } from 'firebase/firestore'
 import { ApolloWrapper } from '@jaedag/admin-portal-react-core'
 import useCustomColors from 'hooks/useCustomColors'
 import UserCampsCard from 'components/UserCampsCard'
+import Ellipsis from 'components/Ellipsis'
 
 const UserProfile = () => {
+  const [imageLoaded, setImageLoaded] = useState(false)
   const firestore = useFirestore()
   const { userId } = useClickCard()
   const { userCardBackground, userCardStroke } = useCustomColors()
@@ -74,47 +81,67 @@ const UserProfile = () => {
             <Text>Profile</Text>
           </Box>
           <Box>
-            {' '}
             <Card
-              pb={10}
+              pb={5}
               bg={userCardBackground}
               variant="outline"
               outline={4}
               outlineColor={userCardStroke}
             >
-              <CardBody>
-                <VStack alignItems="center">
-                  <Box py={8}></Box>
-                  <Box>
-                    <Image
-                      borderRadius="full"
-                      boxSize="100px"
-                      src="https://bit.ly/dan-abramov"
-                      alt="Dan Abramov"
-                    />
-                  </Box>
-                  <Box>
-                    <Text fontSize="2xl">
-                      {user?.firstName + ' ' + user?.lastName}
-                    </Text>
-                  </Box>
-                  <Box mt={3} maxWidth="97%">
-                    <Flex>
-                      <Button colorScheme="blue" size="sm" mr={1}>
-                        Call {user?.firstName}
-                      </Button>
-                      <Spacer />
-                      <Button colorScheme="gray" size="sm" mr={1}>
-                        Message
-                      </Button>
-                      <Spacer />
-                      <Button colorScheme="whatsapp" size="sm">
-                        Assign to Camp
-                      </Button>
-                    </Flex>
-                  </Box>
-                </VStack>
-              </CardBody>
+              <Box>
+                <CardBody>
+                  <Flex alignItems="center">
+                    <Spacer />
+
+                    <Menu>
+                      <MenuButton
+                        as={IconButton}
+                        aria-label="Options"
+                        icon={<FaEllipsisH />}
+                        variant="link"
+                      />
+                      <MenuList>
+                        <MenuItem>Edit User</MenuItem>
+                        <MenuItem>Delete User</MenuItem>
+                      </MenuList>
+                    </Menu>
+                  </Flex>
+                  <VStack alignItems="center">
+                    <Box py={1}></Box>
+                    <Box>
+                      <SkeletonCircle size="100" isLoaded={imageLoaded}>
+                        <Image
+                          borderRadius="full"
+                          boxSize="100px"
+                          src={user?.image_url}
+                          alt={user?.firstName + ' ' + user?.lastName}
+                          onLoad={() => setImageLoaded(true)}
+                        />
+                      </SkeletonCircle>
+                    </Box>
+                    <Box>
+                      <Text fontSize="2xl">
+                        {user?.firstName + ' ' + user?.lastName}
+                      </Text>
+                    </Box>
+                    <Box mt={3} maxWidth="97%">
+                      <Flex>
+                        <Button colorScheme="blue" size="sm" mr={1}>
+                          Call {user?.firstName}
+                        </Button>
+                        <Spacer />
+                        <Button colorScheme="gray" size="sm" mr={1}>
+                          Message
+                        </Button>
+                        <Spacer />
+                        <Button colorScheme="whatsapp" size="sm">
+                          Assign to Camp
+                        </Button>
+                      </Flex>
+                    </Box>
+                  </VStack>
+                </CardBody>
+              </Box>
             </Card>
           </Box>
           <Box mt={3}>
