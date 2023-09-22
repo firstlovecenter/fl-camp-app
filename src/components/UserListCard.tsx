@@ -47,8 +47,6 @@ const UserListCard = ({ name, role, id, image }: UserListProps) => {
   const [imageLoaded, setImageLoaded] = useState<boolean>(false)
   const { homePageCardBackground } = useCustomColors()
 
-  const loading = !name
-
   const roleText = findHighestPriorityRole(role)
   const { clickCard } = useClickCard()
 
@@ -57,6 +55,8 @@ const UserListCard = ({ name, role, id, image }: UserListProps) => {
     clickCard(card)
     navigate('/user-profile')
   }
+
+  const loading = !name
 
   return (
     <Card
@@ -74,11 +74,10 @@ const UserListCard = ({ name, role, id, image }: UserListProps) => {
                 maxH={{ base: '20%', sm: '20px' }}
                 borderRadius="lg"
                 src={image}
-                // alt={name}
+                alt={name}
                 loading="lazy"
-                fallbackSrc="https://via.placeholder.com/150"
+                // fallbackSrc="https://via.placeholder.com/150"
                 onLoad={() => setImageLoaded(true)} // Set imageLoaded to true when the image is loaded
-                onError={() => setImageLoaded(true)} // Set imageLoaded to true when the image is loaded
               />
 
               <Box pl={2}>
