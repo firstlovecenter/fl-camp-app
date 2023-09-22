@@ -4,9 +4,11 @@ import React from 'react'
 import { useFirestore, useFirestoreCollectionData } from 'reactfire'
 import { collection } from '@firebase/firestore'
 import UserSearch from 'components/UserSearch'
+import { useNavigate } from 'react-router-dom'
 
 const UserList = () => {
   const firestore = useFirestore()
+  const navigate = useNavigate()
   const userCollection = collection(firestore, 'users')
   const { status, data: users } = useFirestoreCollectionData(userCollection, {
     idField: 'id',
@@ -29,7 +31,13 @@ const UserList = () => {
         </Box>
         <Box>
           <Center>
-            <Button width="100%" my={4} py={7} colorScheme="telegram">
+            <Button
+              width="100%"
+              my={4}
+              py={7}
+              colorScheme="telegram"
+              onClick={() => navigate('/add-user')}
+            >
               Add A User
             </Button>
           </Center>
