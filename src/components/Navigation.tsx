@@ -25,10 +25,6 @@ function Navigation() {
       name: 'Home',
       link: '/',
     },
-    {
-      name: 'Directory',
-      link: '/directory',
-    },
   ]
 
   return (
