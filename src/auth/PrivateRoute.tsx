@@ -2,6 +2,7 @@ import { useAuth } from 'contexts/AuthContext'
 import LogIn from './LogIn'
 import { UnauthMsg } from './UnauthMsg'
 import { useEffect, useState } from 'react'
+import { Role } from '../../global'
 
 interface ProtectedRouteProps {
   children: JSX.Element

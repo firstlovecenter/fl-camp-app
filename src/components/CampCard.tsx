@@ -10,6 +10,7 @@ import {
 } from '@chakra-ui/react'
 import useCustomColorMode from '../hooks/useCustomColors'
 import { capitalizeFirstLetter, formatDateRange } from 'utils/utils'
+import { Camp } from '../../global'
 
 const CampCard = ({
   name,
