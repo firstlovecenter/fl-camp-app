@@ -6,15 +6,9 @@ import { useNavigate } from 'react-router-dom'
 import CampCard from 'components/CampCard'
 import { db } from 'firebase'
 import { useFirestore, useFirestoreCollectionData } from 'reactfire'
-import {
-  collection,
-  query,
-  doc,
-  getDoc,
-  where,
-  getDocs,
-} from 'firebase/firestore'
+import { collection, query, doc, getDoc } from 'firebase/firestore'
 import { ApolloWrapper } from '@jaedag/admin-portal-react-core'
+import { FetchedCampData } from '../../../global'
 
 const AdminHomePage = () => {
   const { currentUser } = useAuth()

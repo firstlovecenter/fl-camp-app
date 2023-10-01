@@ -11,6 +11,7 @@ import {
 import useCustomColors from 'hooks/useCustomColors'
 
 import { useNavigate } from 'react-router-dom'
+import { Role } from '../../global'
 
 type RoleCardProps = {
   role: Role
