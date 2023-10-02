@@ -16,6 +16,7 @@ import {
 import { db } from 'firebase'
 import { parseRegistrationOptions } from 'utils/utils'
 import { ApolloWrapper } from '@jaedag/admin-portal-react-core'
+import { FetchedCampDataCamper } from '../../../global'
 
 const CamperHomePage = () => {
   const { currentUser, logout } = useAuth()
