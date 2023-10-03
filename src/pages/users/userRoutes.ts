@@ -4,6 +4,7 @@ import { LazyRouteTypes } from '../../auth/auth-types'
 const UserList = lazy(() => import('./UserList'))
 const UserProfile = lazy(() => import('./UserProfile'))
 const AddUserForm = lazy(() => import('./AddUserForm'))
+const EditUserForm = lazy(() => import('./EditUserForm'))
 
 export const userRoutes: LazyRouteTypes[] = [
   {
@@ -21,6 +22,12 @@ export const userRoutes: LazyRouteTypes[] = [
   {
     path: '/add-user',
     element: AddUserForm,
+    placeholder: true,
+    roles: ['all'],
+  },
+  {
+    path: '/edit-user',
+    element: EditUserForm,
     placeholder: true,
     roles: ['all'],
   },

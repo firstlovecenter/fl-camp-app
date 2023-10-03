@@ -7,9 +7,8 @@ import {
   Alert,
   AlertIcon,
   AlertDescription,
-  useToast,
 } from '@chakra-ui/react'
-import { ImageUpload, Input } from '@jaedag/admin-portal-react-core'
+import { ImageUpload, Input, Select } from '@jaedag/admin-portal-react-core'
 import React, { useState } from 'react'
 import * as Yup from 'yup'
 import 'yup-phone-lite'
@@ -25,17 +24,22 @@ import {
   sendPasswordResetEmail,
 } from 'firebase/auth'
 import { doc, setDoc } from 'firebase/firestore'
-import { useFirestore } from 'reactfire'
+import { useFirestore, useFirestoreDocData } from 'reactfire'
 import { useNavigate } from 'react-router-dom'
+import useClickCard from 'hooks/useClickCard'
 
 const AddUserForm = () => {
   const [error, setError] = useState('')
-
+  const [showAlert, setShowAlert] = useState(false)
   const navigate = useNavigate()
-  const toast = useToast()
+  const { userId } = useClickCard()
+
+  const firestore = useFirestore()
+  const userEmail = userId as string
+  const ref = doc(firestore, 'users', userEmail)
+  const { status, data: user } = useFirestoreDocData(ref)
 
   const auth = getAuth()
-  const firestore = useFirestore()
 
   const convertedCodes: string[] = Countries.map((country) => country.code)
   const countryCodes: CountryCode[] = convertedCodes as CountryCode[]
@@ -43,12 +47,12 @@ const AddUserForm = () => {
   const date = new Date('1990-01-01')
 
   const initialValues = {
-    firstName: '',
-    lastName: '',
-    email: '',
-    phone: '',
-    dob: date,
-    pictureUrl: '',
+    firstName: user?.firstName,
+    lastName: user?.lastName,
+    email: user?.email,
+    phone: user?.phone,
+    dob: user?.dob,
+    pictureUrl: user?.image_url,
   }
 
   const validationSchema = Yup.object({
@@ -81,47 +85,25 @@ const AddUserForm = () => {
 
   const onSubmit = async (values: typeof initialValues) => {
     try {
-      const userCredential = await createUserWithEmailAndPassword(
-        auth,
-        values?.email,
-        import.meta.env.VITE_DEFAULT_PASSWORD
-      )
-
-      if (userCredential) {
-        await sendPasswordResetEmail(auth, email)
-
-        const data = {
+      const userRef = doc(firestore, 'users', user?.email)
+      await setDoc(
+        userRef,
+        {
           firstName: values?.firstName,
           lastName: values?.lastName,
           email: values?.email,
           phone: values?.phone,
           dob: values?.dob.toISOString().slice(0, 10),
           image_url: values?.pictureUrl,
-        }
+        },
+        { merge: true }
+      )
 
-        await setDoc(doc(firestore, 'users', values?.email), data)
-
-        toast({
-          title: 'Account created.',
-          description: "We've created your account for you.",
-          status: 'success',
-          duration: 4000,
-          isClosable: true,
-        })
-
-        navigate('/users')
-      }
+      navigate('/user-profile')
     } catch (error: any) {
       if (error?.code === 'auth/email-already-in-use') {
         setError('Email already in use')
-
-        toast({
-          title: 'Error.',
-          description: 'Email already in use.',
-          status: 'error',
-          duration: 4000,
-          isClosable: true,
-        })
+        setShowAlert(true)
       }
     }
 
@@ -207,6 +189,13 @@ const AddUserForm = () => {
             aria-describedby="ImageUpload"
           />
         </Box>
+
+        {showAlert && (
+          <Alert status="error">
+            <AlertIcon />
+            <AlertDescription>{error}</AlertDescription>
+          </Alert>
+        )}
 
         <Button
           marginTop={10}
