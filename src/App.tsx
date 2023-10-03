@@ -11,42 +11,45 @@ import { Suspense } from 'react'
 import { IdContextProvider } from 'contexts/IdContext'
 import { FirestoreProvider, useFirebaseApp } from 'reactfire'
 import { getFirestore } from 'firebase/firestore'
+import { UserContextProvider } from 'contexts/UserContext'
 
 const App = () => {
   const firestoreInstance = getFirestore(useFirebaseApp())
   return (
     <FirestoreProvider sdk={firestoreInstance}>
-      <IdContextProvider>
-        <AuthProvider>
-          <BrowserRouter>
-            <Navigation />
-            <Suspense fallback={<LoadingPage />}>
-              <Routes>
-                {[
-                  ...authRoutes,
-                  ...directoryRoutes,
-                  ...homeRoutes,
-                  ...userRoutes,
-                ].map((route, i) => (
-                  <Route
-                    key={i}
-                    path={route.path}
-                    element={
-                      <PrivateRoute
-                        roles={route.roles}
-                        placeholder={route.placeholder}
-                      >
-                        <route.element />
-                      </PrivateRoute>
-                    }
-                  />
-                ))}
-                <Route path="*" element={<PageNotFound />} />
-              </Routes>
-            </Suspense>
-          </BrowserRouter>
-        </AuthProvider>
-      </IdContextProvider>
+      <UserContextProvider>
+        <IdContextProvider>
+          <AuthProvider>
+            <BrowserRouter>
+              <Navigation />
+              <Suspense fallback={<LoadingPage />}>
+                <Routes>
+                  {[
+                    ...authRoutes,
+                    ...directoryRoutes,
+                    ...homeRoutes,
+                    ...userRoutes,
+                  ].map((route, i) => (
+                    <Route
+                      key={i}
+                      path={route.path}
+                      element={
+                        <PrivateRoute
+                          roles={route.roles}
+                          placeholder={route.placeholder}
+                        >
+                          <route.element />
+                        </PrivateRoute>
+                      }
+                    />
+                  ))}
+                  <Route path="*" element={<PageNotFound />} />
+                </Routes>
+              </Suspense>
+            </BrowserRouter>
+          </AuthProvider>
+        </IdContextProvider>
+      </UserContextProvider>
     </FirestoreProvider>
   )
 }
