@@ -14,18 +14,27 @@ import React from 'react'
 import { GiHamburgerMenu } from 'react-icons/gi'
 import { useNavigate } from 'react-router-dom'
 import { ColorModeSwitcher } from '../components/ColorModeSwitcher'
+import { useUserContext } from 'contexts/UserContext'
 
 function Navigation() {
   const { isOpen, onOpen, onClose } = useDisclosure()
   const btnRef = React.useRef(null)
   const navigate = useNavigate()
+  const { userProfile } = useUserContext()
 
   const menuItems = [
     {
       name: 'Home',
       link: '/',
     },
-  ]
+
+    userProfile && userProfile === 'globalAdmin'
+      ? {
+          name: 'Camps',
+          link: '/camps',
+        }
+      : null,
+  ].filter(Boolean)
 
   return (
     <>

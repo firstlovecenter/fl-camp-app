@@ -2,15 +2,13 @@ import { Heading, Text, Box, Container } from '@chakra-ui/react'
 import RoleCard from 'components/RoleCard'
 
 import React, { useEffect, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+
 import { useAuth } from 'contexts/AuthContext'
 import { ApolloWrapper } from '@jaedag/admin-portal-react-core'
 import { Role } from '../../../global'
 
 const LandingPage = () => {
-  // const [error, setError] = useState('')
   const { currentUser, logout } = useAuth()
-  const navigate = useNavigate()
   const [roles, setRoles] = useState<Role[]>([])
 
   const loading = !roles

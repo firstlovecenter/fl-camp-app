@@ -35,7 +35,7 @@ const CampCard = ({
     >
       <CardBody>
         <Stack>
-          <Heading size="md">{name}</Heading>
+          <Heading size="sm">{name}</Heading>
           <Wrap>
             <Tag colorScheme="telegram">{capitalizeFirstLetter(type)} Camp</Tag>
             {/* admin stuff */}
