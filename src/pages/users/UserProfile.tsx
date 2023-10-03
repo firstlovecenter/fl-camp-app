@@ -126,13 +126,20 @@ const UserProfile = () => {
                     </Box>
                     <Box mt={3} maxWidth="97%">
                       <Flex>
-                        <Button colorScheme="blue" size="sm" mr={1}>
-                          Call {user?.firstName}
-                        </Button>
+                        <a href={`tel:${user?.phone}`}>
+                          <Button colorScheme="blue" size="sm" mr={1}>
+                            Call {user?.firstName}
+                          </Button>
+                        </a>
                         <Spacer />
-                        <Button colorScheme="gray" size="sm" mr={1}>
-                          Message
-                        </Button>
+                        <a
+                          href={`https://wa.me/${user?.phone}`}
+                          className="ms-3"
+                        >
+                          <Button colorScheme="gray" size="sm" mr={1}>
+                            Message
+                          </Button>
+                        </a>
                         <Spacer />
                         <Button colorScheme="whatsapp" size="sm">
                           Assign to Camp
