@@ -101,7 +101,9 @@ const UserProfile = () => {
                         variant="link"
                       />
                       <MenuList>
-                        <MenuItem>Edit User</MenuItem>
+                        <MenuItem onClick={() => handleEditUser()}>
+                          Edit User
+                        </MenuItem>
                         <MenuItem>Delete User</MenuItem>
                       </MenuList>
                     </Menu>
