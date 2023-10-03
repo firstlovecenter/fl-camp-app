@@ -23,7 +23,7 @@ import {
 } from '@chakra-ui/react'
 import React, { useEffect, useState } from 'react'
 import useCustomColors from 'hooks/useCustomColors'
-import { useFirestore } from 'reactfire'
+import { useFirestore, useUser } from 'reactfire'
 import {
   collection,
   getCountFromServer,
@@ -33,6 +33,7 @@ import {
 import { db } from 'firebase'
 import { ApolloWrapper } from '@jaedag/admin-portal-react-core'
 import { useNavigate } from 'react-router-dom'
+import { useUserContext } from 'contexts/UserContext'
 
 interface CampCounts {
   totalCount: number
@@ -40,6 +41,8 @@ interface CampCounts {
 }
 
 const GlobalAdminHomePage = () => {
+  const { userProfile } = useUserContext()
+  console.log('userProfile', userProfile)
   const [campCounts, setCampCounts] = useState<CampCounts>({
     totalCount: 0,
     activeTotalCount: 0,

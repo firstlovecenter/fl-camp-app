@@ -16,7 +16,7 @@ const UserContext = createContext<UserContextType>({
   setUserProfile: () => null,
 })
 
-export const useUser = () => {
+export const useUserContext = () => {
   return useContext(UserContext)
 }
 

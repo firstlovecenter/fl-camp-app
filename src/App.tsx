@@ -6,6 +6,7 @@ import { authRoutes } from 'auth/authRoutes'
 import { directoryRoutes } from 'pages/directory/directoryRoutes'
 import { homeRoutes } from 'pages/home/homeRoutes'
 import { userRoutes } from 'pages/users/userRoutes'
+import { campRoutes } from 'pages/camps/campRoutes'
 import { LoadingPage, PageNotFound } from '@jaedag/admin-portal-react-core'
 import { Suspense } from 'react'
 import { IdContextProvider } from 'contexts/IdContext'
@@ -29,6 +30,7 @@ const App = () => {
                     ...directoryRoutes,
                     ...homeRoutes,
                     ...userRoutes,
+                    ...campRoutes,
                   ].map((route, i) => (
                     <Route
                       key={i}

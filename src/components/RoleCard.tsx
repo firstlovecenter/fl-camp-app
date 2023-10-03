@@ -8,6 +8,7 @@ import {
   Text,
   HStack,
 } from '@chakra-ui/react'
+import { useUserContext } from 'contexts/UserContext'
 import useCustomColors from 'hooks/useCustomColors'
 
 import { useNavigate } from 'react-router-dom'
@@ -21,6 +22,7 @@ type RoleCardProps = {
 const RoleCard = ({ role, name }: RoleCardProps) => {
   const navigate = useNavigate()
   const { profileCardBackground } = useCustomColors()
+  const { setUserProfile } = useUserContext()
 
   let roleText = ''
   let route = ''
@@ -38,10 +40,16 @@ const RoleCard = ({ role, name }: RoleCardProps) => {
       route = '/camper'
       break
   }
+
+  const handleClick = () => {
+    setUserProfile(role)
+    navigate(route)
+  }
+
   return (
     <Card
       maxW="md"
-      onClick={() => navigate(route)}
+      onClick={() => handleClick()}
       bg={profileCardBackground}
       mb={2}
     >
