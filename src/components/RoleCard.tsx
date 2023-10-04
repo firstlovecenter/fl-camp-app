@@ -4,7 +4,6 @@ import {
   Avatar,
   Box,
   Center,
-  Stack,
   Text,
   HStack,
 } from '@chakra-ui/react'

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import { Box, Button, Container, Heading, Stack, Text } from '@chakra-ui/react'
 import DetailsCard from '../../../components/DetailsCard'
 import { useNavigate } from 'react-router-dom'

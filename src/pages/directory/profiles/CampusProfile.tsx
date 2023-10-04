@@ -1,20 +1,12 @@
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import { Box, Button, Container, Heading, Stack, Text } from '@chakra-ui/react'
 import DetailsCard from '../../../components/DetailsCard'
 import { useNavigate } from 'react-router-dom'
-import { doc, getDoc } from '@firebase/firestore'
-import { db } from 'firebase'
+import { doc } from '@firebase/firestore'
+
 import { useChurchId } from 'contexts/IdContext'
 import { useFirestore, useFirestoreDocData } from 'reactfire'
 import { ApolloWrapper } from '@jaedag/admin-portal-react-core'
-
-interface PageDetails {
-  registrations: number
-  paidRegistrations: number
-  countries: number
-  name: string
-  id: string
-}
 
 const CampusProfile = () => {
   const navigate = useNavigate()

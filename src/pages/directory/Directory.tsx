@@ -1,9 +1,8 @@
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import MenuCard from '../../components/MenuCard'
 import { Container, Heading } from '@chakra-ui/react'
-import { collection, getDocs, query, orderBy } from '@firebase/firestore'
-import { db } from 'firebase'
-import { DataItem } from 'utils/MenuDataTypes'
+import { collection, query, orderBy } from '@firebase/firestore'
+
 import { menuItemsPlaceholder } from 'utils/placeholders'
 import { useFirestore, useFirestoreCollectionData } from 'reactfire'
 import { ApolloWrapper } from '@jaedag/admin-portal-react-core'

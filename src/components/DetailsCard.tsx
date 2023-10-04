@@ -6,7 +6,6 @@ import {
   Stat,
   StatLabel,
   StatNumber,
-  Text,
 } from '@chakra-ui/react'
 import useCustomColorMode from '../hooks/useCustomColors'
 

@@ -22,7 +22,7 @@ const LandingPage = () => {
     }
 
     getRoles()
-  }, [])
+  }, [currentUser])
 
   return (
     <ApolloWrapper data={roles} loading={loading}>

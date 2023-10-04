@@ -1,10 +1,8 @@
-import { Container, Text, Center, Box } from '@chakra-ui/layout'
+import { Container, Box } from '@chakra-ui/layout'
 import React, { useEffect, useState } from 'react'
 import { useAuth } from 'contexts/AuthContext'
 import { Heading } from '@chakra-ui/react'
-import { useNavigate } from 'react-router-dom'
 import CampCard from 'components/CampCard'
-import { db } from 'firebase'
 import { useFirestore, useFirestoreCollectionData } from 'reactfire'
 import { collection, query, doc, getDoc } from 'firebase/firestore'
 import { ApolloWrapper } from '@jaedag/admin-portal-react-core'
@@ -54,7 +52,7 @@ const AdminHomePage = () => {
     }
 
     fetchData()
-  }, [campsData, db, email, firestore])
+  }, [campsData, email, firestore])
 
   return (
     <ApolloWrapper data={camps} loading={loading}>

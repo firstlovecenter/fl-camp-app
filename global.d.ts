@@ -5,6 +5,7 @@ interface Camp {
   role: string
   startDate: string
   endDate: string
+  campType: string
   registrationStatus?: string
   paymentStatus?: string
   campStatus?: boolean

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useForm, Controller } from 'react-hook-form'
-import { Container, FormControl, Input, Box } from '@chakra-ui/react'
+import { FormControl, Input, Box } from '@chakra-ui/react'
 import UserListCard from './UserListCard'
 import { UserData } from '../../global'
 
