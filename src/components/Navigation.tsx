@@ -22,19 +22,29 @@ function Navigation() {
   const navigate = useNavigate()
   const { userProfile } = useUserContext()
 
-  const menuItems = [
-    {
-      name: 'Home',
-      link: '/',
-    },
-
-    userProfile === 'globalAdmin'
-      ? {
+  let menuItems = []
+  switch (userProfile) {
+    case 'globalAdmin':
+      menuItems = [
+        {
+          name: 'Home',
+          link: '/',
+        },
+        {
           name: 'Camps',
           link: '/camps',
-        }
-      : null,
-  ].filter(Boolean)
+        },
+      ]
+      break
+    default:
+      menuItems = [
+        {
+          name: 'Home',
+          link: '/',
+        },
+      ]
+      break
+  }
 
   return (
     <>
