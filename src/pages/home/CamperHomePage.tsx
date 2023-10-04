@@ -66,6 +66,7 @@ const CamperHomePage = () => {
               startDate: campee.data()?.startDate,
               endDate: campee.data()?.endDate,
               campStatus: false,
+              campType: campee.data()?.campType,
             })
           })
         )
