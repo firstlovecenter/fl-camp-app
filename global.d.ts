@@ -20,6 +20,7 @@ interface FetchedCampData {
   startDate: string
   endDate: string
   campStatus: boolean
+  campType: string
 }
 
 interface FetchedCampDataCamper extends FetchedCampData {

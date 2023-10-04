@@ -42,6 +42,7 @@ const AdminHomePage = () => {
               startDate: campee.data()?.startDate,
               endDate: campee.data()?.endDate,
               campStatus: campee.data()?.campStatus,
+              campType: campee.data()?.campType,
             })
           })
         )
