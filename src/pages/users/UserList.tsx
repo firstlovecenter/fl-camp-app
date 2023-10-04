@@ -11,7 +11,7 @@ const UserList = () => {
   const firestore = useFirestore()
   const navigate = useNavigate()
   const userCollection = collection(firestore, 'users')
-  const { status, data: users } = useFirestoreCollectionData(userCollection, {
+  const { data: users } = useFirestoreCollectionData(userCollection, {
     idField: 'id',
   })
 

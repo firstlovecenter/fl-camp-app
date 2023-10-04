@@ -3,7 +3,6 @@ import {
   Box,
   Center,
   Container,
-  SimpleGrid,
   Wrap,
   WrapItem,
   Heading,
@@ -16,14 +15,13 @@ import {
   CardBody,
   Divider,
   Tag,
-  SkeletonText,
   Skeleton,
   Flex,
   Spacer,
 } from '@chakra-ui/react'
 import React, { useEffect, useState } from 'react'
 import useCustomColors from 'hooks/useCustomColors'
-import { useFirestore, useUser } from 'reactfire'
+
 import {
   collection,
   getCountFromServer,
@@ -49,7 +47,6 @@ const GlobalAdminHomePage = () => {
   })
   const navigate = useNavigate()
   const {
-    bg,
     homePageCardBackground,
     homePageCardText,
     homePageCardTextEmphasis,

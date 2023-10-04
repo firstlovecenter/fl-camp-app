@@ -14,7 +14,7 @@ import { Camp } from '../../global'
 
 const CampCard = ({
   name,
-  type,
+  campType,
   roomOption,
   role,
   registrationStatus,
@@ -37,7 +37,9 @@ const CampCard = ({
         <Stack>
           <Heading size="sm">{name}</Heading>
           <Wrap>
-            <Tag colorScheme="telegram">{capitalizeFirstLetter(type)} Camp</Tag>
+            <Tag colorScheme="telegram">
+              {capitalizeFirstLetter(campType)} Camp
+            </Tag>
             {/* admin stuff */}
             {role === 'Admin' && (
               <Tag colorScheme={campStatus ? 'whatsapp' : 'red'}>

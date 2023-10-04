@@ -28,7 +28,7 @@ function Navigation() {
       link: '/',
     },
 
-    userProfile && userProfile === 'globalAdmin'
+    userProfile === 'globalAdmin'
       ? {
           name: 'Camps',
           link: '/camps',

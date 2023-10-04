@@ -11,8 +11,8 @@ import { ApolloWrapper } from '@jaedag/admin-portal-react-core'
 import CampCard from 'components/CampCard'
 import { collection } from '@firebase/firestore'
 import React from 'react'
-import { useNavigate } from 'react-router-dom'
 import { useFirestore, useFirestoreCollectionData } from 'reactfire'
+import { Camp } from '../../../global'
 
 const Camps = () => {
   //   const navigate = useNavigate()
@@ -56,10 +56,10 @@ const Camps = () => {
           </Button>
         </Stack>
         {camps ? (
-          camps?.map((camp: any, index: number) => (
+          camps?.map((camp: Camp, index: number) => (
             <CampCard
               name={camp?.name}
-              type={camp?.campType}
+              campType={camp?.campType}
               roomOption={camp?.roomOption}
               startDate={camp?.startDate}
               endDate={camp?.endDate}

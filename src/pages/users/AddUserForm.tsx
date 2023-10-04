@@ -8,7 +8,7 @@ import {
   AlertIcon,
   AlertDescription,
 } from '@chakra-ui/react'
-import { ImageUpload, Input, Select } from '@jaedag/admin-portal-react-core'
+import { ImageUpload, Input } from '@jaedag/admin-portal-react-core'
 import React, { useState } from 'react'
 import * as Yup from 'yup'
 import 'yup-phone-lite'
@@ -97,10 +97,7 @@ const AddUserForm = () => {
           image_url: values?.pictureUrl,
         }
 
-        const resulter = await setDoc(
-          doc(firestore, 'users', values?.email),
-          data
-        )
+        await setDoc(doc(firestore, 'users', values?.email), data)
 
         navigate('/users')
       }
