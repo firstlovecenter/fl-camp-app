@@ -63,7 +63,7 @@ const AdminHomePage = () => {
             {camps?.map((camp, index) => (
               <CampCard
                 name={camp?.name}
-                type={camp?.campLevel}
+                campType={camp?.campType}
                 registrationStatus={''}
                 paymentStatus={''}
                 role={camp?.role}

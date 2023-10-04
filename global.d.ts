@@ -1,6 +1,5 @@
 interface Camp {
   name: string
-  type: string
   roomOption: string
   role: string
   startDate: string
