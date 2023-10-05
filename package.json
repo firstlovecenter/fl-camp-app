@@ -42,6 +42,7 @@
     "@hookform/resolvers": "^3.2.0",
     "@jaedag/admin-portal-react-core": "^2.0.7",
     "@vitejs/plugin-react": "^3.1.0",
+    "axios": "^1.5.1",
     "execa": "^4.0.2",
     "firebase-tools": "^12.4.8",
     "firebaseui": "^6.0.2",

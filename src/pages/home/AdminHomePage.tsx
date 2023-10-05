@@ -26,13 +26,15 @@ const AdminHomePage = () => {
     idField: 'id',
   })
 
+  console.log('campsData', campsData)
+
   useEffect(() => {
     const fetchData = async () => {
       const fetchedCamps: FetchedCampData[] = []
       if (Array.isArray(campsData)) {
         await Promise.all(
           campsData?.map(async (camp) => {
-            const campee = await getDoc(doc(firestore, 'camps', camp.id))
+            const campee = await getDoc(doc(firestore, 'camps', camp?.campId))
 
             fetchedCamps.push({
               id: camp.id,
@@ -47,6 +49,8 @@ const AdminHomePage = () => {
           })
         )
       }
+
+      console.log('fetchedCamps', fetchedCamps)
 
       setcamps(fetchedCamps)
       setLoading(false)

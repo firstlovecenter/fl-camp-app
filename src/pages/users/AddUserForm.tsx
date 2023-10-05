@@ -4,9 +4,6 @@ import {
   Container,
   Heading,
   Text,
-  Alert,
-  AlertIcon,
-  AlertDescription,
   useToast,
 } from '@chakra-ui/react'
 import { ImageUpload, Input } from '@jaedag/admin-portal-react-core'
