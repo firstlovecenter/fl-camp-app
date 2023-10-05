@@ -72,3 +72,18 @@ export const capitalizeFirstLetter = (str: string) => {
   // Using replace method with regEx
   return str.charAt(0).toUpperCase() + str.slice(1)
 }
+
+export const churchLevel = (campLevel: string) => {
+  switch (campLevel) {
+    case 'campusAdmin':
+      return 'campus'
+    case 'countryAdmin':
+      return 'country'
+    case 'continentAdmin':
+      return 'continent'
+    case 'globalAdmin':
+      return 'global'
+    default:
+      return 'campus'
+  }
+}
