@@ -62,36 +62,10 @@ const UserProfile = () => {
   const userEmail = userId as string
   const userReference = doc(firestore, 'users', userEmail)
   const { status, data: user } = useFirestoreDocData(userReference)
-  const campAdminCollection = collection(
-    firestore,
-    'users',
-    userEmail,
-    'camp_admin'
-  )
-  const {
-    status: campsCollectionstatus,
-    data: campAdmin,
-    error: campAdminError,
-  } = useFirestoreCollectionData(campAdminCollection, {
-    idField: 'id',
-  })
-  if (campAdminError) {
-    console.error('Error fetching campAdmin:', campAdminError)
-  }
-  const campCamperCollection = collection(
-    firestore,
-    'users',
-    userEmail,
-    'camp_camper'
-  )
-  const { status: campCamperStatus, data: campCamper } =
-    useFirestoreCollectionData(campCamperCollection, {
-      idField: 'id',
-    })
 
   let allCamps: any[] = []
-  if (campAdmin && campCamper) {
-    allCamps = [...campAdmin, ...campCamper]
+  if (user?.camp_admin && user?.camp_camper) {
+    allCamps = [...user.camp_admin, ...user.camp_camper]
   }
 
   const campsCollectionRef = collection(firestore, 'camps')
@@ -109,7 +83,7 @@ const UserProfile = () => {
     })
   }
 
-  const loading = !user || !campAdmin || !campCamper || !campsCollection
+  const loading = !user || !campsCollection
 
   return (
     <ApolloWrapper data={user} loading={loading}>
@@ -251,7 +225,7 @@ const UserProfile = () => {
                     {allCamps.map((camp) => (
                       <UserCampsCard
                         camp={camp}
-                        key={camp.id}
+                        key={camp.campId}
                         onOpenSecondModal={onOpenSecondModal}
                       />
                     ))}

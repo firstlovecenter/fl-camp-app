@@ -11,6 +11,7 @@ import {
   Heading,
   Text,
   Box,
+  useToast,
 } from '@chakra-ui/react'
 import { Select } from '@jaedag/admin-portal-react-core'
 import { ModalProps, SelectOptions } from '../../../global'
@@ -19,8 +20,8 @@ import { useForm } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { getFunctions, httpsCallable } from 'firebase/functions'
 import { churchLevel } from 'utils/utils'
-import { addDoc, collection, doc } from 'firebase/firestore'
-import { useFirestore, useFirestoreCollectionData } from 'reactfire'
+import { doc, getDoc, updateDoc } from 'firebase/firestore'
+import { useFirestore } from 'reactfire'
 
 interface AssignAdminToCampModalProps extends ModalProps {
   user: string
@@ -36,6 +37,7 @@ const AssignAdminToCampModal = ({
 }: AssignAdminToCampModalProps) => {
   //   const campOptions = [{ key: 'abcde', value: 'abcde' }]
   const firestore = useFirestore()
+  const toast = useToast()
 
   const initialValues = {
     campLevel: '',
@@ -77,15 +79,40 @@ const AssignAdminToCampModal = ({
       console.log('callable response', callableResponse)
 
       const userReference = doc(firestore, 'users', user)
+      //TODO check if the camp already exists in the user's camp_admin array
+      const userData = await getDoc(doc(firestore, 'users', user))
+      const adminCamps = userData.data()?.camp_admin || []
 
-      await addDoc(collection(userReference, 'camp_admin'), {
+      const campAdmin = [...adminCamps]
+
+      const newCampObject = {
         campId: campId,
         churchLevel: churchLevel(campLevel),
         name: camp?.key,
         role: campLevel,
+      }
+      campAdmin.push(newCampObject)
+
+      const res = await updateDoc(userReference, {
+        camp_admin: campAdmin,
+      })
+
+      toast({
+        title: 'User Assigned',
+        description: 'User has been made an admin',
+        status: 'success',
+        duration: 4000,
+        isClosable: true,
       })
     } catch (error) {
       console.log(error)
+      toast({
+        title: 'User Not  Assigned',
+        description: 'There was an error making the user and admin',
+        status: 'error',
+        duration: 4000,
+        isClosable: true,
+      })
     }
   }
 
