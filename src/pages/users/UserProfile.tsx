@@ -20,12 +20,6 @@ import {
   MenuList,
   MenuItem,
   useDisclosure,
-  Modal,
-  ModalOverlay,
-  ModalContent,
-  ModalFooter,
-  ModalBody,
-  ModalCloseButton,
 } from '@chakra-ui/react'
 import { FaEllipsisH } from 'react-icons/fa'
 import useClickCard from 'hooks/useClickCard'
@@ -34,39 +28,34 @@ import {
   useFirestoreCollectionData,
   useFirestoreDocData,
 } from 'reactfire'
-import { doc, collection, addDoc } from 'firebase/firestore'
-import { ApolloWrapper, Select } from '@jaedag/admin-portal-react-core'
+import { doc, collection } from 'firebase/firestore'
+import { ApolloWrapper } from '@jaedag/admin-portal-react-core'
 import useCustomColors from 'hooks/useCustomColors'
 import UserCampsCard from 'components/UserCampsCard'
-import * as Yup from 'yup'
-import { useForm } from 'react-hook-form'
-import { yupResolver } from '@hookform/resolvers/yup'
-import axios from 'axios'
-import { getFunctions, httpsCallable } from 'firebase/functions'
-
-interface CampOption {
-  key: string
-  value: string
-}
-
-const churchLevel = (campLevel: string) => {
-  switch (campLevel) {
-    case 'campusAdmin':
-      return 'campus'
-    case 'countryAdmin':
-      return 'country'
-    case 'continentAdmin':
-      return 'continent'
-    case 'globalAdmin':
-      return 'global'
-    default:
-      return 'campus'
-  }
-}
+import { SelectOptions } from '../../../global'
+import AssignAdminToCampModal from 'components/modals/AssignAdminUserModal'
+import RemoveUserFromCampModal from 'components/modals/RemoveUserFromCampModal'
 
 const UserProfile = () => {
+  const [isOpenFirstModal, setIsOpenFirstModal] = useState(false)
+  const [isOpenSecondModal, setIsOpenSecondModal] = useState(false)
+
+  // Handler to open/close the first modal
+  const onOpenFirstModal = () => setIsOpenFirstModal(true)
+  const onCloseFirstModal = () => setIsOpenFirstModal(false)
+
+  // Handler to open/close the second modal
+  const onOpenSecondModal = () => setIsOpenSecondModal(true)
+  const onCloseSecondModal = () => setIsOpenSecondModal(false)
+
+  // Submit handler for both modals
+  const onSubmitModal = () => {
+    // Handle submission logic here
+  }
+
   const [imageLoaded, setImageLoaded] = useState(false)
   const { isOpen, onOpen, onClose } = useDisclosure()
+
   const firestore = useFirestore()
   const { userId } = useClickCard()
   const { userCardBackground, userCardStroke } = useCustomColors()
@@ -100,6 +89,11 @@ const UserProfile = () => {
       idField: 'id',
     })
 
+  let allCamps: any[] = []
+  if (campAdmin && campCamper) {
+    allCamps = [...campAdmin, ...campCamper]
+  }
+
   const campsCollectionRef = collection(firestore, 'camps')
   const {
     status: campsStatus,
@@ -107,68 +101,12 @@ const UserProfile = () => {
     error: campError,
   } = useFirestoreCollectionData(campsCollectionRef, { idField: 'id' })
 
-  const campOptions: CampOption[] = []
+  const campOptions: SelectOptions[] = []
 
-  campsCollection.forEach((camp) => {
-    campOptions.push({ key: camp.name, value: camp.id })
-  })
-
-  let allCamps: any[] = []
-  if (campAdmin && campCamper) {
-    allCamps = [...campAdmin, ...campCamper]
-  }
-
-  const initialValues = {
-    campLevel: '',
-    camp: '',
-  }
-
-  const validationSchema = Yup.object({
-    campLevel: Yup.string().required('Camp Level is a required field'),
-    camp: Yup.string().required('Camp is a required field'),
-  })
-
-  const {
-    handleSubmit,
-    control,
-    formState: { errors, isSubmitting },
-  } = useForm<typeof initialValues>({
-    resolver: yupResolver(validationSchema),
-    defaultValues: initialValues,
-  })
-
-  const onSubmit = async (values: typeof initialValues) => {
-    try {
-      console.log('Form submitted with values:', values)
-
-      console.log(values)
-
-      const campLevel = values.campLevel
-      const campId = values.camp
-
-      const camp = campOptions.find((camp) => camp.value === campId)
-
-      const functions = getFunctions()
-      const addClaimsToUser = httpsCallable(
-        functions,
-        'addClaimsToUsersCallable'
-      )
-
-      const callableResponse = await addClaimsToUser({
-        email: userEmail,
-        permission: campLevel,
-      })
-      console.log('callable response', callableResponse)
-
-      await addDoc(collection(userReference, 'camp_admin'), {
-        campId: campId,
-        churchLevel: churchLevel(campLevel),
-        name: camp?.key,
-        role: campLevel,
-      })
-    } catch (error) {
-      console.log(error)
-    }
+  if (campsCollection && campsCollection.length > 0) {
+    campsCollection.forEach((camp) => {
+      campOptions.push({ key: camp.name, value: camp.id })
+    })
   }
 
   const loading = !user || !campAdmin || !campCamper || !campsCollection
@@ -176,62 +114,21 @@ const UserProfile = () => {
   return (
     <ApolloWrapper data={user} loading={loading}>
       <Container p={6}>
-        <Modal
-          isOpen={isOpen}
-          onClose={onClose}
-          size={'xs'}
-          scrollBehavior={'inside'}
-        >
-          <ModalOverlay />
-          <ModalContent>
-            <ModalCloseButton />
-            <ModalBody pb={6}>
-              <Heading>Users</Heading>
-              <Text>Assign to A Camp</Text>
+        {/* Render the first modal */}
+        <AssignAdminToCampModal
+          isOpen={isOpenFirstModal}
+          onClose={onCloseFirstModal}
+          onSubmit={onSubmitModal}
+          campOptions={campOptions}
+          user={userEmail}
+        />
 
-              <form onSubmit={handleSubmit(onSubmit)}>
-                <Box my={3}>
-                  <Select
-                    name="campLevel"
-                    label="Level"
-                    placeholder="Level"
-                    options={[
-                      { key: 'Campus Admin', value: 'campusAdmin' },
-                      { key: 'Country Admin', value: 'countryAdmin' },
-                      { key: 'Continent Admin', value: 'continentAdmin' },
-                      { key: 'Global Admin', value: 'globalAdmin' },
-                    ]}
-                    control={control}
-                    errors={errors}
-                  />
-                </Box>
-
-                <Box my={3}>
-                  <Select
-                    name="camp"
-                    label="Camps"
-                    placeholder="Camps"
-                    options={campOptions}
-                    control={control}
-                    errors={errors}
-                  />
-                </Box>
-
-                <ModalFooter>
-                  <Button
-                    type="submit"
-                    size="lg"
-                    width="100%"
-                    isLoading={isSubmitting}
-                    colorScheme="blue"
-                  >
-                    Assign
-                  </Button>
-                </ModalFooter>
-              </form>
-            </ModalBody>
-          </ModalContent>
-        </Modal>
+        {/* Render the second modal */}
+        <RemoveUserFromCampModal
+          isOpen={isOpenSecondModal}
+          onClose={onCloseSecondModal}
+          onSubmit={onSubmitModal}
+        />
 
         <Stack>
           <Box>
@@ -302,7 +199,7 @@ const UserProfile = () => {
                         <Button
                           colorScheme="whatsapp"
                           size="sm"
-                          onClick={onOpen}
+                          onClick={onOpenFirstModal}
                         >
                           Assign to Camp
                         </Button>
@@ -352,7 +249,11 @@ const UserProfile = () => {
                 <Card bg={userCardBackground} variant="outline">
                   <CardBody>
                     {allCamps.map((camp) => (
-                      <UserCampsCard camp={camp} key={camp.id} />
+                      <UserCampsCard
+                        camp={camp}
+                        key={camp.id}
+                        onOpenSecondModal={onOpenSecondModal}
+                      />
                     ))}
                   </CardBody>
                 </Card>

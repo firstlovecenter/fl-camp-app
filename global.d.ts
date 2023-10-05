@@ -53,3 +53,14 @@ export interface Member {
   whatsappNumber: string
   pictureUrl: string
 }
+
+export interface ModalProps {
+  isOpen: boolean
+  onClose: () => void
+  onSubmit: () => void
+}
+
+export interface SelectOptions {
+  key: string
+  value: string
+}

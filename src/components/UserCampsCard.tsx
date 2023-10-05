@@ -20,7 +20,13 @@ const formatCampTitle = (title: string) => {
   }
   return 'No Title'
 }
-const UserCampsCard = ({ camp }: { camp: any }) => {
+const UserCampsCard = ({
+  camp,
+  onOpenSecondModal,
+}: {
+  camp: any
+  onOpenSecondModal: () => void
+}) => {
   if (!('role' in camp)) {
     camp.role = 'Member'
   }
@@ -41,6 +47,7 @@ const UserCampsCard = ({ camp }: { camp: any }) => {
           variant="outline"
           size="xs"
           icon={<DeleteIcon />}
+          onClick={onOpenSecondModal}
         />
       </Flex>
     </Box>

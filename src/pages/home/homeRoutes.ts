@@ -10,7 +10,7 @@ export const homeRoutes: LazyRouteTypes[] = [
     path: '/admin',
     element: AdminHomePage,
     placeholder: true,
-    roles: ['campusAdmin', 'globalAdmin'],
+    roles: ['campusAdmin', 'countryAdmin', 'continentAdmin', 'globalAdmin'],
   },
   {
     path: '/camper',
