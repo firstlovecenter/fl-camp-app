@@ -22,6 +22,7 @@ const useCustomColors = () => {
   const generalBackground = useColorModeValue('#fff', '#1E202C')
   const sideBarBackground = useColorModeValue('#fff', '#171923')
   const navBg = useColorModeValue('#00000014', '#1A202C')
+  const registerMemberCardBackground = useColorModeValue('#fff', '#1A1A1E')
 
   return {
     bg,
@@ -45,6 +46,7 @@ const useCustomColors = () => {
     generalBackground,
     navBg,
     sideBarBackground,
+    registerMemberCardBackground,
   }
 }
 

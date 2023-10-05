@@ -40,9 +40,12 @@ interface UserData {
   firstName: string
   id: string
   lastName: string
-  roles: string[]
   image_url: string
+<<<<<<< HEAD
   email: string
+=======
+  roles?: string[]
+>>>>>>> 9f4cf98 (fix: change user camp data to object field instead of subcollection)
 }
 
 export interface Member {
