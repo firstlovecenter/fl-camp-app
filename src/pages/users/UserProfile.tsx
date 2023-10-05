@@ -19,6 +19,13 @@ import {
   MenuButton,
   MenuList,
   MenuItem,
+  useDisclosure,
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalFooter,
+  ModalBody,
+  ModalCloseButton,
 } from '@chakra-ui/react'
 import { FaEllipsisH } from 'react-icons/fa'
 import useClickCard from 'hooks/useClickCard'
@@ -27,20 +34,45 @@ import {
   useFirestoreCollectionData,
   useFirestoreDocData,
 } from 'reactfire'
-import { doc, collection } from 'firebase/firestore'
-import { ApolloWrapper } from '@jaedag/admin-portal-react-core'
+import { doc, collection, addDoc } from 'firebase/firestore'
+import { ApolloWrapper, Select } from '@jaedag/admin-portal-react-core'
 import useCustomColors from 'hooks/useCustomColors'
 import UserCampsCard from 'components/UserCampsCard'
-import Ellipsis from 'components/Ellipsis'
+import * as Yup from 'yup'
+import { useForm } from 'react-hook-form'
+import { yupResolver } from '@hookform/resolvers/yup'
+import axios from 'axios'
+import { getFunctions, httpsCallable } from 'firebase/functions'
+
+interface CampOption {
+  key: string
+  value: string
+}
+
+const churchLevel = (campLevel: string) => {
+  switch (campLevel) {
+    case 'campusAdmin':
+      return 'campus'
+    case 'countryAdmin':
+      return 'country'
+    case 'continentAdmin':
+      return 'continent'
+    case 'globalAdmin':
+      return 'global'
+    default:
+      return 'campus'
+  }
+}
 
 const UserProfile = () => {
   const [imageLoaded, setImageLoaded] = useState(false)
+  const { isOpen, onOpen, onClose } = useDisclosure()
   const firestore = useFirestore()
   const { userId } = useClickCard()
   const { userCardBackground, userCardStroke } = useCustomColors()
   const userEmail = userId as string
-  const ref = doc(firestore, 'users', userEmail)
-  const { status, data: user } = useFirestoreDocData(ref)
+  const userReference = doc(firestore, 'users', userEmail)
+  const { status, data: user } = useFirestoreDocData(userReference)
   const campAdminCollection = collection(
     firestore,
     'users',
@@ -67,14 +99,140 @@ const UserProfile = () => {
     useFirestoreCollectionData(campCamperCollection, {
       idField: 'id',
     })
+
+  const campsCollectionRef = collection(firestore, 'camps')
+  const {
+    status: campsStatus,
+    data: campsCollection,
+    error: campError,
+  } = useFirestoreCollectionData(campsCollectionRef, { idField: 'id' })
+
+  const campOptions: CampOption[] = []
+
+  campsCollection.forEach((camp) => {
+    campOptions.push({ key: camp.name, value: camp.id })
+  })
+
   let allCamps: any[] = []
   if (campAdmin && campCamper) {
     allCamps = [...campAdmin, ...campCamper]
   }
-  const loading = !user || !campAdmin || !campCamper
+
+  const initialValues = {
+    campLevel: '',
+    camp: '',
+  }
+
+  const validationSchema = Yup.object({
+    campLevel: Yup.string().required('Camp Level is a required field'),
+    camp: Yup.string().required('Camp is a required field'),
+  })
+
+  const {
+    handleSubmit,
+    control,
+    formState: { errors, isSubmitting },
+  } = useForm<typeof initialValues>({
+    resolver: yupResolver(validationSchema),
+    defaultValues: initialValues,
+  })
+
+  const onSubmit = async (values: typeof initialValues) => {
+    try {
+      console.log('Form submitted with values:', values)
+
+      console.log(values)
+
+      const campLevel = values.campLevel
+      const campId = values.camp
+
+      const camp = campOptions.find((camp) => camp.value === campId)
+
+      const functions = getFunctions()
+      const addClaimsToUser = httpsCallable(
+        functions,
+        'addClaimsToUsersCallable'
+      )
+
+      const callableResponse = await addClaimsToUser({
+        email: userEmail,
+        permission: campLevel,
+      })
+      console.log('callable response', callableResponse)
+
+      await addDoc(collection(userReference, 'camp_admin'), {
+        campId: campId,
+        churchLevel: churchLevel(campLevel),
+        name: camp?.key,
+        role: campLevel,
+      })
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  const loading = !user || !campAdmin || !campCamper || !campsCollection
+
   return (
     <ApolloWrapper data={user} loading={loading}>
       <Container p={6}>
+        <Modal
+          isOpen={isOpen}
+          onClose={onClose}
+          size={'xs'}
+          scrollBehavior={'inside'}
+        >
+          <ModalOverlay />
+          <ModalContent>
+            <ModalCloseButton />
+            <ModalBody pb={6}>
+              <Heading>Users</Heading>
+              <Text>Assign to A Camp</Text>
+
+              <form onSubmit={handleSubmit(onSubmit)}>
+                <Box my={3}>
+                  <Select
+                    name="campLevel"
+                    label="Level"
+                    placeholder="Level"
+                    options={[
+                      { key: 'Campus Admin', value: 'campusAdmin' },
+                      { key: 'Country Admin', value: 'countryAdmin' },
+                      { key: 'Continent Admin', value: 'continentAdmin' },
+                      { key: 'Global Admin', value: 'globalAdmin' },
+                    ]}
+                    control={control}
+                    errors={errors}
+                  />
+                </Box>
+
+                <Box my={3}>
+                  <Select
+                    name="camp"
+                    label="Camps"
+                    placeholder="Camps"
+                    options={campOptions}
+                    control={control}
+                    errors={errors}
+                  />
+                </Box>
+
+                <ModalFooter>
+                  <Button
+                    type="submit"
+                    size="lg"
+                    width="100%"
+                    isLoading={isSubmitting}
+                    colorScheme="blue"
+                  >
+                    Assign
+                  </Button>
+                </ModalFooter>
+              </form>
+            </ModalBody>
+          </ModalContent>
+        </Modal>
+
         <Stack>
           <Box>
             <Heading>User</Heading>
@@ -101,9 +259,7 @@ const UserProfile = () => {
                         variant="link"
                       />
                       <MenuList>
-                        <MenuItem onClick={() => handleEditUser()}>
-                          Edit User
-                        </MenuItem>
+                        <MenuItem>Edit User</MenuItem>
                         <MenuItem>Delete User</MenuItem>
                       </MenuList>
                     </Menu>
@@ -143,7 +299,11 @@ const UserProfile = () => {
                           </Button>
                         </a>
                         <Spacer />
-                        <Button colorScheme="whatsapp" size="sm">
+                        <Button
+                          colorScheme="whatsapp"
+                          size="sm"
+                          onClick={onOpen}
+                        >
                           Assign to Camp
                         </Button>
                       </Flex>
@@ -188,7 +348,7 @@ const UserProfile = () => {
           <Box mt={3}>
             {allCamps.length > 0 && (
               <>
-                <Text mb={1}>Camps Admin Of</Text>
+                <Text mb={1}>Camp</Text>
                 <Card bg={userCardBackground} variant="outline">
                   <CardBody>
                     {allCamps.map((camp) => (

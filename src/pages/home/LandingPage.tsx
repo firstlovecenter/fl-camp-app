@@ -15,6 +15,8 @@ const LandingPage = () => {
   const navigate = useNavigate()
   const [roles, setRoles] = useState<Role[]>([])
 
+  console.log('roles', roles)
+
   const loading = !roles
 
   useEffect(() => {
