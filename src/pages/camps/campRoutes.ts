@@ -2,7 +2,7 @@ import { lazy } from 'react'
 import { LazyRouteTypes } from '../../auth/auth-types'
 
 const Camps = lazy(() => import('./Camps'))
-const StartCampForm = lazy(() => import('./StartCampForm'))
+const CampDetails = lazy(() => import('./CampDetails'))
 
 export const campRoutes: LazyRouteTypes[] = [
   {
@@ -12,8 +12,8 @@ export const campRoutes: LazyRouteTypes[] = [
     roles: ['all'],
   },
   {
-    path: '/camps/start-camp',
-    element: StartCampForm,
+    path: '/camps/camp-details',
+    element: CampDetails,
     placeholder: true,
     roles: ['all'],
   },

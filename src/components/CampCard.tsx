@@ -11,6 +11,8 @@ import {
 import useCustomColorMode from '../hooks/useCustomColors'
 import { capitalizeFirstLetter, formatDateRange } from 'utils/utils'
 import { Camp } from '../../global'
+import useClickCard from 'hooks/useClickCard'
+import { useNavigate } from 'react-router-dom'
 
 const CampCard = ({
   name,
@@ -22,15 +24,24 @@ const CampCard = ({
 
   startDate,
   endDate,
+  campId,
 }: Camp) => {
   const { cardBackground } = useCustomColorMode()
   const date = formatDateRange(startDate, endDate)
+  const { clickCard } = useClickCard()
+  const navigate = useNavigate()
+
+  const handleClick = () => {
+    const card = { id: campId as string, type: 'Camp' }
+    clickCard(card)
+    navigate(`/camp/camp-details`)
+  }
 
   const currentDate = new Date()
   const deadline = new Date(endDate)
   return (
     <Card
-      //   onClick={() => handleClick()}
+      onClick={() => handleClick()}
       borderRadius="md"
       bg={cardBackground}
       mb={3}

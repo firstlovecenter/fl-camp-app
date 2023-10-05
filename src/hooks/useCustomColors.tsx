@@ -17,6 +17,8 @@ const useCustomColors = () => {
   const dropdownBackground = useColorModeValue('#fff', '#282D35')
   const userCardStroke = useColorModeValue('#e2e8f0', '#374151')
   const inputFieldBackground = useColorModeValue('#21242F', '#21242F')
+  const campRegistrationsCardBackground = useColorModeValue('#fff', '#5C6CA599')
+  const campPaymentsCardBackground = useColorModeValue('#fff', '#258C5BBD')
 
   return {
     bg,
@@ -33,8 +35,16 @@ const useCustomColors = () => {
     homePageOptionsSubtitle,
     userCardBackground,
     dropdownBackground,
+<<<<<<< HEAD
     userCardStroke,
+<<<<<<< HEAD
     inputFieldBackground,
+=======
+=======
+    campRegistrationsCardBackground,
+    campPaymentsCardBackground,
+>>>>>>> f158235 (feat: basic design of camp profile page)
+>>>>>>> fc0c97d (feat: basic design of camp profile page)
   }
 }
 
