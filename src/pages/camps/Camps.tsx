@@ -13,9 +13,10 @@ import { collection } from '@firebase/firestore'
 import React from 'react'
 import { useFirestore, useFirestoreCollectionData } from 'reactfire'
 import { Camp } from '../../../global'
+import { useNavigate } from 'react-router-dom'
 
 const Camps = () => {
-  //   const navigate = useNavigate()
+  const navigate = useNavigate()
 
   const firestore = useFirestore()
   const campCollection = collection(firestore, 'camps')
@@ -48,7 +49,7 @@ const Camps = () => {
           <Button
             colorScheme="blue"
             variant="solid"
-            // onClick={() => navigate('')}
+            onClick={() => navigate('/camps/start-camp')}
             my={6}
             py={6}
           >
