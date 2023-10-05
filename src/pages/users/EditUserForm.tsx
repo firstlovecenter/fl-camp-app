@@ -168,7 +168,8 @@ const AddUserForm = () => {
             )}
           />
           <Text as="small" color="red.300">
-            {errors.phone && errors.phone.message}
+            {/* //TODO: Fix this error */}
+            {/* {errors.phone && errors.phone.message} */}
           </Text>
         </Box>
         <Box overflow="clip" my={6}>
