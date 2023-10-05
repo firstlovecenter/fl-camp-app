@@ -34,6 +34,21 @@ function Navigation() {
   const { navBg, sideBarBackground } = useCustomColors()
 
   let menuItems = []
+
+  const defaultMenuItems = [
+    {
+      name: 'Home',
+      link: '/',
+    },
+  ]
+  const globalAdminMenuItems = [
+    ...defaultMenuItems,
+    {
+      name: 'Camps',
+      link: '/camps',
+    },
+  ]
+
   switch (userProfile) {
     case 'globalAdmin':
       menuItems = [

@@ -5,7 +5,14 @@ import { Text } from '@chakra-ui/react'
 
 import CampCard from 'components/CampCard'
 import { useFirestore, useFirestoreDocData } from 'reactfire'
-import { collection, query, doc, getDoc, getDocs } from 'firebase/firestore'
+import {
+  collection,
+  query,
+  doc,
+  getDoc,
+  where,
+  getDocs,
+} from 'firebase/firestore'
 import { db } from 'firebase'
 import { ApolloWrapper } from '@jaedag/admin-portal-react-core'
 import { FetchedCampDataCamper } from '../../../global'
@@ -27,7 +34,7 @@ const CamperHomePage = () => {
   const firestore = useFirestore()
 
   const userReference = doc(firestore, 'users', email)
-  const { data: user } = useFirestoreDocData(userReference)
+  const { status, data: user } = useFirestoreDocData(userReference)
 
   useEffect(() => {
     const fetchData = async () => {
@@ -39,6 +46,7 @@ const CamperHomePage = () => {
 
             const queryRegistrationDetails = query(
               collection(db, 'camps', camp.campId, 'registrations')
+              // where('user', '==', email)
             )
 
             const queryRegistrationDetailsSnapshot = await getDocs(
@@ -55,7 +63,7 @@ const CamperHomePage = () => {
             })
 
             fetchedCamps.push({
-              id: camp.id,
+              id: camp.campId,
               registrationStatus: 'Registered',
               paymentStatus: registrationDetails[0]?.paymentStatus
                 ? 'Paid'
