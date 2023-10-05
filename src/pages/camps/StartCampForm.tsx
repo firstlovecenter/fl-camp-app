@@ -5,7 +5,7 @@ import * as Yup from 'yup'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { useForm } from 'react-hook-form'
 import { useNavigate } from 'react-router-dom'
-import { setDoc, doc } from 'firebase/firestore'
+import { collection, addDoc } from 'firebase/firestore'
 import { useFirestore } from 'reactfire'
 
 const CampLevelOptions = [
@@ -55,7 +55,7 @@ const StartCampForm = () => {
 
   const onSubmit = async (values: typeof initialValues) => {
     const data = {
-      campName: values?.campName,
+      name: values?.campName,
       campLevel: values?.campLevel,
       campType: values?.campLevel,
       startDate: values?.campStart.toISOString().slice(0, 10),
@@ -66,10 +66,10 @@ const StartCampForm = () => {
       paymentDeadline: values?.paymentDeadline.toISOString().slice(0, 10),
     }
 
-    console.log('data', data)
-    // await setDoc(doc(firestore, 'camps'), data)
+    const docRef = await addDoc(collection(firestore, 'camps'), data)
+    console.log('Document written with ID: ', docRef.id)
 
-    // navigate('/users')
+    navigate('/camps')
   }
 
   return (
@@ -113,7 +113,7 @@ const StartCampForm = () => {
           <Input
             name="campEnd"
             placeholder="Camp End"
-            label="Camp"
+            label="Camp End"
             type="date"
             control={control}
             errors={errors}
