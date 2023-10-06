@@ -35,16 +35,10 @@ const useCustomColors = () => {
     homePageOptionsSubtitle,
     userCardBackground,
     dropdownBackground,
-<<<<<<< HEAD
     userCardStroke,
-<<<<<<< HEAD
     inputFieldBackground,
-=======
-=======
     campRegistrationsCardBackground,
     campPaymentsCardBackground,
->>>>>>> f158235 (feat: basic design of camp profile page)
->>>>>>> fc0c97d (feat: basic design of camp profile page)
   }
 }
 
