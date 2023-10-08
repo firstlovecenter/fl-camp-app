@@ -30,9 +30,12 @@ const CampCard = ({
   const date = formatDateRange(startDate, endDate)
   const { clickCard } = useClickCard()
   const navigate = useNavigate()
+  console.log('wgere', campId)
 
   const handleClick = () => {
+    console.log('campId', campId)
     const card = { id: campId as string, type: 'Camp' }
+    console.log('camp', card)
     clickCard(card)
     navigate(`/camp/camp-details`)
   }

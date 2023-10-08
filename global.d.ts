@@ -9,6 +9,7 @@ interface Camp {
   paymentStatus?: string
   campStatus?: boolean
   campId?: string
+  id?: string
 }
 
 type Role =

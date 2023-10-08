@@ -65,7 +65,7 @@ const Camps = () => {
               endDate={camp?.endDate}
               role={'Admin'}
               key={index}
-              campId={camp?.campId}
+              campId={camp?.id}
             />
           ))
         ) : (

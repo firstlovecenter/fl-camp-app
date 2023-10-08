@@ -25,9 +25,11 @@ import { doc } from '@firebase/firestore'
 import useCustomColors from 'hooks/useCustomColors'
 import { FaEllipsisV } from 'react-icons/fa'
 import { capitalizeFirstLetter } from 'utils/utils'
+import { useNavigate } from 'react-router-dom'
 
 const CampDetails = () => {
   const { campId } = useClickCard()
+  const navigate = useNavigate()
   const firestore = useFirestore()
   const {
     homePageCardBackground,
@@ -38,7 +40,7 @@ const CampDetails = () => {
 
   const camp = campId ?? '2dFnsBjS1R6kWaMzKU8s'
 
-  console.log('camp', camp)
+  console.log('camp here we are', campId)
 
   const ref = doc(firestore, 'camps', '2dFnsBjS1R6kWaMzKU8s')
   console.log('ref', ref)
@@ -59,7 +61,7 @@ const CampDetails = () => {
                 <Text>{campDoc?.name}</Text>
               </Box>
               <Tag colorScheme="telegram">
-                {campDoc?.campType && capitalizeFirstLetter(campDoc?.campType)}
+                {campDoc?.campType && capitalizeFirstLetter(campDoc?.campType)}{' '}
                 Camp
               </Tag>
             </Box>
@@ -73,7 +75,9 @@ const CampDetails = () => {
                   variant="link"
                 />
                 <MenuList>
-                  <MenuItem>Assign Admin</MenuItem>
+                  <MenuItem onClick={() => navigate('/camps/assign-admin')}>
+                    Assign Admin
+                  </MenuItem>
                 </MenuList>
               </Menu>
             </Center>
@@ -126,6 +130,21 @@ const CampDetails = () => {
                 <Text fontSize="lg">Manage Users</Text>
                 <Text fontSize="sm" color={homePageOptionsSubtitle}>
                   Add admins, members
+                </Text>
+              </CardBody>
+            </Card>
+          </Box>
+          <Box mt={2}>
+            <Card
+              borderLeft="4px"
+              borderColor="blue.500"
+              bg={homePageCardBackground}
+              onClick={() => navigate('/assign-camp-admin')}
+            >
+              <CardBody>
+                <Text fontSize="lg">Manage Admins</Text>
+                <Text fontSize="sm" color={homePageOptionsSubtitle}>
+                  Add admins
                 </Text>
               </CardBody>
             </Card>
