@@ -19,6 +19,7 @@ const useCustomColors = () => {
   const inputFieldBackground = useColorModeValue('#21242F', '#21242F')
   const campRegistrationsCardBackground = useColorModeValue('#fff', '#5C6CA599')
   const campPaymentsCardBackground = useColorModeValue('#fff', '#258C5BBD')
+  const generalBackground = useColorModeValue('#fff', '#1E202C')
 
   return {
     bg,
@@ -39,6 +40,7 @@ const useCustomColors = () => {
     inputFieldBackground,
     campRegistrationsCardBackground,
     campPaymentsCardBackground,
+    generalBackground,
   }
 }
 

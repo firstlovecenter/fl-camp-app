@@ -22,10 +22,12 @@ const useClickCard = () => {
     switch (card.type) {
       case 'User':
         setUserId(card.id)
+        console.log('card.id', card.id)
         sessionStorage.setItem('userId', card.id)
         break
       case 'Camp':
         setCampId(card.id)
+        console.log('card.id', card.id)
         sessionStorage.setItem('campId', card.id)
         break
     }

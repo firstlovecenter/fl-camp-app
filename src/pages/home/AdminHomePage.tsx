@@ -30,7 +30,7 @@ const AdminHomePage = () => {
       const fetchedCamps: FetchedCampData[] = []
       if (Array.isArray(user?.camp_admin)) {
         await Promise.all(
-          user?.camp_admin?.map(async (camp) => {
+          user?.camp_admin?.map(async (camp: any) => {
             const campee = await getDoc(doc(firestore, 'camps', camp?.campId))
 
             fetchedCamps.push({
