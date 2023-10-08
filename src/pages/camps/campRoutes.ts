@@ -19,7 +19,7 @@ export const campRoutes: LazyRouteTypes[] = [
     roles: ['all'],
   },
   {
-    path: '/assign-camp-admin',
+    path: '/camp/assign-camp-admin',
     element: AssignAdmin,
     placeholder: true,
     roles: ['all'],

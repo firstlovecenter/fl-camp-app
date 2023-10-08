@@ -38,15 +38,8 @@ const CampDetails = () => {
     campPaymentsCardBackground,
   } = useCustomColors()
 
-  const camp = campId ?? '2dFnsBjS1R6kWaMzKU8s'
-
-  console.log('camp here we are', campId)
-
-  const ref = doc(firestore, 'camps', '2dFnsBjS1R6kWaMzKU8s')
-  console.log('ref', ref)
+  const ref = doc(firestore, 'camps', campId as string)
   const { status, data: campDoc } = useFirestoreDocData(ref, { idField: 'id' })
-
-  console.log('campDoc', campDoc)
 
   const loading = !campDoc
 
@@ -75,7 +68,7 @@ const CampDetails = () => {
                   variant="link"
                 />
                 <MenuList>
-                  <MenuItem onClick={() => navigate('/camps/assign-admin')}>
+                  <MenuItem onClick={() => navigate('/camp/assign-camp-admin')}>
                     Assign Admin
                   </MenuItem>
                 </MenuList>
@@ -139,7 +132,7 @@ const CampDetails = () => {
               borderLeft="4px"
               borderColor="blue.500"
               bg={homePageCardBackground}
-              onClick={() => navigate('/assign-camp-admin')}
+              onClick={() => navigate('/camp/assign-camp-admin')}
             >
               <CardBody>
                 <Text fontSize="lg">Manage Admins</Text>

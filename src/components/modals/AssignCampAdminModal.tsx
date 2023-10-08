@@ -56,7 +56,7 @@ const AssignCampAdminModal = ({ isOpen, onClose, onSubmit }: ModalProps) => {
   const handleSubmitForm = async (values: typeof initialValues) => {
     try {
       const campLevel = values.campLevel
-
+      //TODO: check if the user already has the camp assinged with the admin level
       const functions = getFunctions()
       const addClaimsToUser = httpsCallable(
         functions,
