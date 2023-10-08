@@ -12,8 +12,13 @@ import {
 } from '@chakra-ui/react'
 import RegisterUserCard from '../../components/RegisterUserCard'
 import RegisterMembersSearch from 'components/RegisterMemberSearch'
+import { useFirestore, useFirestoreCollectionData } from 'reactfire'
+import { collection, query, where } from '@firebase/firestore'
+import { UserData } from '../../../global'
+import { check } from 'prettier'
 
 const users = ['David', 'John', 'Paul', 'Ringo', 'George']
+
 const usersA = [
   {
     firstName: 'David',
@@ -39,6 +44,72 @@ const usersA = [
 ]
 
 const RegisterMembers = () => {
+  const firestore = useFirestore()
+  const usersCollection = collection(firestore, 'users')
+  const { status, data: users } = useFirestoreCollectionData(usersCollection, {
+    idField: 'id',
+  })
+  console.log('users', users)
+
+  const parsedUsers: UserData[] = []
+  users?.forEach((user: any) => {
+    parsedUsers.push({
+      firstName: user?.firstName,
+      id: user?.id,
+      lastName: user?.lastName,
+      image_url: user?.image_url,
+      camp_admin: user?.camp_admin,
+      camp_camper: user?.camp_camper,
+      roles: user?.roles,
+    })
+  })
+
+  console.log('parsedUsers', parsedUsers)
+
+  const inCampUsers: UserCampData = []
+  const notInCampUsers: UserCampData = []
+
+  const checkCamp = (element: string) => {
+    console.log('element', element)
+    return element == 'lT1akYRvLl7FnVrPV8cp'
+  }
+
+  parsedUsers?.forEach((user) => {
+    const belongsToCamp = user?.camp_camper?.some((camp) => {
+      return checkCamp(camp.campId)
+    })
+    console.log('user', user, 'what it is', belongsToCamp)
+
+    if (!belongsToCamp) {
+      notInCampUsers.push(user)
+    }
+
+    if (belongsToCamp) {
+      inCampUsers.push(user)
+    }
+  })
+
+  console.log('inCampUsers', inCampUsers)
+  console.log('notInCampUsers', notInCampUsers)
+
+  // const belongsToCamp = parsedUsers?.camp_camper.some(
+  //   (camp) => camp.campId === campIdToExclude
+  // )
+
+  // console.log('belongsToCamp', belongsToCamp)
+  //
+  const q = query(
+    usersCollection,
+    where('camp_camper', 'array-contains', {
+      campId: 'lT1akYRvLl7FnVrPV8cp',
+    })
+  )
+
+  const { otherStatus, data: campUsers } = useFirestoreCollectionData(q, {
+    idField: 'id',
+  })
+  console.log('campUsers', campUsers)
+
   return (
     <Container my={3}>
       <Box>
@@ -58,11 +129,12 @@ const RegisterMembers = () => {
               {/* {usersA.map((user) => (
                 <RegisterUserCard name={user?.name} email={user?.email} />
               ))} */}
-              <RegisterMembersSearch users={usersA} />
+              <RegisterMembersSearch users={inCampUsers} />
               {/* <RegisterUserCard /> */}
             </TabPanel>
             <TabPanel>
               <p>two!</p>
+              <RegisterMembersSearch users={notInCampUsers} />
             </TabPanel>
           </TabPanels>
         </Tabs>
