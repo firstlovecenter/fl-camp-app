@@ -87,3 +87,5 @@ export const churchLevel = (campLevel: string) => {
       return 'campus'
   }
 }
+
+export const PHONE_NUM_REGEX = /^[+][(]{0,1}[1-9]{1,4}[)]{0,1}[-\s/0-9]*$/
