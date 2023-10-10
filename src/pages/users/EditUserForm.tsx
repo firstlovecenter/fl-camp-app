@@ -11,13 +11,8 @@ import {
 import { ImageUpload, Input, Select } from '@jaedag/admin-portal-react-core'
 import React, { useState } from 'react'
 import * as Yup from 'yup'
-import 'yup-phone-lite'
 import { yupResolver } from '@hookform/resolvers/yup'
-
-import { Controller, useForm } from 'react-hook-form'
-import { PhoneNumberInput } from 'components/PhoneNumberInput/PhoneNumberInput'
-import Countries from '../../utils/countries.json'
-import { CountryCode } from 'libphonenumber-js/types'
+import { useForm } from 'react-hook-form'
 import {
   getAuth,
   createUserWithEmailAndPassword,
@@ -41,9 +36,6 @@ const AddUserForm = () => {
 
   const auth = getAuth()
 
-  const convertedCodes: string[] = Countries.map((country) => country.code)
-  const countryCodes: CountryCode[] = convertedCodes as CountryCode[]
-
   const date = new Date('1990-01-01')
 
   const initialValues = {
@@ -63,7 +55,10 @@ const AddUserForm = () => {
       .required('Date of birth is a required field')
       .max(new Date(), "You can't be born after today"),
     phone: Yup.string()
-      .phone(countryCodes, 'Please enter a valid phone number')
+      .matches(
+        PHONE_NUM_REGEX,
+        `Phone Number must start with + and country code (eg. '+233')`
+      )
       .required('Phone number is a required field'),
     pictureUrl: Yup.string().required('You must upload a picture'),
   })
@@ -157,21 +152,15 @@ const AddUserForm = () => {
         </Box>
 
         <Box my={3}>
-          <Text as="label" htmlFor="phone">
-            Phone Number
-          </Text>
-          <Controller
-            control={control}
+          <Input
             name="phone"
-            render={({ field: { onChange } }) => (
-              <PhoneNumberInput onChange={onChange} />
-            )}
+            placeholder="Eg. +233 241 23 456"
+            label="Phone Number"
+            control={control}
+            errors={errors}
           />
-          <Text as="small" color="red.300">
-            {/* //TODO: Fix this error */}
-            {/* {errors.phone && errors.phone.message} */}
-          </Text>
         </Box>
+
         <Box overflow="clip" my={6}>
           <ImageUpload
             name="pictureUrl"
