@@ -1,11 +1,4 @@
-import {
-  Box,
-  Button,
-  Container,
-  Heading,
-  Text,
-  useToast,
-} from '@chakra-ui/react'
+import { Box, Button, Container, Heading, useToast } from '@chakra-ui/react'
 import {
   ImageUpload,
   Input,
@@ -13,13 +6,8 @@ import {
 } from '@jaedag/admin-portal-react-core'
 import React, { useState } from 'react'
 import * as Yup from 'yup'
-import 'yup-phone-lite'
 import { yupResolver } from '@hookform/resolvers/yup'
-
-import { Controller, useForm } from 'react-hook-form'
-import { PhoneNumberInput } from 'components/PhoneNumberInput/PhoneNumberInput'
-import Countries from '../../utils/countries.json'
-import { CountryCode } from 'libphonenumber-js/types'
+import { useForm } from 'react-hook-form'
 import {
   getAuth,
   createUserWithEmailAndPassword,
@@ -37,9 +25,6 @@ const AddUserForm = () => {
 
   const auth = getAuth()
   const firestore = useFirestore()
-
-  const convertedCodes: string[] = Countries.map((country) => country.code)
-  const countryCodes: CountryCode[] = convertedCodes as CountryCode[]
 
   const date = new Date('1990-01-01')
 
