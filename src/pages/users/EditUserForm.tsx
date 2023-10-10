@@ -8,7 +8,12 @@ import {
   AlertIcon,
   AlertDescription,
 } from '@chakra-ui/react'
-import { ImageUpload, Input, Select } from '@jaedag/admin-portal-react-core'
+import {
+  ImageUpload,
+  Input,
+  PHONE_NUM_REGEX,
+  Select,
+} from '@jaedag/admin-portal-react-core'
 import React, { useState } from 'react'
 import * as Yup from 'yup'
 import { yupResolver } from '@hookform/resolvers/yup'
