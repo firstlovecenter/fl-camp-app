@@ -80,8 +80,8 @@ const AddUserForm = () => {
         await sendPasswordResetEmail(auth, email)
 
         const data = {
-          firstName: values?.firstName,
-          lastName: values?.lastName,
+          firstName: values?.firstName.toLowerCase(),
+          lastName: values?.lastName.toLowerCase(),
           email: values?.email,
           phone: values?.phone,
           dob: values?.dob.toISOString().slice(0, 10),

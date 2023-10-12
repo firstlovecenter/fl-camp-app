@@ -1,21 +1,20 @@
 import React, { useEffect, useState } from 'react'
 import { useForm, Controller } from 'react-hook-form'
-import { FormControl, Input, Box } from '@chakra-ui/react'
+import { FormControl, Input, Box, Center } from '@chakra-ui/react'
 import UserListCard from './UserListCard'
 import { UserData } from '../../global'
+import { useFirestore } from 'reactfire'
+import { collection, query, where, getDocs } from 'firebase/firestore'
+import { capitalizeFirstLetter } from 'utils/utils'
 
 type UserSearchProp = {
   users: UserData[]
 }
 
-const UserSearch = ({ users }: UserSearchProp) => {
-  const userDataLoaded = users
+const UserSearch = () => {
+  const firestore = useFirestore()
 
   const [userData, setUserData] = useState<UserData[]>([])
-
-  useEffect(() => {
-    setUserData(userDataLoaded)
-  }, [userDataLoaded])
 
   const { handleSubmit, control } = useForm({
     defaultValues: {
@@ -24,19 +23,39 @@ const UserSearch = ({ users }: UserSearchProp) => {
   })
 
   const onSubmit = (data: any) => {
-    setUserData(
-      userDataLoaded.filter(
-        (user: UserData) =>
-          user.firstName
-            .toLowerCase()
-            .includes(data.userSearch.toLowerCase()) ||
-          user.lastName.toLowerCase().includes(data.userSearch.toLowerCase())
-      )
+    searchName(data.userSearch)
+  }
+
+  const searchName = async (name: string) => {
+    const usersData: UserData[] = []
+
+    const userRef = collection(firestore, 'users')
+    const queryFirstName = query(
+      userRef,
+      where('firstName', '>=', name.toLowerCase()),
+      where('firstName', '<=', name.toLowerCase() + '\uf8ff')
     )
+    const docs = await getDocs(queryFirstName)
+
+    const queryLastName = query(
+      userRef,
+      where('lastName', '>=', name.toLowerCase()),
+      where('lastName', '<=', name.toLowerCase() + '\uf8ff')
+    )
+    const docs2 = await getDocs(queryLastName)
+
+    docs?.forEach((userDoc: any) => {
+      usersData.push(userDoc.data())
+    })
+
+    docs2?.forEach((userDoc: any) => {
+      usersData.push(userDoc.data())
+    })
+
+    setUserData(usersData)
   }
 
   return (
-    // <div>
     <Box>
       <form onSubmit={handleSubmit(onSubmit)}>
         <FormControl my={1}>
@@ -58,15 +77,25 @@ const UserSearch = ({ users }: UserSearchProp) => {
       </form>
 
       <Box mt={4}>
-        {userData?.map((user, index) => (
-          <UserListCard
-            id={user?.id}
-            name={user?.firstName + ' ' + user?.lastName}
-            key={index}
-            role={user?.roles}
-            image={user?.image_url}
-          />
-        ))}
+        {userData.length > 0 ? (
+          userData?.map((user, index) => (
+            <UserListCard
+              id={user?.id}
+              name={
+                capitalizeFirstLetter(user?.firstName) +
+                ' ' +
+                capitalizeFirstLetter(user?.lastName)
+              }
+              key={index}
+              role={user?.roles}
+              image={user?.image_url}
+            />
+          ))
+        ) : (
+          <Box>
+            <Center>No Users Found</Center>
+          </Box>
+        )}
       </Box>
     </Box>
   )
