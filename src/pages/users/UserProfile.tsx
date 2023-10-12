@@ -21,7 +21,7 @@ import {
   MenuItem,
   useDisclosure,
 } from '@chakra-ui/react'
-import { FaEllipsisH } from 'react-icons/fa'
+import { FaEllipsisH, FaPhone, FaWhatsapp } from 'react-icons/fa'
 import useClickCard from 'hooks/useClickCard'
 import {
   useFirestore,
@@ -156,18 +156,28 @@ const UserProfile = () => {
                     <Box mt={3} maxWidth="97%">
                       <Flex>
                         <a href={`tel:${user?.phone}`}>
-                          <Button colorScheme="blue" size="sm" mr={1}>
-                            Call {user?.firstName}
-                          </Button>
+                          <IconButton
+                            colorScheme="blue"
+                            aria-label="Call Icon"
+                            variant="solid"
+                            size="sm"
+                            icon={<FaPhone />}
+                            mr={1}
+                          />
                         </a>
                         <Spacer />
                         <a
                           href={`https://wa.me/${user?.phone}`}
                           className="ms-3"
                         >
-                          <Button colorScheme="gray" size="sm" mr={1}>
-                            Message
-                          </Button>
+                          <IconButton
+                            colorScheme="gray"
+                            aria-label="Call Icon"
+                            variant="solid"
+                            size="sm"
+                            icon={<FaWhatsapp />}
+                            mr={1}
+                          />
                         </a>
                         <Spacer />
                         <Button
@@ -175,7 +185,7 @@ const UserProfile = () => {
                           size="sm"
                           onClick={onOpenFirstModal}
                         >
-                          Assign to Camp
+                          Assign
                         </Button>
                       </Flex>
                     </Box>
