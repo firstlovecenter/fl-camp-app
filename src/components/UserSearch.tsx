@@ -3,18 +3,13 @@ import { useForm, Controller } from 'react-hook-form'
 import { FormControl, Input, Box, Center } from '@chakra-ui/react'
 import UserListCard from './UserListCard'
 import { UserData } from '../../global'
-import { useFirestore } from 'reactfire'
-import { collection, query, where, getDocs } from 'firebase/firestore'
-import { capitalizeFirstLetter } from 'utils/utils'
 
-type UserSearchProp = {
-  users: UserData[]
-}
+import { capitalizeFirstLetter } from 'utils/utils'
+import searchName from 'queries/SearchQueries'
 
 const UserSearch = () => {
-  const firestore = useFirestore()
-
   const [userData, setUserData] = useState<UserData[]>([])
+  const [cardText, setCardText] = useState<string>('Type to begin your search')
 
   const { handleSubmit, control } = useForm({
     defaultValues: {
@@ -22,37 +17,14 @@ const UserSearch = () => {
     },
   })
 
-  const onSubmit = (data: any) => {
-    searchName(data.userSearch)
-  }
+  const noUsersFoundText = 'No Users Found'
 
-  const searchName = async (name: string) => {
-    const usersData: UserData[] = []
-
-    const userRef = collection(firestore, 'users')
-    const queryFirstName = query(
-      userRef,
-      where('firstName', '>=', name.toLowerCase()),
-      where('firstName', '<=', name.toLowerCase() + '\uf8ff')
-    )
-    const docs = await getDocs(queryFirstName)
-
-    const queryLastName = query(
-      userRef,
-      where('lastName', '>=', name.toLowerCase()),
-      where('lastName', '<=', name.toLowerCase() + '\uf8ff')
-    )
-    const docs2 = await getDocs(queryLastName)
-
-    docs?.forEach((userDoc: any) => {
-      usersData.push(userDoc.data())
-    })
-
-    docs2?.forEach((userDoc: any) => {
-      usersData.push(userDoc.data())
-    })
-
-    setUserData(usersData)
+  const onSubmit = async (data: any) => {
+    const searchResult = await searchName(data.userSearch)
+    if (searchResult.length === 0) {
+      setCardText(noUsersFoundText)
+    }
+    setUserData(searchResult)
   }
 
   return (
@@ -93,7 +65,7 @@ const UserSearch = () => {
           ))
         ) : (
           <Box>
-            <Center>No Users Found</Center>
+            <Center>{cardText}</Center>
           </Box>
         )}
       </Box>
