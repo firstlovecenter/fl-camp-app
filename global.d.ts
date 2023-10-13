@@ -42,6 +42,7 @@ interface UserData {
   lastName: string
   roles: string[]
   image_url: string
+  email: string
 }
 
 export interface Member {

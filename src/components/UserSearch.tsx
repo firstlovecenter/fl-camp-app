@@ -52,7 +52,7 @@ const UserSearch = () => {
         {userData.length > 0 ? (
           userData?.map((user, index) => (
             <UserListCard
-              id={user?.id}
+              id={user?.email}
               name={
                 capitalizeFirstLetter(user?.firstName) +
                 ' ' +
