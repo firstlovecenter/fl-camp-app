@@ -40,8 +40,8 @@ const AssignAdmin = () => {
           onClose={onCloseFirstModal}
           onSubmit={onSubmitModal}
         />
-        <Heading>Assign Admin</Heading>
-        <AssignAdminUserSearch users={usersData} modal={onOpenFirstModal} />
+        <Heading my={3}>Assign Admin</Heading>
+        <AssignAdminUserSearch modal={onOpenFirstModal} />
       </Container>
     </ApolloWrapper>
   )

@@ -1,23 +1,19 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { useForm, Controller } from 'react-hook-form'
-import { FormControl, Input, Box } from '@chakra-ui/react'
-import UserListCard from './UserListCard'
+import { FormControl, Input, Box, Center } from '@chakra-ui/react'
+
 import { UserData } from '../../global'
 import AdminUserSearchCard from './AdminUserSearchCard'
+import searchName from 'queries/SearchQueries'
+import { capitalizeFirstLetter } from 'utils/utils'
 
 type UserSearchProp = {
-  users: UserData[]
   modal: () => void
 }
 
-const AssignAdminUserSearch = ({ users, modal }: UserSearchProp) => {
-  const userDataLoaded = users
-
+const AssignAdminUserSearch = ({ modal }: UserSearchProp) => {
   const [userData, setUserData] = useState<UserData[]>([])
-
-  useEffect(() => {
-    setUserData(userDataLoaded)
-  }, [userDataLoaded])
+  const [cardText, setCardText] = useState<string>('Type to begin your search')
 
   const { handleSubmit, control } = useForm({
     defaultValues: {
@@ -25,20 +21,17 @@ const AssignAdminUserSearch = ({ users, modal }: UserSearchProp) => {
     },
   })
 
-  const onSubmit = (data: any) => {
-    setUserData(
-      userDataLoaded.filter(
-        (user: UserData) =>
-          user.firstName
-            .toLowerCase()
-            .includes(data.userSearch.toLowerCase()) ||
-          user.lastName.toLowerCase().includes(data.userSearch.toLowerCase())
-      )
-    )
+  const noUsersFoundText = 'No Users Found'
+
+  const onSubmit = async (data: any) => {
+    const searchResult = await searchName(data.userSearch)
+    if (searchResult.length === 0) {
+      setCardText(noUsersFoundText)
+    }
+    setUserData(searchResult)
   }
 
   return (
-    // <div>
     <Box>
       <form onSubmit={handleSubmit(onSubmit)}>
         <FormControl my={1}>
@@ -60,15 +53,25 @@ const AssignAdminUserSearch = ({ users, modal }: UserSearchProp) => {
       </form>
 
       <Box mt={4}>
-        {userData?.map((user, index) => (
-          <AdminUserSearchCard
-            name={user?.firstName + ' ' + user?.lastName}
-            key={index}
-            email={user?.id}
-            image={user?.image_url}
-            modal={modal}
-          />
-        ))}
+        {userData.length > 0 ? (
+          userData?.map((user, index) => (
+            <AdminUserSearchCard
+              email={user?.email}
+              name={
+                capitalizeFirstLetter(user?.firstName) +
+                ' ' +
+                capitalizeFirstLetter(user?.lastName)
+              }
+              key={index}
+              modal={modal}
+              image={user?.image_url}
+            />
+          ))
+        ) : (
+          <Box>
+            <Center>{cardText}</Center>
+          </Box>
+        )}
       </Box>
     </Box>
   )

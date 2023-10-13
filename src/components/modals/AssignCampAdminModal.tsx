@@ -31,7 +31,6 @@ const AssignCampAdminModal = ({ isOpen, onClose, onSubmit }: ModalProps) => {
   const user = userId || ''
   const camp = campId || ''
 
-  console.log('user', userId, 'camp', campId)
   const firestore = useFirestore()
 
   const toast = useToast()

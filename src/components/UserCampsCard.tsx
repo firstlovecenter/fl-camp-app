@@ -8,6 +8,10 @@ const formatAdminRole = (role: string) => {
       return 'Campus Admin'
     case 'countryAdmin':
       return 'Country Admin'
+    case 'continentAdmin':
+      return 'Continent Admin'
+    case 'globalAdmin':
+      return 'Global Admin'
     case 'Member':
       return 'Member'
     default:
@@ -18,7 +22,9 @@ const formatCampTitle = (title: string) => {
   if (title && title.length > 10) {
     return title.substring(0, 10) + '...'
   }
-  return 'No Title'
+  if (!title || title.length === 0) return 'No Title'
+
+  return title
 }
 const UserCampsCard = ({
   camp,
