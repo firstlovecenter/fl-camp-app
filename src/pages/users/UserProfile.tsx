@@ -171,7 +171,7 @@ const UserProfile = () => {
                           className="ms-3"
                         >
                           <IconButton
-                            colorScheme="gray"
+                            colorScheme="whatsapp"
                             aria-label="Call Icon"
                             variant="solid"
                             size="sm"
@@ -181,7 +181,7 @@ const UserProfile = () => {
                         </a>
                         <Spacer />
                         <Button
-                          colorScheme="whatsapp"
+                          colorScheme="purple"
                           size="sm"
                           onClick={onOpenFirstModal}
                         >
