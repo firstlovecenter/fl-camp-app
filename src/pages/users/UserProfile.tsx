@@ -35,6 +35,7 @@ import UserCampsCard from 'components/UserCampsCard'
 import { SelectOptions } from '../../../global'
 import AssignAdminToCampModal from 'components/modals/AssignAdminUserModal'
 import RemoveUserFromCampModal from 'components/modals/RemoveUserFromCampModal'
+import { capitalizeFirstLetter } from 'utils/utils'
 
 const UserProfile = () => {
   const [isOpenFirstModal, setIsOpenFirstModal] = useState(false)
@@ -150,20 +151,17 @@ const UserProfile = () => {
                     </Box>
                     <Box>
                       <Text fontSize="2xl">
-                        {user?.firstName + ' ' + user?.lastName}
+                        {capitalizeFirstLetter(user?.firstName) +
+                          ' ' +
+                          capitalizeFirstLetter(user?.lastName)}
                       </Text>
                     </Box>
                     <Box mt={3} maxWidth="97%">
                       <Flex>
                         <a href={`tel:${user?.phone}`}>
-                          <IconButton
-                            colorScheme="blue"
-                            aria-label="Call Icon"
-                            variant="solid"
-                            size="sm"
-                            icon={<FaPhone />}
-                            mr={1}
-                          />
+                          <Button colorScheme="blue" size="sm" mr={1}>
+                            Call {capitalizeFirstLetter(user?.firstName)}
+                          </Button>
                         </a>
                         <Spacer />
                         <a

@@ -34,7 +34,7 @@ const AssignAdmin = () => {
 
   return (
     <ApolloWrapper data={usersData} loading={loading}>
-      <Container>
+      <Container p={6}>
         <AssignCampAdminModal
           isOpen={isOpenFirstModal}
           onClose={onCloseFirstModal}
