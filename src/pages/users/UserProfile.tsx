@@ -172,7 +172,7 @@ const UserProfile = () => {
                         >
                           <IconButton
                             colorScheme="whatsapp"
-                            aria-label="Call Icon"
+                            aria-label="Whatsapp Icon"
                             variant="solid"
                             size="sm"
                             icon={<FaWhatsapp />}
