@@ -61,6 +61,7 @@ const UserProfile = () => {
   const { userId } = useClickCard()
   const { userCardBackground, userCardStroke } = useCustomColors()
   const userEmail = userId as string
+
   const userReference = doc(firestore, 'users', userEmail)
   const { status, data: user } = useFirestoreDocData(userReference)
 
@@ -151,17 +152,23 @@ const UserProfile = () => {
                     </Box>
                     <Box>
                       <Text fontSize="2xl">
-                        {capitalizeFirstLetter(user?.firstName) +
-                          ' ' +
-                          capitalizeFirstLetter(user?.lastName)}
+                        {user &&
+                          capitalizeFirstLetter(user?.firstName) +
+                            ' ' +
+                            capitalizeFirstLetter(user?.lastName)}
                       </Text>
                     </Box>
                     <Box mt={3} maxWidth="97%">
                       <Flex>
                         <a href={`tel:${user?.phone}`}>
-                          <Button colorScheme="blue" size="sm" mr={1}>
-                            Call {capitalizeFirstLetter(user?.firstName)}
-                          </Button>
+                          <IconButton
+                            colorScheme="blue"
+                            aria-label="Call Icon"
+                            variant="solid"
+                            size="sm"
+                            icon={<FaPhone />}
+                            mr={1}
+                          />
                         </a>
                         <Spacer />
                         <a
@@ -201,7 +208,7 @@ const UserProfile = () => {
                     <Flex>
                       <Text fontSize="sm">Email</Text>
                       <Spacer />
-                      <Text fontSize="sm">{user?.NO_ID_FIELD}</Text>
+                      <Text fontSize="sm">{user?.email}</Text>
                     </Flex>
                   </Box>
                   <Box>
