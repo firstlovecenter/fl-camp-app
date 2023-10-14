@@ -76,7 +76,6 @@ const AdminHomePage = () => {
                 endDate={camp?.endDate}
                 roomOption={''}
                 key={index}
-                campStatus={camp?.campStatus}
               />
             ))}
           </Box>

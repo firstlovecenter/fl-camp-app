@@ -98,7 +98,6 @@ const CamperHomePage = () => {
                   endDate={camp?.endDate}
                   roomOption={camp?.roomOption}
                   key={index}
-                  campStatus={camp?.campStatus}
                 />
               ))}
           </Box>

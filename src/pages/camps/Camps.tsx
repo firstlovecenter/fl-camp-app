@@ -64,7 +64,6 @@ const Camps = () => {
               roomOption={camp?.roomOption}
               startDate={camp?.startDate}
               endDate={camp?.endDate}
-              campStatus={camp?.campStatus}
               role={'Admin'}
               key={index}
             />

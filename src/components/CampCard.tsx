@@ -19,13 +19,15 @@ const CampCard = ({
   role,
   registrationStatus,
   paymentStatus,
-  campStatus,
+
   startDate,
   endDate,
 }: Camp) => {
   const { cardBackground } = useCustomColorMode()
   const date = formatDateRange(startDate, endDate)
 
+  const currentDate = new Date()
+  const deadline = new Date(endDate)
   return (
     <Card
       //   onClick={() => handleClick()}
@@ -42,8 +44,8 @@ const CampCard = ({
             </Tag>
             {/* admin stuff */}
             {role === 'Admin' && (
-              <Tag colorScheme={campStatus ? 'whatsapp' : 'red'}>
-                {campStatus ? 'Active' : 'Ended'}
+              <Tag colorScheme={deadline > currentDate ? 'whatsapp' : 'red'}>
+                {deadline > currentDate ? 'Active' : 'Ended'}
               </Tag>
             )}
 
