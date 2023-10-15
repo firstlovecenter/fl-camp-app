@@ -3,7 +3,11 @@ import React, { useEffect, useState } from 'react'
 import { useAuth } from 'contexts/AuthContext'
 import { Heading } from '@chakra-ui/react'
 import CampCard from 'components/CampCard'
-import { useFirestore, useFirestoreCollectionData } from 'reactfire'
+import {
+  useFirestore,
+  useFirestoreCollectionData,
+  useFirestoreDocData,
+} from 'reactfire'
 import { collection, query, doc, getDoc } from 'firebase/firestore'
 import { ApolloWrapper } from '@jaedag/admin-portal-react-core'
 import { FetchedCampData } from '../../../global'
@@ -18,46 +22,36 @@ const AdminHomePage = () => {
 
   const firestore = useFirestore()
 
-  const userCampsQuery = query(
-    collection(firestore, 'users', email, 'camp_admin')
-  )
-
-  const { data: campsData } = useFirestoreCollectionData(userCampsQuery, {
-    idField: 'id',
-  })
-
-  console.log('campsData', campsData)
+  const userReference = doc(firestore, 'users', email)
+  const { status, data: user } = useFirestoreDocData(userReference)
 
   useEffect(() => {
     const fetchData = async () => {
       const fetchedCamps: FetchedCampData[] = []
-      if (Array.isArray(campsData)) {
+      if (Array.isArray(user?.camp_admin)) {
         await Promise.all(
-          campsData?.map(async (camp) => {
+          user?.camp_admin?.map(async (camp) => {
             const campee = await getDoc(doc(firestore, 'camps', camp?.campId))
 
             fetchedCamps.push({
-              id: camp.id,
+              id: camp?.campId,
               role: 'Admin',
               name: campee.data()?.name,
               campLevel: campee.data()?.campLevel,
               startDate: campee.data()?.startDate,
               endDate: campee.data()?.endDate,
-              campStatus: campee.data()?.campStatus,
               campType: campee.data()?.campType,
             })
           })
         )
       }
 
-      console.log('fetchedCamps', fetchedCamps)
-
       setcamps(fetchedCamps)
       setLoading(false)
     }
 
     fetchData()
-  }, [campsData, email, firestore])
+  }, [user?.camp_admin, email, firestore])
 
   return (
     <ApolloWrapper data={camps} loading={loading}>
@@ -65,19 +59,20 @@ const AdminHomePage = () => {
         <Container my={6}>
           <Heading>Welcome Admin!</Heading>
           <Box mt={6}>
-            {camps?.map((camp, index) => (
-              <CampCard
-                name={camp?.name}
-                campType={camp?.campType}
-                registrationStatus={''}
-                paymentStatus={''}
-                role={camp?.role}
-                startDate={camp?.startDate}
-                endDate={camp?.endDate}
-                roomOption={''}
-                key={index}
-              />
-            ))}
+            {camps &&
+              camps?.map((camp, index) => (
+                <CampCard
+                  name={camp?.name}
+                  campType={camp?.campType}
+                  registrationStatus={''}
+                  paymentStatus={''}
+                  role={camp?.role}
+                  startDate={camp?.startDate}
+                  endDate={camp?.endDate}
+                  roomOption={''}
+                  key={index}
+                />
+              ))}
           </Box>
         </Container>
       </Box>
