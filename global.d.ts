@@ -25,7 +25,6 @@ interface FetchedCampData {
   campLevel: string
   startDate: string
   endDate: string
-  campStatus: boolean
   campType: string
 }
 

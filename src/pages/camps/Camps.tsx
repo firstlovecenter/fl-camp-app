@@ -26,15 +26,14 @@ const Camps = () => {
       idField: 'id',
     }
   )
-  console.log('camps', campDocs)
-
-  const loading = !campDocs
 
   const camps: Camp[] = []
 
   campDocs?.forEach((camp: any) => {
     camps.push(camp)
   })
+
+  const loading = !camps
 
   const error = ''
   if (status === 'error') {

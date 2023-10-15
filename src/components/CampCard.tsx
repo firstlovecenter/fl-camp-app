@@ -40,7 +40,7 @@ const CampCard = ({
           <Heading size="sm">{name}</Heading>
           <Wrap>
             <Tag colorScheme="telegram">
-              {capitalizeFirstLetter(campType)} Camp
+              {campType && capitalizeFirstLetter(campType)} Camp
             </Tag>
             {/* admin stuff */}
             {role === 'Admin' && (

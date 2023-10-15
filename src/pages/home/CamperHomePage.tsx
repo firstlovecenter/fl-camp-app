@@ -4,7 +4,7 @@ import { useAuth } from 'contexts/AuthContext'
 import { Heading } from '@chakra-ui/react'
 
 import CampCard from 'components/CampCard'
-import { useFirestore, useFirestoreCollectionData } from 'reactfire'
+import { useFirestore, useFirestoreDocData } from 'reactfire'
 import {
   collection,
   query,
@@ -14,9 +14,14 @@ import {
   getDocs,
 } from 'firebase/firestore'
 import { db } from 'firebase'
-import { parseRegistrationOptions } from 'utils/utils'
 import { ApolloWrapper } from '@jaedag/admin-portal-react-core'
 import { FetchedCampDataCamper } from '../../../global'
+
+type UserRegistrationDetails = {
+  paymentStatus: string
+  roomOption: string
+  user: string
+}
 
 const CamperHomePage = () => {
   const { currentUser, logout } = useAuth()
@@ -28,30 +33,34 @@ const CamperHomePage = () => {
 
   const firestore = useFirestore()
 
-  const userCampsQuery = query(
-    collection(firestore, 'users', email, 'camp_camper')
-  )
-
-  const { data: campsData } = useFirestoreCollectionData(userCampsQuery, {
-    idField: 'id',
-  })
+  const userReference = doc(firestore, 'users', email)
+  const { status, data: user } = useFirestoreDocData(userReference)
 
   useEffect(() => {
     const fetchData = async () => {
       const fetchedCamps: FetchedCampDataCamper[] = []
-      if (Array.isArray(campsData)) {
+      if (Array.isArray(user?.camp_camper)) {
         await Promise.all(
-          campsData?.map(async (camp) => {
-            const campee = await getDoc(doc(firestore, 'camps', camp.id))
+          user?.camp_camper?.map(async (camp) => {
+            const campee = await getDoc(doc(firestore, 'camps', camp.campId))
 
-            const q = query(
-              collection(db, 'registrations'),
-              where('email', '==', email),
-              where('camp', '==', camp.id)
+            const queryRegistrationDetails = query(
+              collection(db, 'camps', camp.campId, 'registrations')
+              // where('user', '==', email)
             )
 
-            const querySnapshot = await getDocs(q)
-            const registrationDetails = parseRegistrationOptions(querySnapshot)
+            const queryRegistrationDetailsSnapshot = await getDocs(
+              queryRegistrationDetails
+            )
+
+            const registrationDetails: UserRegistrationDetails[] = []
+            queryRegistrationDetailsSnapshot.forEach((doc) => {
+              registrationDetails.push({
+                paymentStatus: doc.data()?.paymentStatus,
+                roomOption: doc.data()?.roomOption,
+                user: doc.data()?.user,
+              })
+            })
 
             fetchedCamps.push({
               id: camp.id,
@@ -65,20 +74,18 @@ const CamperHomePage = () => {
               campLevel: campee.data()?.campLevel,
               startDate: campee.data()?.startDate,
               endDate: campee.data()?.endDate,
-              campStatus: false,
               campType: campee.data()?.campType,
             })
           })
         )
       }
 
-      // console.log(fetchedCamps)
       setcamps(fetchedCamps)
       setLoading(false)
     }
 
     fetchData()
-  }, [campsData, email, firestore])
+  }, [user?.camp_camper, email, firestore])
 
   return (
     <ApolloWrapper data={camps} loading={loading}>
@@ -86,20 +93,19 @@ const CamperHomePage = () => {
         <Container my={6}>
           <Heading>Welcome Camper!</Heading>
           <Box mt={6}>
-            {camps &&
-              camps.map((camp, index) => (
-                <CampCard
-                  name={camp?.name}
-                  campType={camp?.campType}
-                  registrationStatus={camp?.registrationStatus}
-                  paymentStatus={camp?.paymentStatus}
-                  role={camp?.role}
-                  startDate={camp?.startDate}
-                  endDate={camp?.endDate}
-                  roomOption={camp?.roomOption}
-                  key={index}
-                />
-              ))}
+            {camps.map((camp, index) => (
+              <CampCard
+                name={camp?.name}
+                campType={camp?.campType}
+                registrationStatus={camp?.registrationStatus}
+                paymentStatus={camp?.paymentStatus}
+                role={camp?.role}
+                startDate={camp?.startDate}
+                endDate={camp?.endDate}
+                roomOption={camp?.roomOption}
+                key={index}
+              />
+            ))}
           </Box>
         </Container>
       </Box>
