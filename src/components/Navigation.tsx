@@ -34,6 +34,10 @@ function Navigation() {
           name: 'Camps',
           link: '/camps',
         },
+        {
+          name: 'Users',
+          link: '/users',
+        },
       ]
       break
     default:
