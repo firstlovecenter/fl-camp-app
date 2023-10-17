@@ -82,6 +82,7 @@ const LogIn = () => {
               size="lg"
               marginY={2}
               fontSize="1rem"
+              type="password"
               height="3.5rem"
               name="password"
               placeholder="Password"
