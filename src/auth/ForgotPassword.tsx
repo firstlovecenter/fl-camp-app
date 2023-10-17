@@ -4,8 +4,6 @@ import {
   AlertIcon,
   AlertTitle,
   Button,
-  Card,
-  CardBody,
   Center,
   Container,
   Heading,
@@ -16,15 +14,16 @@ import { useAuth } from 'contexts/AuthContext'
 import * as Yup from 'yup'
 import { useState } from 'react'
 import { Input } from '@jaedag/admin-portal-react-core'
-import { Link as RouterLink, useNavigate } from 'react-router-dom'
+import { Link as RouterLink } from 'react-router-dom'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { useForm } from 'react-hook-form'
+import useCustomColors from 'hooks/useCustomColors'
 
 const ForgotPassword = () => {
   const [error, setError] = useState('')
   const [message, setMessage] = useState('')
-  const { resetPassword, currentUser } = useAuth()
-  const navigate = useNavigate()
+  const { resetPassword } = useAuth()
+  const { inputFieldBackground } = useCustomColors()
 
   const initialValues = {
     email: '',
@@ -54,65 +53,67 @@ const ForgotPassword = () => {
 
   return (
     <Container>
-      <Center height="80vh">
+      <Center height="100vh">
         <Container>
-          <Card>
-            <CardBody>
-              <Heading textAlign={'center'} marginBottom={4}>
-                Password Reset
-              </Heading>
-              {error && (
-                <Alert status="error">
-                  <AlertIcon />
-                  <AlertTitle>Error!</AlertTitle>
-                  <AlertDescription>{error}</AlertDescription>
-                </Alert>
-              )}
+          <Heading textAlign={'center'} marginBottom={4}>
+            Password Reset
+          </Heading>
+          {error && (
+            <Alert status="error">
+              <AlertIcon />
+              <AlertTitle>Error!</AlertTitle>
+              <AlertDescription>{error}</AlertDescription>
+            </Alert>
+          )}
 
-              {message && (
-                <Alert status="success">
-                  <AlertIcon />
-                  <AlertTitle>Success!</AlertTitle>
-                  <AlertDescription>{message}</AlertDescription>
-                </Alert>
-              )}
-              <Text>{JSON.stringify(currentUser?.email)}</Text>
+          {message && (
+            <Alert status="success">
+              <AlertIcon />
+              <AlertTitle>Success!</AlertTitle>
+              <AlertDescription>{message}</AlertDescription>
+            </Alert>
+          )}
 
-              <form onSubmit={handleSubmit(onSubmit)}>
-                <Input
-                  name="email"
-                  label="Email"
-                  size="lg"
-                  control={control}
-                  errors={errors}
-                />
+          <form onSubmit={handleSubmit(onSubmit)}>
+            <Input
+              fontSize="1rem"
+              height="3.5rem"
+              name="email"
+              placeholder="Email"
+              _placeholder={{ opacity: 1, color: 'whiteAlpha.700' }}
+              size="lg"
+              control={control}
+              errors={errors}
+              backgroundColor={inputFieldBackground}
+            />
 
-                <Button
-                  width="100%"
-                  type="submit"
-                  size="lg"
-                  marginTop={5}
-                  isLoading={isSubmitting}
-                >
-                  Reset Password
-                </Button>
-              </form>
+            <Button
+              width="100%"
+              type="submit"
+              backgroundColor="cyan.700"
+              size="lg"
+              marginTop={7}
+              padding={7}
+              isLoading={isSubmitting}
+            >
+              Reset Password
+            </Button>
+          </form>
 
-              <Container marginTop={3}>
-                <Text
-                  textAlign="center"
-                  color="blue.500"
-                  onClick={() => navigate('/login')}
-                >
+          <Container>
+            <Center width={'100%'} marginTop={3}>
+              <Text>
+                Already have an account?{' '}
+                <Link as={RouterLink} color="cyan.700" to="/login">
                   Login
-                </Text>
-              </Container>
-            </CardBody>
-          </Card>
-          <Center width={'100%'} marginTop={2}>
+                </Link>
+              </Text>
+            </Center>
+          </Container>
+          <Center width={'100%'} marginTop={1}>
             <Text>
               Need an account?{' '}
-              <Link as={RouterLink} to="/signup">
+              <Link as={RouterLink} color="cyan.700" to="/sign-up">
                 Sign Up
               </Link>
             </Text>
