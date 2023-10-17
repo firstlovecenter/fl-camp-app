@@ -4,13 +4,9 @@ import {
   AlertIcon,
   AlertTitle,
   Button,
-  Card,
-  CardBody,
   Center,
   Container,
   Heading,
-  InputGroup,
-  InputRightElement,
   Link,
   Text,
 } from '@chakra-ui/react'
@@ -23,10 +19,8 @@ import { Link as RouterLink, useNavigate } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
 
 const SignUp = () => {
-  const [show, setShow] = useState(false)
   const [error, setError] = useState('')
-  const handleClick = () => setShow(!show)
-  const { signup, currentUser } = useAuth()
+  const { signup } = useAuth()
   const navigate = useNavigate()
 
   const initialValues = {
@@ -63,79 +57,73 @@ const SignUp = () => {
 
   return (
     <Container>
-      <Center height="80vh">
+      <Center height="100vh">
         <Container>
-          <Card>
-            <CardBody>
-              <Heading textAlign={'center'} marginBottom={4}>
-                Sign Up
-              </Heading>
-              {error && (
-                <Alert status="error">
-                  <AlertIcon />
-                  <AlertTitle>Error!</AlertTitle>
-                  <AlertDescription>{error}</AlertDescription>
-                </Alert>
-              )}
-              <Text>{JSON.stringify(currentUser?.email)}</Text>
+          <Heading textAlign={'center'} marginBottom={7}>
+            Sign Up
+          </Heading>
+          {error && (
+            <Alert status="error">
+              <AlertIcon />
+              <AlertTitle>Error!</AlertTitle>
+              <AlertDescription>{error}</AlertDescription>
+            </Alert>
+          )}
+          <form onSubmit={handleSubmit(onSubmit)}>
+            <Input
+              fontSize="1rem"
+              height="3.5rem"
+              size="lg"
+              name="email"
+              control={control}
+              errors={errors}
+              placeholder="Email"
+              _placeholder={{ opacity: 1, color: 'whiteAlpha.700' }}
+              backgroundColor={'#21242F'}
+            />
+            <Input
+              marginY={2}
+              size="lg"
+              fontSize="1rem"
+              type="password"
+              height="3.5rem"
+              name="password"
+              placeholder="Password"
+              _placeholder={{ opacity: 1, color: 'whiteAlpha.700' }}
+              control={control}
+              errors={errors}
+              backgroundColor={'#21242F'}
+            />
 
-              <form onSubmit={handleSubmit(onSubmit)}>
-                <Input
-                  size="lg"
-                  name="email"
-                  label="Email"
-                  control={control}
-                  errors={errors}
-                />
-                <InputGroup size="md" marginY={5}>
-                  <Input
-                    // paddingRight="4.5rem"
-                    size="lg"
-                    name="password"
-                    type={show ? 'text' : 'password'}
-                    placeholder="Enter password"
-                    control={control}
-                    errors={errors}
-                  />
-                  <InputRightElement width="4.5rem">
-                    <Button h="1.75rem" size="sm" onClick={handleClick}>
-                      {show ? 'Hide' : 'Show'}
-                    </Button>
-                  </InputRightElement>
-                </InputGroup>
-                <InputGroup size="md">
-                  <Input
-                    size="lg"
-                    // paddingRight="4.5rem"
-                    name="passwordConfirm"
-                    type={show ? 'text' : 'password'}
-                    placeholder="Confirm password"
-                    control={control}
-                    errors={errors}
-                  />
-                  <InputRightElement width="4.5rem">
-                    <Button h="1.75rem" size="sm" onClick={handleClick}>
-                      {show ? 'Hide' : 'Show'}
-                    </Button>
-                  </InputRightElement>
-                </InputGroup>
+            <Input
+              size="lg"
+              fontSize="1rem"
+              type="password"
+              height="3.5rem"
+              name="confirmPassword"
+              placeholder="Confirm Password"
+              _placeholder={{ opacity: 1, color: 'whiteAlpha.700' }}
+              control={control}
+              errors={errors}
+              backgroundColor={'#21242F'}
+            />
 
-                <Button
-                  size="lg"
-                  width="100%"
-                  type="submit"
-                  marginTop={5}
-                  isLoading={isSubmitting}
-                >
-                  Sign Up
-                </Button>
-              </form>
-            </CardBody>
-          </Card>
+            <Button
+              width="100%"
+              type="submit"
+              backgroundColor="cyan.700"
+              size="lg"
+              marginTop={7}
+              padding={7}
+              isLoading={isSubmitting}
+            >
+              Sign Up
+            </Button>
+          </form>
           <Center width={'100%'} marginTop={2}>
             <Text>
               Already have an account?{' '}
-              <Link as={RouterLink} to="/login">
+              <Link as={RouterLink} color={'cyan.700'} to="/login">
                 Log In
               </Link>
             </Text>
