@@ -4,13 +4,9 @@ import {
   AlertIcon,
   AlertTitle,
   Button,
-  Card,
-  CardBody,
   Center,
   Container,
-  Heading,
-  InputGroup,
-  InputRightElement,
+  Image,
   Link,
   Text,
 } from '@chakra-ui/react'
@@ -21,12 +17,11 @@ import { Input } from '@jaedag/admin-portal-react-core'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { Link as RouterLink, useNavigate } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
+import logo from '../assets/CampLogo.svg'
 
 const LogIn = () => {
-  const [show, setShow] = useState(false)
   const [error, setError] = useState('')
-  const handleClick = () => setShow(!show)
-  const { login, currentUser } = useAuth()
+  const { login } = useAuth()
   const navigate = useNavigate()
 
   const initialValues = {
@@ -59,72 +54,68 @@ const LogIn = () => {
 
   return (
     <Container>
-      <Center height="80vh">
+      <Center height="100vh">
         <Container>
-          <Card>
-            <CardBody>
-              <Heading textAlign={'center'} marginBottom={4}>
-                Log In
-              </Heading>
-              {error && (
-                <Alert status="error">
-                  <AlertIcon />
-                  <AlertTitle>Error!</AlertTitle>
-                  <AlertDescription>{error}</AlertDescription>
-                </Alert>
-              )}
-              <Text>{JSON.stringify(currentUser?.email)}</Text>
+          <Center marginBottom="3rem">
+            <Image src={logo} />
+          </Center>
+          {error && (
+            <Alert status="error">
+              <AlertIcon />
+              <AlertTitle>Error!</AlertTitle>
+              <AlertDescription>{error}</AlertDescription>
+            </Alert>
+          )}
+          <form onSubmit={handleSubmit(onSubmit)}>
+            <Input
+              fontSize="1rem"
+              height="3.5rem"
+              name="email"
+              size="lg"
+              control={control}
+              errors={errors}
+              placeholder="Username"
+              _placeholder={{ opacity: 1, color: 'whiteAlpha.700' }}
+              backgroundColor={'#21242F'}
+            />
+            <Input
+              size="lg"
+              marginY={2}
+              fontSize="1rem"
+              height="3.5rem"
+              name="password"
+              placeholder="Password"
+              _placeholder={{ opacity: 1, color: 'whiteAlpha.700' }}
+              control={control}
+              errors={errors}
+              backgroundColor={'#21242F'}
+            />
 
-              <form onSubmit={handleSubmit(onSubmit)}>
-                <Input
-                  name="email"
-                  label="Email"
-                  size="lg"
-                  control={control}
-                  errors={errors}
-                />
-                <InputGroup size="lg" marginY={5}>
-                  <Input
-                    // paddingRight="4.5rem"
-                    name="password"
-                    type={show ? 'text' : 'password'}
-                    placeholder="Enter password"
-                    control={control}
-                    errors={errors}
-                  />
-                  <InputRightElement width="4.5rem">
-                    <Button h="1.75rem" size="sm" onClick={handleClick}>
-                      {show ? 'Hide' : 'Show'}
-                    </Button>
-                  </InputRightElement>
-                </InputGroup>
+            <Text
+              textAlign="end"
+              color="whiteAlpha.700"
+              onClick={() => navigate('/forgot-password')}
+            >
+              Forgot Password?
+            </Text>
 
-                <Button
-                  width="100%"
-                  type="submit"
-                  size="lg"
-                  marginTop={5}
-                  isLoading={isSubmitting}
-                >
-                  Log In
-                </Button>
-              </form>
+            <Button
+              width="100%"
+              type="submit"
+              backgroundColor="cyan.700"
+              size="lg"
+              marginTop={7}
+              padding={7}
+              isLoading={isSubmitting}
+            >
+              Login
+            </Button>
+          </form>
 
-              <Container marginTop={3}>
-                <Text
-                  textAlign="center"
-                  color="blue.500"
-                  onClick={() => navigate('/forgot-password')}
-                >
-                  Forgot Password?
-                </Text>
-              </Container>
-            </CardBody>
-          </Card>
           <Center width={'100%'} marginTop={2}>
             <Text>
               Need an account?{' '}
-              <Link as={RouterLink} to="/signup">
+              <Link as={RouterLink} color={'cyan.700'} to="/sign-up">
                 Sign Up
               </Link>
             </Text>
