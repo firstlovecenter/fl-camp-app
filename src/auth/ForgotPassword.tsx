@@ -6,9 +6,11 @@ import {
   Button,
   Center,
   Container,
+  HStack,
   Heading,
   Link,
   Text,
+  VStack,
 } from '@chakra-ui/react'
 import { useAuth } from 'contexts/AuthContext'
 import * as Yup from 'yup'
@@ -67,10 +69,14 @@ const ForgotPassword = () => {
           )}
 
           {message && (
-            <Alert status="success">
-              <AlertIcon />
-              <AlertTitle>Success!</AlertTitle>
-              <AlertDescription>{message}</AlertDescription>
+            <Alert status="success" marginBottom={5}>
+              <VStack>
+                <HStack>
+                  <AlertIcon />
+                  <AlertTitle>Success!</AlertTitle>
+                </HStack>
+                <AlertDescription>{message}</AlertDescription>
+              </VStack>
             </Alert>
           )}
 
