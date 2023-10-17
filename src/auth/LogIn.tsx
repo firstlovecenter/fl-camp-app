@@ -18,11 +18,13 @@ import { yupResolver } from '@hookform/resolvers/yup'
 import { Link as RouterLink, useNavigate } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
 import logo from '../assets/CampLogo.svg'
+import useCustomColors from 'hooks/useCustomColors'
 
 const LogIn = () => {
   const [error, setError] = useState('')
   const { login } = useAuth()
   const navigate = useNavigate()
+  const { inputFieldBackground } = useCustomColors()
 
   const initialValues = {
     email: '',
@@ -76,7 +78,7 @@ const LogIn = () => {
               errors={errors}
               placeholder="Username"
               _placeholder={{ opacity: 1, color: 'whiteAlpha.700' }}
-              backgroundColor={'#21242F'}
+              backgroundColor={inputFieldBackground}
             />
             <Input
               size="lg"
@@ -89,7 +91,7 @@ const LogIn = () => {
               _placeholder={{ opacity: 1, color: 'whiteAlpha.700' }}
               control={control}
               errors={errors}
-              backgroundColor={'#21242F'}
+              backgroundColor={inputFieldBackground}
             />
 
             <Text

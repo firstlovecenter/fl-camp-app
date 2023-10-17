@@ -17,11 +17,13 @@ import { Input } from '@jaedag/admin-portal-react-core'
 import { Link as RouterLink } from 'react-router-dom'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { useForm } from 'react-hook-form'
+import useCustomColors from 'hooks/useCustomColors'
 
 const ForgotPassword = () => {
   const [error, setError] = useState('')
   const [message, setMessage] = useState('')
   const { resetPassword } = useAuth()
+  const { inputFieldBackground } = useCustomColors()
 
   const initialValues = {
     email: '',
@@ -82,7 +84,7 @@ const ForgotPassword = () => {
               size="lg"
               control={control}
               errors={errors}
-              backgroundColor={'#21242F'}
+              backgroundColor={inputFieldBackground}
             />
 
             <Button

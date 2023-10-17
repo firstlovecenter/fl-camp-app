@@ -17,11 +17,13 @@ import { Input } from '@jaedag/admin-portal-react-core'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { Link as RouterLink, useNavigate } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
+import useCustomColors from 'hooks/useCustomColors'
 
 const SignUp = () => {
   const [error, setError] = useState('')
   const { signup } = useAuth()
   const navigate = useNavigate()
+  const { inputFieldBackground } = useCustomColors()
 
   const initialValues = {
     email: '',
@@ -79,7 +81,7 @@ const SignUp = () => {
               errors={errors}
               placeholder="Email"
               _placeholder={{ opacity: 1, color: 'whiteAlpha.700' }}
-              backgroundColor={'#21242F'}
+              backgroundColor={inputFieldBackground}
             />
             <Input
               marginY={2}
@@ -92,7 +94,7 @@ const SignUp = () => {
               _placeholder={{ opacity: 1, color: 'whiteAlpha.700' }}
               control={control}
               errors={errors}
-              backgroundColor={'#21242F'}
+              backgroundColor={inputFieldBackground}
             />
 
             <Input
@@ -105,7 +107,7 @@ const SignUp = () => {
               _placeholder={{ opacity: 1, color: 'whiteAlpha.700' }}
               control={control}
               errors={errors}
-              backgroundColor={'#21242F'}
+              backgroundColor={inputFieldBackground}
             />
 
             <Button

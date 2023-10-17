@@ -16,6 +16,7 @@ const useCustomColors = () => {
   const userCardBackground = useColorModeValue('#fff', '#171C22')
   const dropdownBackground = useColorModeValue('#fff', '#282D35')
   const userCardStroke = useColorModeValue('#e2e8f0', '#374151')
+  const inputFieldBackground = useColorModeValue('#21242F', '#21242F')
 
   return {
     bg,
@@ -33,6 +34,7 @@ const useCustomColors = () => {
     userCardBackground,
     dropdownBackground,
     userCardStroke,
+    inputFieldBackground,
   }
 }
 
