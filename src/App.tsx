@@ -22,7 +22,8 @@ const App = () => {
         <IdContextProvider>
           <AuthProvider>
             <BrowserRouter>
-              <Navigation />
+              {!authRoutes && <Navigation />}
+
               <Suspense fallback={<LoadingPage />}>
                 <Routes>
                   {[
