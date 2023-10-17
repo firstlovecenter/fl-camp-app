@@ -16,7 +16,7 @@ export const authRoutes: LazyRouteTypes[] = [
     roles: ['all'],
   },
   {
-    path: '/signup',
+    path: '/sign-up',
     element: Signup,
     placeholder: true,
     roles: ['all'],
