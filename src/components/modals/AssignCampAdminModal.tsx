@@ -14,7 +14,7 @@ import {
   useToast,
 } from '@chakra-ui/react'
 import { Select } from '@jaedag/admin-portal-react-core'
-import { ModalProps, SelectOptions } from '../../../global'
+import { ModalProps } from '../../../global'
 import * as Yup from 'yup'
 import { useForm } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'

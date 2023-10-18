@@ -1,24 +1,38 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { Container, Heading, Box, Button } from '@chakra-ui/react'
 import { Input, Select } from '@jaedag/admin-portal-react-core'
 import * as Yup from 'yup'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { useForm } from 'react-hook-form'
 import { useNavigate } from 'react-router-dom'
-import { collection, addDoc } from 'firebase/firestore'
+import { collection, addDoc, getDocs, where, query } from 'firebase/firestore'
 import { useFirestore } from 'reactfire'
+import { SelectOptions } from '../../../global'
+import { CAMP_LEVEL_OPTIONS } from 'utils/constants'
+import { FormData } from '../../../global'
 
-const CampLevelOptions = [
-  { key: 'Global', value: 'global' },
-  { key: 'Continent', value: 'continent' },
-  { key: 'Country', value: 'country' },
-  { key: 'Campus', value: 'campus' },
-]
+const campLevelReference = (campLevel: string, values: FormData) => {
+  switch (campLevel) {
+    case 'global':
+      return values?.world as string
+    case 'continent':
+      return values?.continent as string
+    case 'country':
+      return values?.country as string
+    case 'campus':
+      return values?.campus as string
+    default:
+      return values?.world as string
+  }
+}
 
 const StartCampForm = () => {
   const date = new Date('1990-01-01')
   const navigate = useNavigate()
   const firestore = useFirestore()
+  const [continents, setContinents] = useState<SelectOptions[]>([])
+  const [countries, setCountries] = useState<SelectOptions[]>([])
+  const [campuses, setCampuses] = useState<SelectOptions[]>([])
 
   const initialValues = {
     campName: '',
@@ -27,6 +41,10 @@ const StartCampForm = () => {
     campEnd: date,
     registrationDeadline: date,
     paymentDeadline: date,
+    world: '' || undefined,
+    continent: '' || undefined,
+    country: '' || undefined,
+    campus: '' || undefined,
   }
 
   const validationSchema = Yup.object({
@@ -42,18 +60,30 @@ const StartCampForm = () => {
     paymentDeadline: Yup.date()
       .required('Payment Deadline Date is a required field')
       .min(new Date(), 'Payment deadline cannot be before today'),
+    world: Yup.string(),
+    continent: Yup.string(),
+    country: Yup.string(),
+    campus: Yup.string(),
   })
 
   const {
     handleSubmit,
     control,
+    watch,
     formState: { errors, isSubmitting },
-  } = useForm<typeof initialValues>({
+  } = useForm<FormData>({
     resolver: yupResolver(validationSchema),
     defaultValues: initialValues,
   })
 
-  const onSubmit = async (values: typeof initialValues) => {
+  const watchCampLevel = watch('campLevel')
+  const watchWorld = watch('world')
+  const watchContinent = watch('continent')
+  const watchCountry = watch('country')
+
+  const onSubmit = async (values: FormData) => {
+    console.log(values)
+    const levelRef = campLevelReference(watchCampLevel, values)
     const data = {
       name: values?.campName,
       campLevel: values?.campLevel,
@@ -64,6 +94,7 @@ const StartCampForm = () => {
         .toISOString()
         .slice(0, 10),
       paymentDeadline: values?.paymentDeadline.toISOString().slice(0, 10),
+      levelRef: levelRef,
     }
 
     const docRef = await addDoc(collection(firestore, 'camps'), data)
@@ -71,6 +102,86 @@ const StartCampForm = () => {
 
     navigate('/camps')
   }
+
+  useEffect(() => {
+    const fetchContinents = async () => {
+      try {
+        const continentsCollection = collection(firestore, 'continents')
+
+        const continents: SelectOptions[] = []
+        const querySnapshot = await getDocs(continentsCollection)
+        const data = querySnapshot.docs.map((doc) =>
+          continents.push({ key: doc.data().name, value: doc.id })
+        )
+
+        setContinents(continents)
+      } catch (error) {
+        console.error(error)
+      }
+    }
+
+    fetchContinents()
+  }, [firestore, watchWorld])
+
+  useEffect(() => {
+    const fetchCountries = async () => {
+      if (watchContinent) {
+        try {
+          const countriesCollection = collection(firestore, 'countries')
+
+          const countriesQuery = query(
+            countriesCollection,
+            where('continentRef', '==', watchContinent)
+          )
+
+          const countriesSnapshot = await getDocs(countriesQuery)
+
+          const data = countriesSnapshot.docs.map((doc) => ({
+            key: doc.data().name,
+            value: doc.id,
+          }))
+
+          setCountries(data)
+        } catch (error) {
+          console.error(error)
+        }
+      } else {
+        setCountries([])
+      }
+    }
+
+    fetchCountries()
+  }, [firestore, watchContinent])
+
+  useEffect(() => {
+    const fetchCampuses = async () => {
+      if (watchCountry) {
+        try {
+          const campusesCollection = collection(firestore, 'campuses')
+
+          const campusesQuery = query(
+            campusesCollection,
+            where('countryRef', '==', watchCountry)
+          )
+
+          const campusesSnapshot = await getDocs(campusesQuery)
+
+          const data = campusesSnapshot.docs.map((doc) => ({
+            key: doc.data().name,
+            value: doc.id,
+          }))
+
+          setCampuses(data)
+        } catch (error) {
+          console.error(error)
+        }
+      } else {
+        setCampuses([])
+      }
+    }
+
+    fetchCampuses()
+  }, [firestore, watchCountry])
 
   return (
     <Container p={6}>
@@ -92,11 +203,68 @@ const StartCampForm = () => {
             name="campLevel"
             placeholder="Camp Level"
             label="Camp Level"
-            options={CampLevelOptions}
+            options={CAMP_LEVEL_OPTIONS}
             control={control}
             errors={errors}
           />
         </Box>
+
+        {(watchCampLevel == 'global' ||
+          watchCampLevel == 'continent' ||
+          watchCampLevel == 'country' ||
+          watchCampLevel == 'campus') && (
+          <Box my={3}>
+            <Select
+              name="world"
+              placeholder="world"
+              label="Select World"
+              options={[{ key: 'Earth', value: 'earth' }]}
+              control={control}
+              errors={errors}
+            />
+          </Box>
+        )}
+
+        {(watchCampLevel == 'continent' ||
+          watchCampLevel == 'country' ||
+          watchCampLevel == 'campus') && (
+          <Box my={3}>
+            <Select
+              name="continent"
+              placeholder="Continent"
+              label="Select Continent"
+              options={continents}
+              control={control}
+              errors={errors}
+            />
+          </Box>
+        )}
+
+        {(watchCampLevel == 'country' || watchCampLevel == 'campus') && (
+          <Box my={3}>
+            <Select
+              name="country"
+              placeholder="Country"
+              label="Select Country"
+              options={countries}
+              control={control}
+              errors={errors}
+            />
+          </Box>
+        )}
+
+        {watchCampLevel == 'campus' && (
+          <Box my={3}>
+            <Select
+              name="campus"
+              placeholder="Campus"
+              label="Select Campus"
+              options={campuses}
+              control={control}
+              errors={errors}
+            />
+          </Box>
+        )}
 
         <Box my={3}>
           <Input

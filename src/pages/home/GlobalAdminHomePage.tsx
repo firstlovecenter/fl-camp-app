@@ -173,7 +173,7 @@ const GlobalAdminHomePage = () => {
               borderLeft="4px"
               borderColor="green.500"
               bg={homePageCardBackground}
-              onClick={() => navigate('/camps/start-camp')}
+              onClick={() => navigate('/camp/start-camp')}
             >
               <CardBody>
                 <Text fontSize="lg">Start a Camp</Text>

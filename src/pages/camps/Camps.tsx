@@ -48,7 +48,7 @@ const Camps = () => {
           <Button
             colorScheme="blue"
             variant="solid"
-            onClick={() => navigate('/camps/start-camp')}
+            onClick={() => navigate('/camp/start-camp')}
             my={6}
             py={6}
           >
