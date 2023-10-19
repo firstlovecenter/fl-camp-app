@@ -39,6 +39,10 @@ const PrivateRoute: React.FC<ProtectedRouteProps> = (props) => {
     fetchUserRoles()
   }, [currentUser])
 
+  if (placeholder) {
+    return children
+  }
+
   if (!currentUser) {
     return <LogIn />
   }

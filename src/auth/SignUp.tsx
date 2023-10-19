@@ -65,7 +65,13 @@ const SignUp = () => {
             Sign Up
           </Heading>
           {error && (
-            <Alert status="error">
+            <Alert
+              marginBottom={4}
+              flexWrap={'wrap'}
+              borderRadius={7}
+              justifyContent={'center'}
+              status="error"
+            >
               <AlertIcon />
               <AlertTitle>Error!</AlertTitle>
               <AlertDescription>{error}</AlertDescription>
