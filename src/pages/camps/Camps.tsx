@@ -26,15 +26,14 @@ const Camps = () => {
       idField: 'id',
     }
   )
-  console.log('camps', campDocs)
-
-  const loading = !campDocs
 
   const camps: Camp[] = []
 
   campDocs?.forEach((camp: any) => {
     camps.push(camp)
   })
+
+  const loading = !camps
 
   const error = ''
   if (status === 'error') {
@@ -49,7 +48,7 @@ const Camps = () => {
           <Button
             colorScheme="blue"
             variant="solid"
-            onClick={() => navigate('/camps/start-camp')}
+            onClick={() => navigate('/camp/start-camp')}
             my={6}
             py={6}
           >
@@ -64,9 +63,9 @@ const Camps = () => {
               roomOption={camp?.roomOption}
               startDate={camp?.startDate}
               endDate={camp?.endDate}
-              campStatus={camp?.campStatus}
               role={'Admin'}
               key={index}
+              campId={camp?.id}
             />
           ))
         ) : (

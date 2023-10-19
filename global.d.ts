@@ -8,6 +8,8 @@ interface Camp {
   registrationStatus?: string
   paymentStatus?: string
   campStatus?: boolean
+  campId?: string
+  id?: string
 }
 
 type Role =
@@ -25,7 +27,6 @@ interface FetchedCampData {
   campLevel: string
   startDate: string
   endDate: string
-  campStatus: boolean
   campType: string
 }
 
@@ -41,6 +42,7 @@ interface UserData {
   lastName: string
   roles: string[]
   image_url: string
+  email: string
 }
 
 export interface Member {
@@ -63,4 +65,17 @@ export interface ModalProps {
 export interface SelectOptions {
   key: string
   value: string
+}
+
+type FormData = {
+  campName: string
+  campLevel: string
+  campStart: Date
+  campEnd: Date
+  registrationDeadline: Date
+  paymentDeadline: Date
+  world: string | undefined
+  continent: string | undefined
+  country: string | undefined
+  campus: string | undefined
 }

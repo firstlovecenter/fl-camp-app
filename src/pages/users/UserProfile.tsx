@@ -35,6 +35,7 @@ import UserCampsCard from 'components/UserCampsCard'
 import { SelectOptions } from '../../../global'
 import AssignAdminToCampModal from 'components/modals/AssignAdminUserModal'
 import RemoveUserFromCampModal from 'components/modals/RemoveUserFromCampModal'
+import { capitalizeFirstLetter } from 'utils/utils'
 
 const UserProfile = () => {
   const [isOpenFirstModal, setIsOpenFirstModal] = useState(false)
@@ -60,6 +61,7 @@ const UserProfile = () => {
   const { userId } = useClickCard()
   const { userCardBackground, userCardStroke } = useCustomColors()
   const userEmail = userId as string
+
   const userReference = doc(firestore, 'users', userEmail)
   const { status, data: user } = useFirestoreDocData(userReference)
 
@@ -150,7 +152,10 @@ const UserProfile = () => {
                     </Box>
                     <Box>
                       <Text fontSize="2xl">
-                        {user?.firstName + ' ' + user?.lastName}
+                        {user &&
+                          capitalizeFirstLetter(user?.firstName) +
+                            ' ' +
+                            capitalizeFirstLetter(user?.lastName)}
                       </Text>
                     </Box>
                     <Box mt={3} maxWidth="97%">
@@ -203,7 +208,7 @@ const UserProfile = () => {
                     <Flex>
                       <Text fontSize="sm">Email</Text>
                       <Spacer />
-                      <Text fontSize="sm">{user?.NO_ID_FIELD}</Text>
+                      <Text fontSize="sm">{user?.email}</Text>
                     </Flex>
                   </Box>
                   <Box>

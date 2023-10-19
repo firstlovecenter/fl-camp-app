@@ -15,16 +15,32 @@ const LandingPage = () => {
   const navigate = useNavigate()
   const [roles, setRoles] = useState<Role[]>([])
 
-  console.log('roles', roles)
-
   const loading = !roles
 
   useEffect(() => {
     const getRoles = async () => {
       const token = await currentUser?.getIdTokenResult()
+      let roles: string[] = []
       if (token?.claims?.roles) {
-        setRoles(token.claims.roles)
+        roles = [...token.claims.roles]
       }
+
+      const roleMappings: { [key: string]: string } = {
+        countryAdmin: 'campAdmin',
+        campusAdmin: 'campAdmin',
+        continentAdmin: 'campAdmin',
+      }
+
+      // Use filter to keep only 'globalAdmin', 'campCamper', and roles mapped to 'campAdmin'
+      const filteredRoles = roles.filter((role) => {
+        return (
+          role === 'globalAdmin' ||
+          role === 'campCamper' ||
+          roleMappings[role] === 'campAdmin'
+        )
+      })
+
+      setRoles(filteredRoles as Role[])
     }
 
     getRoles()

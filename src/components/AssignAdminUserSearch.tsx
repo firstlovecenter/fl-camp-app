@@ -1,13 +1,17 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { useForm, Controller } from 'react-hook-form'
 import { FormControl, Input, Box, Center } from '@chakra-ui/react'
-import UserListCard from './UserListCard'
+
 import { UserData } from '../../global'
-
-import { capitalizeFirstLetter } from 'utils/utils'
+import AdminUserSearchCard from './AdminUserSearchCard'
 import searchName from 'queries/SearchQueries'
+import { capitalizeFirstLetter } from 'utils/utils'
 
-const UserSearch = () => {
+type UserSearchProp = {
+  modal: () => void
+}
+
+const AssignAdminUserSearch = ({ modal }: UserSearchProp) => {
   const [userData, setUserData] = useState<UserData[]>([])
   const [cardText, setCardText] = useState<string>('Type to begin your search')
 
@@ -51,15 +55,15 @@ const UserSearch = () => {
       <Box mt={4}>
         {userData.length > 0 ? (
           userData?.map((user, index) => (
-            <UserListCard
-              id={user?.email}
+            <AdminUserSearchCard
+              email={user?.email}
               name={
                 capitalizeFirstLetter(user?.firstName) +
                 ' ' +
                 capitalizeFirstLetter(user?.lastName)
               }
               key={index}
-              role={user?.roles}
+              modal={modal}
               image={user?.image_url}
             />
           ))
@@ -73,4 +77,4 @@ const UserSearch = () => {
   )
 }
 
-export default UserSearch
+export default AssignAdminUserSearch
