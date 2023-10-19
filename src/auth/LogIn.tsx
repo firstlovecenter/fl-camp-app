@@ -97,6 +97,7 @@ const LogIn = () => {
             <Text
               textAlign="end"
               color="whiteAlpha.700"
+              cursor={'pointer'}
               onClick={() => navigate('/forgot-password')}
             >
               Forgot Password?

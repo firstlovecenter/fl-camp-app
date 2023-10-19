@@ -59,7 +59,13 @@ const ForgotPassword = () => {
             Password Reset
           </Heading>
           {error && (
-            <Alert status="error">
+            <Alert
+              marginBottom={4}
+              flexWrap={'wrap'}
+              borderRadius={7}
+              justifyContent={'center'}
+              status="error"
+            >
               <AlertIcon />
               <AlertTitle>Error!</AlertTitle>
               <AlertDescription>{error}</AlertDescription>
@@ -67,7 +73,13 @@ const ForgotPassword = () => {
           )}
 
           {message && (
-            <Alert status="success">
+            <Alert
+              marginBottom={4}
+              flexWrap={'wrap'}
+              borderRadius={7}
+              justifyContent={'center'}
+              status="success"
+            >
               <AlertIcon />
               <AlertTitle>Success!</AlertTitle>
               <AlertDescription>{message}</AlertDescription>
