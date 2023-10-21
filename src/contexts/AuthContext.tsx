@@ -35,6 +35,7 @@ export interface ValueProps {
 interface CreateDocumentProps {
   values: ValueProps
   email: string
+  userCredential: UserCredential
   addUser: boolean
 }
 
@@ -48,6 +49,12 @@ interface AuthContextType {
   updatePassword: (password: string) => Promise<void>
   createUserDocument: ({ values, email, addUser }: CreateDocumentProps) => void
   userInfo: DocumentData
+  createUserDocument: ({
+    values,
+    email,
+    userCredential,
+    addUser,
+  }: CreateDocumentProps) => void
 }
 
 const AuthContext = createContext<AuthContextType>({
@@ -61,6 +68,7 @@ const AuthContext = createContext<AuthContextType>({
   userInfo: [],
   createUserDocument: () => null,
   userInfo: [],
+  createUserDocument: () => null,
 })
 
 // eslint-disable-next-line react-refresh/only-export-components
@@ -156,6 +164,50 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     const userSnapShot = await getDoc(userDoc)
 
     return (await userSnapShot.exists()) ? userSnapShot.data() : null
+  const createUserDocument = async ({
+    values,
+    email,
+    userCredential,
+    addUser,
+  }: CreateDocumentProps) => {
+    try {
+      if (addUser) {
+        if (userCredential) {
+          await sendPasswordResetEmail(auth, email)
+          console.log('add user')
+        }
+      }
+      const data = {
+        firstName: values?.firstName.toLowerCase(),
+        lastName: values?.lastName.toLowerCase(),
+        email: values?.email,
+        phone: values?.phone,
+        dob: values?.dob.toISOString().slice(0, 10),
+        image_url: values?.pictureUrl,
+      }
+
+      await setDoc(doc(firestore, 'users', values?.email), { ...data })
+
+      toast({
+        title: 'Account created.',
+        description: "We've created your account for you.",
+        status: 'success',
+        duration: 4000,
+        isClosable: true,
+      })
+    } catch (error) {
+      if (AuthErrorCodes.EMAIL_EXISTS) {
+        toast({
+          title: 'Error.',
+          description: 'Email already in use.',
+          status: 'error',
+          duration: 4000,
+          isClosable: true,
+        })
+      } else {
+        console.log('user creation encountered an error', error)
+      }
+    }
   }
 
   useEffect(() => {
@@ -187,6 +239,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     userInfo,
     createUserDocument,
     userInfo,
+    createUserDocument,
   }
 
   return (
