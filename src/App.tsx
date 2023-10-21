@@ -2,7 +2,7 @@ import { Route, Routes, useLocation } from 'react-router-dom'
 import Navigation from './components/Navigation'
 import { AuthProvider } from 'contexts/AuthContext'
 import PrivateRoute from 'auth/PrivateRoute'
-import { authRoutes } from 'auth/authRoutes'
+import { authRoutes, mainAuthRoutes } from 'auth/authRoutes'
 import { directoryRoutes } from 'pages/directory/directoryRoutes'
 import { homeRoutes } from 'pages/home/homeRoutes'
 import { userRoutes } from 'pages/users/userRoutes'
@@ -17,7 +17,7 @@ import { UserContextProvider } from 'contexts/UserContext'
 const App = () => {
   const firestoreInstance = getFirestore(useFirebaseApp())
   const location = useLocation()
-  const isAuthRoute = authRoutes.some(
+  const isAuthRoute = mainAuthRoutes.some(
     (route) => location.pathname === route.path
   )
   return (
@@ -29,6 +29,7 @@ const App = () => {
             <Suspense fallback={<LoadingPage />}>
               <Routes>
                 {[
+                  ...mainAuthRoutes,
                   ...authRoutes,
                   ...directoryRoutes,
                   ...homeRoutes,
