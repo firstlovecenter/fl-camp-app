@@ -8,7 +8,7 @@ const ProfilePage = lazy(() => import('../pages/ProfilePage'))
 const ForgotPassword = lazy(() => import('./ForgotPassword'))
 const UpdateProfile = lazy(() => import('./UpdateProfile'))
 
-export const authRoutes: LazyRouteTypes[] = [
+export const mainAuthRoutes: LazyRouteTypes[] = [
   {
     path: '/login',
     element: Login,
@@ -27,6 +27,8 @@ export const authRoutes: LazyRouteTypes[] = [
     placeholder: true,
     roles: ['all'],
   },
+]
+export const authRoutes: LazyRouteTypes[] = [
   {
     path: '/',
     element: LandingPage,

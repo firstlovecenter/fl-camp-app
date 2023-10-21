@@ -15,12 +15,23 @@ import { GiHamburgerMenu } from 'react-icons/gi'
 import { useNavigate } from 'react-router-dom'
 import { ColorModeSwitcher } from '../components/ColorModeSwitcher'
 import { useUserContext } from 'contexts/UserContext'
+import { useAuth } from 'contexts/AuthContext'
 
 function Navigation() {
   const { isOpen, onOpen, onClose } = useDisclosure()
   const btnRef = React.useRef(null)
   const navigate = useNavigate()
   const { userProfile } = useUserContext()
+  const { logout } = useAuth()
+
+  const handleClick = async () => {
+    try {
+      await logout()
+      navigate('/login')
+    } catch (err) {
+      console.log('err', err)
+    }
+  }
 
   let menuItems = []
   switch (userProfile) {
@@ -70,6 +81,7 @@ function Navigation() {
         placement="left"
         onClose={onClose}
         finalFocusRef={btnRef}
+        size={{ base: 'full', md: 'xs', lg: 'xs' }}
       >
         <DrawerOverlay />
         <DrawerContent>
@@ -93,8 +105,11 @@ function Navigation() {
             ))}
           </DrawerBody>
 
-          <DrawerFooter>
-            <ColorModeSwitcher justifySelf="flex-end" />
+          <DrawerFooter justifyContent={'space-between'}>
+            <Button colorScheme="red" onClick={handleClick}>
+              Log out
+            </Button>
+            <ColorModeSwitcher />
           </DrawerFooter>
         </DrawerContent>
       </Drawer>
