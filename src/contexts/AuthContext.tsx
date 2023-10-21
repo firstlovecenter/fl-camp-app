@@ -83,7 +83,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const firestore = useFirestore()
 
   const signup = (email: string, password: string) => {
-    console.log('here')
     return createUserWithEmailAndPassword(auth, email, password)
   }
 

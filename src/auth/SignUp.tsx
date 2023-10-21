@@ -79,7 +79,6 @@ const SignUp = () => {
   const lastName = watch('lastName')
   const email = watch('email')
 
-  console.log(errors)
   const onSubmit = async (values: typeof initialValues) => {
     try {
       const userCredential = await signup(values.email, values.password)
