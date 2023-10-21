@@ -26,7 +26,7 @@ import useCustomColors from 'hooks/useCustomColors'
 
 const SignUp = () => {
   const [error, setError] = useState('')
-  const { signup } = useAuth()
+  const { signup, createUserDocument } = useAuth()
   const navigate = useNavigate()
   const { inputFieldBackground } = useCustomColors()
   const date = new Date()
@@ -46,10 +46,12 @@ const SignUp = () => {
     firstName: Yup.string().required('First name is a required field'),
     lastName: Yup.string().required('Last name is a required field'),
     email: Yup.string().email().required(),
-    password: Yup.string().min(6).required(),
+    password: Yup.string()
+      .min(6, 'Password must be at least 6 characters')
+      .required('Password is required'),
     passwordConfirm: Yup.string()
       .oneOf([Yup.ref('password'), undefined], 'Passwords must match')
-      .required('Required'),
+      .required('Please confirm your password'),
     dob: Yup.date()
       .required('Date of birth is a required field')
       .max(new Date(), "You can't be born after today"),
@@ -77,12 +79,16 @@ const SignUp = () => {
   const lastName = watch('lastName')
   const email = watch('email')
 
+  console.log(errors)
   const onSubmit = async (values: typeof initialValues) => {
     try {
-      await signup(values.email, values.password)
+      const userCredential = await signup(values.email, values.password)
+      const addUser = false
+      await createUserDocument({ values, email, userCredential, addUser })
       navigate('/')
     } catch (error) {
       setError('Failed to create an account')
+      console.log('err', error)
     }
   }
 
@@ -163,7 +169,7 @@ const SignUp = () => {
               fontSize="1rem"
               type="password"
               height="3.5rem"
-              name="confirmPassword"
+              name="passwordConfirm"
               placeholder="Confirm Password"
               _placeholder={{ opacity: 1, color: 'whiteAlpha.700' }}
               control={control}
@@ -189,7 +195,6 @@ const SignUp = () => {
               placeholder="Eg. +233 241 23 456"
               size="lg"
               fontSize="1rem"
-              type="password"
               height="3.5rem"
               _placeholder={{ opacity: 1, color: 'whiteAlpha.700' }}
               control={control}

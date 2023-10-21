@@ -1,34 +1,22 @@
-import { Box, Button, Container, Heading, useToast } from '@chakra-ui/react'
+import { Box, Button, Container, Heading } from '@chakra-ui/react'
 import {
   ImageUpload,
   Input,
   PHONE_NUM_REGEX,
 } from '@jaedag/admin-portal-react-core'
-import React, { useState } from 'react'
 import * as Yup from 'yup'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { useForm } from 'react-hook-form'
-import {
-  getAuth,
-  createUserWithEmailAndPassword,
-  sendPasswordResetEmail,
-} from 'firebase/auth'
-import { doc, setDoc } from 'firebase/firestore'
-import { useFirestore } from 'reactfire'
+import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth'
+import { ValueProps, useAuth } from 'contexts/AuthContext'
 import { useNavigate } from 'react-router-dom'
 
 const AddUserForm = () => {
-  const [error, setError] = useState('')
-
-  const navigate = useNavigate()
-  const toast = useToast()
-
   const auth = getAuth()
-  const firestore = useFirestore()
-
   const date = new Date('1990-01-01')
-
-  const initialValues = {
+  const { createUserDocument } = useAuth()
+  const navigate = useNavigate()
+  const initialValues: ValueProps = {
     firstName: '',
     lastName: '',
     email: '',
@@ -75,43 +63,11 @@ const AddUserForm = () => {
         values?.email,
         import.meta.env.VITE_DEFAULT_PASSWORD
       )
-
-      if (userCredential) {
-        await sendPasswordResetEmail(auth, email)
-
-        const data = {
-          firstName: values?.firstName.toLowerCase(),
-          lastName: values?.lastName.toLowerCase(),
-          email: values?.email,
-          phone: values?.phone,
-          dob: values?.dob.toISOString().slice(0, 10),
-          image_url: values?.pictureUrl,
-        }
-
-        await setDoc(doc(firestore, 'users', values?.email), data)
-
-        toast({
-          title: 'Account created.',
-          description: "We've created your account for you.",
-          status: 'success',
-          duration: 4000,
-          isClosable: true,
-        })
-
-        navigate('/users')
-      }
-    } catch (error: any) {
-      if (error?.code === 'auth/email-already-in-use') {
-        setError('Email already in use')
-
-        toast({
-          title: 'Error.',
-          description: 'Email already in use.',
-          status: 'error',
-          duration: 4000,
-          isClosable: true,
-        })
-      }
+      const addUser = true
+      await createUserDocument({ values, email, userCredential, addUser })
+      navigate('/users')
+    } catch (error) {
+      console.log(error)
     }
   }
 
