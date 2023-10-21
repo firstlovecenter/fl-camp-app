@@ -152,14 +152,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
   }
 
-  const getUsers = async (user: User | null) => {
-    if (!user || !user.email) return
-    const userDoc = await doc(db, 'users', user.email)
-    const userSnapShot = await getDoc(userDoc)
-
-    return (await userSnapShot.exists()) ? userSnapShot.data() : null
-  }
-
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged((user) => {
       setCurrentUser(user as User)
