@@ -23,6 +23,7 @@ const PrivateRoute: React.FC<ProtectedRouteProps> = (props) => {
   const { children, roles, placeholder } = props
   const { currentUser } = useAuth()
   const [userRoles, setUserRoles] = useState<Role[]>([])
+  const navigate = useNavigate()
 
   useEffect(() => {
     const fetchUserRoles = async () => {
