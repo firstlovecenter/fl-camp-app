@@ -77,7 +77,7 @@ function Navigation() {
         placement="left"
         onClose={onClose}
         finalFocusRef={btnRef}
-        size={{ sm: 'sm' }}
+        size={{ base: 'full', md: 'xs', lg: 'xs' }}
       >
         <DrawerOverlay />
         <DrawerContent>
