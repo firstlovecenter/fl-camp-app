@@ -1,9 +1,8 @@
 import { useAuth } from 'contexts/AuthContext'
-import LogIn from './LogIn'
 import { UnauthMsg } from './UnauthMsg'
 import { useEffect, useState } from 'react'
 import { Role } from '../../global'
-import { Route, Routes, useNavigate } from 'react-router-dom'
+import { Navigate } from 'react-router-dom'
 
 interface ProtectedRouteProps {
   children: JSX.Element
@@ -24,7 +23,6 @@ const PrivateRoute: React.FC<ProtectedRouteProps> = (props) => {
   const { children, roles, placeholder } = props
   const { currentUser } = useAuth()
   const [userRoles, setUserRoles] = useState<Role[]>([])
-  const navigate = useNavigate()
 
   useEffect(() => {
     const fetchUserRoles = async () => {
@@ -45,14 +43,7 @@ const PrivateRoute: React.FC<ProtectedRouteProps> = (props) => {
     return children
   }
 
-  if (!currentUser) {
-    navigate('/login')
-    return (
-      <Routes>
-        <Route path="/login" element={<LogIn />} />
-      </Routes>
-    )
-  }
+  !currentUser && <Navigate to="/login" />
 
   if (isAuthorised(roles, userRoles)) {
     return children
