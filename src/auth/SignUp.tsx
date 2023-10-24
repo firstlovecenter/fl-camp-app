@@ -114,9 +114,8 @@ const SignUp = () => {
           <form onSubmit={handleSubmit(onSubmit)}>
             <Input
               mb={2}
-              fontSize="1rem"
-              height="3.5rem"
-              size="lg"
+              fontSize={15}
+              height={59}
               name="firstName"
               control={control}
               errors={errors}
@@ -126,9 +125,8 @@ const SignUp = () => {
             />
             <Input
               mb={2}
-              fontSize="1rem"
-              height="3.5rem"
-              size="lg"
+              fontSize={15}
+              height={59}
               name="lastName"
               control={control}
               errors={errors}
@@ -138,9 +136,8 @@ const SignUp = () => {
             />
             <Input
               mb={2}
-              fontSize="1rem"
-              height="3.5rem"
-              size="lg"
+              fontSize={15}
+              height={59}
               name="email"
               control={control}
               errors={errors}
@@ -150,10 +147,9 @@ const SignUp = () => {
             />
             <Input
               mb={2}
-              size="lg"
-              fontSize="1rem"
+              fontSize={15}
               type="password"
-              height="3.5rem"
+              height={59}
               name="password"
               placeholder="Password"
               _placeholder={{ opacity: 1, color: 'whiteAlpha.700' }}
@@ -164,10 +160,9 @@ const SignUp = () => {
 
             <Input
               mb={2}
-              size="lg"
-              fontSize="1rem"
+              fontSize={15}
               type="password"
-              height="3.5rem"
+              height={59}
               name="passwordConfirm"
               placeholder="Confirm Password"
               _placeholder={{ opacity: 1, color: 'whiteAlpha.700' }}
@@ -180,9 +175,8 @@ const SignUp = () => {
               name="dob"
               placeholder="Date of Birth"
               type="date"
-              size="lg"
-              fontSize="1rem"
-              height="3.5rem"
+              fontSize={15}
+              height={59}
               _placeholder={{ opacity: 1, color: 'whiteAlpha.700' }}
               control={control}
               errors={errors}
@@ -192,9 +186,8 @@ const SignUp = () => {
               mb={2}
               name="phone"
               placeholder="Eg. +233 241 23 456"
-              size="lg"
-              fontSize="1rem"
-              height="3.5rem"
+              fontSize={15}
+              height={59}
               _placeholder={{ opacity: 1, color: 'whiteAlpha.700' }}
               control={control}
               errors={errors}
