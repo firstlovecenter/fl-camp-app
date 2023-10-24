@@ -70,8 +70,8 @@ const LogIn = () => {
           )}
           <form onSubmit={handleSubmit(onSubmit)}>
             <Input
-              fontSize="1rem"
-              height="3.5rem"
+              fontSize={15}
+              height={59}
               name="email"
               size="lg"
               control={control}
@@ -83,9 +83,9 @@ const LogIn = () => {
             <Input
               size="lg"
               marginY={2}
-              fontSize="1rem"
+              fontSize={15}
               type="password"
-              height="3.5rem"
+              height={59}
               name="password"
               placeholder="Password"
               _placeholder={{ opacity: 1, color: 'whiteAlpha.700' }}
