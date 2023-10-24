@@ -81,9 +81,9 @@ const SignUp = () => {
 
   const onSubmit = async (values: typeof initialValues) => {
     try {
-      const userCredential = await signup(values.email, values.password)
+      await signup(values.email, values.password)
       const addUser = false
-      await createUserDocument({ values, email, userCredential, addUser })
+      await createUserDocument({ values, email, addUser })
       navigate('/')
     } catch (error) {
       setError('Failed to create an account')

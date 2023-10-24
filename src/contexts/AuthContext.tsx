@@ -33,7 +33,6 @@ export interface ValueProps {
 interface CreateDocumentProps {
   values: ValueProps
   email: string
-  userCredential: UserCredential
   addUser: boolean
 }
 
@@ -45,13 +44,7 @@ interface AuthContextType {
   resetPassword: (email: string) => Promise<void>
   updateEmail: (email: string) => Promise<void>
   updatePassword: (password: string) => Promise<void>
-  userInfo: DocumentData
-  createUserDocument: ({
-    values,
-    email,
-    userCredential,
-    addUser,
-  }: CreateDocumentProps) => void
+  createUserDocument: ({ values, email, addUser }: CreateDocumentProps) => void
 }
 
 const AuthContext = createContext<AuthContextType>({
@@ -115,15 +108,12 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const createUserDocument = async ({
     values,
     email,
-    userCredential,
     addUser,
   }: CreateDocumentProps) => {
     try {
       if (addUser) {
-        if (userCredential) {
-          await sendPasswordResetEmail(auth, email)
-          console.log('add user')
-        }
+        await sendPasswordResetEmail(auth, email)
+        console.log('add user')
       }
       const data = {
         firstName: values?.firstName.toLowerCase(),
