@@ -58,13 +58,13 @@ const AddUserForm = () => {
 
   const onSubmit = async (values: typeof initialValues) => {
     try {
-      const userCredential = await createUserWithEmailAndPassword(
+      await createUserWithEmailAndPassword(
         auth,
         values?.email,
         import.meta.env.VITE_DEFAULT_PASSWORD
       )
       const addUser = true
-      await createUserDocument({ values, email, userCredential, addUser })
+      await createUserDocument({ values, email, addUser })
       navigate('/users')
     } catch (error) {
       console.log(error)
