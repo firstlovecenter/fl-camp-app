@@ -1,4 +1,5 @@
 import {
+  Box,
   Button,
   Drawer,
   DrawerBody,
@@ -7,7 +8,9 @@ import {
   DrawerFooter,
   DrawerHeader,
   DrawerOverlay,
+  HStack,
   IconButton,
+  Image,
   useDisclosure,
 } from '@chakra-ui/react'
 import React from 'react'
@@ -15,6 +18,7 @@ import { GiHamburgerMenu } from 'react-icons/gi'
 import { useNavigate } from 'react-router-dom'
 import { ColorModeSwitcher } from '../components/ColorModeSwitcher'
 import { useUserContext } from 'contexts/UserContext'
+import logo from '../assets/Logo.svg'
 
 function Navigation() {
   const { isOpen, onOpen, onClose } = useDisclosure()
@@ -51,25 +55,24 @@ function Navigation() {
   }
 
   return (
-    <>
-      <IconButton
-        colorScheme="gray"
-        aria-label="Side Nav Toggle"
-        size="lg"
-        position="fixed"
-        bottom={4}
-        right={6}
-        zIndex={2}
-        isRound
-        ref={btnRef}
-        onClick={onOpen}
-        icon={<GiHamburgerMenu />}
-      />
+    <Box bg={'gray.800'} width={'100vw'} py={2} px={5}>
+      <HStack justifyContent={'space-between'}>
+        <Image src={logo} width={'80px'} />
+        <IconButton
+          colorScheme="gray"
+          aria-label="Side Nav Toggle"
+          bg="none"
+          ref={btnRef}
+          onClick={onOpen}
+          icon={<GiHamburgerMenu size={25} />}
+        />
+      </HStack>
       <Drawer
         isOpen={isOpen}
         placement="left"
         onClose={onClose}
         finalFocusRef={btnRef}
+        size={{ sm: 'sm' }}
       >
         <DrawerOverlay />
         <DrawerContent>
@@ -98,7 +101,7 @@ function Navigation() {
           </DrawerFooter>
         </DrawerContent>
       </Drawer>
-    </>
+    </Box>
   )
 }
 export default Navigation

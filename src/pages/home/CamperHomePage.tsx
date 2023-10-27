@@ -1,18 +1,11 @@
 import { Container, Box } from '@chakra-ui/layout'
 import React, { useEffect, useState } from 'react'
 import { useAuth } from 'contexts/AuthContext'
-import { Heading } from '@chakra-ui/react'
+import { Text } from '@chakra-ui/react'
 
 import CampCard from 'components/CampCard'
 import { useFirestore, useFirestoreDocData } from 'reactfire'
-import {
-  collection,
-  query,
-  doc,
-  getDoc,
-  where,
-  getDocs,
-} from 'firebase/firestore'
+import { collection, query, doc, getDoc, getDocs } from 'firebase/firestore'
 import { db } from 'firebase'
 import { ApolloWrapper } from '@jaedag/admin-portal-react-core'
 import { FetchedCampDataCamper } from '../../../global'
@@ -24,7 +17,7 @@ type UserRegistrationDetails = {
 }
 
 const CamperHomePage = () => {
-  const { currentUser, logout } = useAuth()
+  const { currentUser } = useAuth()
 
   const [camps, setcamps] = useState<FetchedCampDataCamper[]>([])
   const [loading, setLoading] = useState(true)
@@ -34,7 +27,7 @@ const CamperHomePage = () => {
   const firestore = useFirestore()
 
   const userReference = doc(firestore, 'users', email)
-  const { status, data: user } = useFirestoreDocData(userReference)
+  const { data: user } = useFirestoreDocData(userReference)
 
   useEffect(() => {
     const fetchData = async () => {
@@ -46,7 +39,6 @@ const CamperHomePage = () => {
 
             const queryRegistrationDetails = query(
               collection(db, 'camps', camp.campId, 'registrations')
-              // where('user', '==', email)
             )
 
             const queryRegistrationDetailsSnapshot = await getDocs(
@@ -90,9 +82,9 @@ const CamperHomePage = () => {
   return (
     <ApolloWrapper data={camps} loading={loading}>
       <Box bg="body.bg">
-        <Container my={6}>
-          <Heading>Welcome Camper!</Heading>
-          <Box mt={6}>
+        <Container mt={9}>
+          <Text fontSize={23}>Camps</Text>
+          <Box mt={5}>
             {camps.map((camp, index) => (
               <CampCard
                 name={camp?.name}

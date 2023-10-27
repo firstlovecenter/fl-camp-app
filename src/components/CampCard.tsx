@@ -1,18 +1,11 @@
 import React from 'react'
-import {
-  Card,
-  CardBody,
-  Heading,
-  Stack,
-  Tag,
-  Wrap,
-  Text,
-} from '@chakra-ui/react'
+import { Card, CardBody, Stack, Tag, Wrap, Text } from '@chakra-ui/react'
 import useCustomColorMode from '../hooks/useCustomColors'
 import { capitalizeFirstLetter, formatDateRange } from 'utils/utils'
 import { Camp } from '../../global'
 import useClickCard from 'hooks/useClickCard'
 import { useNavigate } from 'react-router-dom'
+import { useUserContext } from 'contexts/UserContext'
 
 const CampCard = ({
   name,
@@ -21,7 +14,6 @@ const CampCard = ({
   role,
   registrationStatus,
   paymentStatus,
-
   startDate,
   endDate,
   campId,
@@ -30,11 +22,16 @@ const CampCard = ({
   const date = formatDateRange(startDate, endDate)
   const { clickCard } = useClickCard()
   const navigate = useNavigate()
+  const { userProfile } = useUserContext()
 
   const handleClick = () => {
     const card = { id: campId as string, type: 'Camp' }
     clickCard(card)
-    navigate(`/camp/camp-details`)
+    if (userProfile === 'campCamper') {
+      navigate(`/camper`)
+    } else {
+      navigate(`/camp/camp-details`)
+    }
   }
 
   const currentDate = new Date()
@@ -43,14 +40,17 @@ const CampCard = ({
     <Card
       onClick={() => handleClick()}
       borderRadius="md"
+      cursor={'pointer'}
       bg={cardBackground}
       mb={3}
     >
       <CardBody>
         <Stack>
-          <Heading size="sm">{name}</Heading>
+          <Text fontSize={'lg'} size="sm">
+            {name}
+          </Text>
           <Wrap>
-            <Tag colorScheme="telegram">
+            <Tag borderRadius={0} bg="blue.600">
               {campType && capitalizeFirstLetter(campType)} Camp
             </Tag>
             {/* admin stuff */}
@@ -63,13 +63,17 @@ const CampCard = ({
             {/* camper stuff */}
             {role === 'Camper' && (
               <>
-                <Tag colorScheme="whatsapp">{registrationStatus}</Tag>
-                <Tag colorScheme="red">{paymentStatus}</Tag>
+                <Tag borderRadius={0} mx={1} bg="green.400">
+                  {registrationStatus}
+                </Tag>
+                <Tag borderRadius={0} bg="red.500">
+                  {paymentStatus}
+                </Tag>
                 {roomOption && <Tag colorScheme="orange">{roomOption}</Tag>}
               </>
             )}
           </Wrap>
-          <Text>{date}</Text>
+          <Text fontSize={'md'}>{date}</Text>
         </Stack>
       </CardBody>
     </Card>
