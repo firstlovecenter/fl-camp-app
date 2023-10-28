@@ -4,30 +4,25 @@ import {
   AlertIcon,
   AlertTitle,
   Button,
-  Card,
-  CardBody,
   Center,
   Container,
   Heading,
-  InputGroup,
-  InputRightElement,
-  Link,
-  Text,
 } from '@chakra-ui/react'
 import { useAuth } from 'contexts/AuthContext'
 import * as Yup from 'yup'
 import { useState } from 'react'
 import { Input } from '@jaedag/admin-portal-react-core'
-import { Link as RouterLink, useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
+import useCustomColors from 'hooks/useCustomColors'
 
 const UpdateProfile = () => {
-  const [show, setShow] = useState(false)
   const [error, setError] = useState('')
-  const handleClick = () => setShow(!show)
   const { currentUser, updateEmail, updatePassword } = useAuth()
   const navigate = useNavigate()
+  const { inputFieldBackground } = useCustomColors()
+  const [message, setMessage] = useState('')
 
   const initialValues = {
     email: currentUser.email ?? '',
@@ -63,6 +58,7 @@ const UpdateProfile = () => {
 
     try {
       await Promise.all(promises)
+      setMessage('Profile updated')
       navigate('/')
     } catch (error) {
       setError('Failed to update account')
@@ -71,82 +67,99 @@ const UpdateProfile = () => {
 
   return (
     <Container>
-      <Center height="80vh">
+      <Center height="100vh">
         <Container>
-          <Card>
-            <CardBody>
-              <Heading textAlign={'center'} marginBottom={4}>
-                Update Profile
-              </Heading>
-              {error && (
-                <Alert status="error">
-                  <AlertIcon />
-                  <AlertTitle>Error!</AlertTitle>
-                  <AlertDescription>{error}</AlertDescription>
-                </Alert>
-              )}
+          <Heading textAlign={'center'} marginBottom={7}>
+            Update Profile
+          </Heading>
+          {error && (
+            <Alert
+              marginBottom={4}
+              flexWrap={'wrap'}
+              borderRadius={7}
+              justifyContent={'center'}
+              status="error"
+            >
+              <AlertIcon />
+              <AlertTitle>Error!</AlertTitle>
+              <AlertDescription>{error}</AlertDescription>
+            </Alert>
+          )}
 
-              <form onSubmit={handleSubmit(onSubmit)}>
-                <Input
-                  size="lg"
-                  name="email"
-                  label="Email"
-                  control={control}
-                  errors={errors}
-                />
-                <InputGroup size="md" marginY={5}>
-                  <Input
-                    // paddingRight="4.5rem"
-                    size="lg"
-                    name="password"
-                    type={show ? 'text' : 'password'}
-                    placeholder="Leave blank to keep the same"
-                    control={control}
-                    errors={errors}
-                  />
-                  <InputRightElement width="4.5rem">
-                    <Button h="1.75rem" size="sm" onClick={handleClick}>
-                      {show ? 'Hide' : 'Show'}
-                    </Button>
-                  </InputRightElement>
-                </InputGroup>
-                <InputGroup size="md">
-                  <Input
-                    size="lg"
-                    // paddingRight="4.5rem"
-                    name="passwordConfirm"
-                    type={show ? 'text' : 'password'}
-                    placeholder="Leave blank to keep the same"
-                    control={control}
-                    errors={errors}
-                  />
-                  <InputRightElement width="4.5rem">
-                    <Button h="1.75rem" size="sm" onClick={handleClick}>
-                      {show ? 'Hide' : 'Show'}
-                    </Button>
-                  </InputRightElement>
-                </InputGroup>
+          {message && (
+            <Alert
+              marginBottom={4}
+              flexWrap={'wrap'}
+              borderRadius={7}
+              justifyContent={'center'}
+              status="success"
+            >
+              <AlertIcon />
+              <AlertTitle>Success!</AlertTitle>
+              <AlertDescription>{message}</AlertDescription>
+            </Alert>
+          )}
 
-                <Button
-                  size="lg"
-                  width="100%"
-                  type="submit"
-                  marginTop={5}
-                  isLoading={isSubmitting}
-                >
-                  Update
-                </Button>
-              </form>
-            </CardBody>
-          </Card>
-          <Center width={'100%'} marginTop={2}>
-            <Text>
-              Already have an account?{' '}
-              <Link as={RouterLink} to="/">
-                Cancel
-              </Link>
-            </Text>
-          </Center>
+          <form onSubmit={handleSubmit(onSubmit)}>
+            <Input
+              mb={2}
+              fontSize={15}
+              height={59}
+              backgroundColor={inputFieldBackground}
+              _placeholder={{ opacity: 1, color: 'whiteAlpha.700' }}
+              name="email"
+              control={control}
+              errors={errors}
+            />
+            <Input
+              mb={2}
+              fontSize={15}
+              height={59}
+              backgroundColor={inputFieldBackground}
+              _placeholder={{ opacity: 1, color: 'whiteAlpha.700' }}
+              type="password"
+              name="password"
+              placeholder="Leave blank to keep the same"
+              control={control}
+              errors={errors}
+            />
+
+            <Input
+              mb={2}
+              fontSize={15}
+              height={59}
+              backgroundColor={inputFieldBackground}
+              _placeholder={{ opacity: 1, color: 'whiteAlpha.700' }}
+              type="password"
+              name="passwordConfirm"
+              placeholder="Leave blank to keep the same"
+              control={control}
+              errors={errors}
+            />
+
+            <Button
+              width="100%"
+              type="submit"
+              backgroundColor="cyan.700"
+              size="lg"
+              marginTop={7}
+              padding={7}
+              isLoading={isSubmitting}
+            >
+              Update
+            </Button>
+            <Button
+              width="100%"
+              type="submit"
+              colorScheme="red"
+              size="lg"
+              marginTop={2}
+              padding={7}
+              onClick={() => navigate('/')}
+            >
+              Cancel
+            </Button>
+          </form>
         </Container>
       </Center>
     </Container>
