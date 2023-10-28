@@ -47,6 +47,7 @@ interface AuthContextType {
   updateEmail: (email: string) => Promise<void>
   updatePassword: (password: string) => Promise<void>
   createUserDocument: ({ values, email, addUser }: CreateDocumentProps) => void
+  userInfo: DocumentData
 }
 
 const AuthContext = createContext<AuthContextType>({
@@ -61,6 +62,7 @@ const AuthContext = createContext<AuthContextType>({
   createUserDocument: () => null,
   userInfo: [],
   createUserDocument: () => null,
+  userInfo: [],
 })
 
 // eslint-disable-next-line react-refresh/only-export-components
@@ -199,6 +201,14 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
   }
 
+  const getUsers = async (user: User | null) => {
+    if (!user || !user.email) return
+    const userDoc = await doc(db, 'users', user.email)
+    const userSnapShot = await getDoc(userDoc)
+
+    return (await userSnapShot.exists()) ? userSnapShot.data() : null
+  }
+
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged((user) => {
       setCurrentUser(user as User)
@@ -229,6 +239,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     createUserDocument,
     userInfo,
     createUserDocument,
+    userInfo,
   }
 
   return (
