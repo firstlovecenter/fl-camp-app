@@ -17,15 +17,16 @@ import { UserContextProvider } from 'contexts/UserContext'
 const App = () => {
   const firestoreInstance = getFirestore(useFirebaseApp())
   const location = useLocation()
-  const isAuthRoute = authRoutes.some(
-    (route) => location.pathname === route.path
+  const matchedRoute = authRoutes.find(
+    (route) => route.path === location.pathname
   )
+
   return (
     <FirestoreProvider sdk={firestoreInstance}>
       <UserContextProvider>
         <IdContextProvider>
           <AuthProvider>
-            {!isAuthRoute && <Navigation />}
+            {!matchedRoute?.placeholder && <Navigation />}
             <Suspense fallback={<LoadingPage />}>
               <Routes>
                 {[

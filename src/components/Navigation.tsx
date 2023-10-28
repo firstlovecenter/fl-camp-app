@@ -11,6 +11,7 @@ import {
   HStack,
   IconButton,
   Image,
+  Text,
   useDisclosure,
 } from '@chakra-ui/react'
 import React from 'react'
@@ -19,12 +20,16 @@ import { useNavigate } from 'react-router-dom'
 import { ColorModeSwitcher } from '../components/ColorModeSwitcher'
 import { useUserContext } from 'contexts/UserContext'
 import logo from '../assets/Logo.svg'
+import { useAuth } from 'contexts/AuthContext'
+import useCustomColors from 'hooks/useCustomColors'
 
 function Navigation() {
   const { isOpen, onOpen, onClose } = useDisclosure()
   const btnRef = React.useRef(null)
   const navigate = useNavigate()
   const { userProfile } = useUserContext()
+  const { userInfo } = useAuth()
+  const { navBg } = useCustomColors()
 
   let menuItems = []
   switch (userProfile) {
@@ -55,7 +60,7 @@ function Navigation() {
   }
 
   return (
-    <Box bg={'gray.800'} width={'100vw'} py={2} px={5}>
+    <Box bg={navBg} width={'100vw'} py={2} px={5}>
       <HStack justifyContent={'space-between'}>
         <Image src={logo} width={'80px'} />
         <IconButton
@@ -96,8 +101,25 @@ function Navigation() {
             ))}
           </DrawerBody>
 
-          <DrawerFooter>
-            <ColorModeSwitcher justifySelf="flex-end" />
+          <DrawerFooter justifyContent={'space-between'} bg={navBg}>
+            <HStack
+              gap={3}
+              onClick={() => {
+                onClose()
+                navigate('/profile')
+              }}
+              cursor={'pointer'}
+            >
+              <Image src={userInfo.image_url} width={10} rounded={'full'} />
+              <div>
+                <Text
+                  textTransform={'capitalize'}
+                  fontWeight={'medium'}
+                >{`${userInfo.firstName} ${userInfo.lastName}`}</Text>
+                <Text fontSize={'sm'}>{userInfo.email}</Text>
+              </div>
+            </HStack>
+            <ColorModeSwitcher />
           </DrawerFooter>
         </DrawerContent>
       </Drawer>

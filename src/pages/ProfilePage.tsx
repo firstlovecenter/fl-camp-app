@@ -1,4 +1,4 @@
-import { Container, Text, Center } from '@chakra-ui/layout'
+import { Container, Center } from '@chakra-ui/layout'
 import React, { useState } from 'react'
 import { useAuth } from 'contexts/AuthContext'
 import {
@@ -10,15 +10,19 @@ import {
   Card,
   CardBody,
   CardHeader,
+  Image,
+  VStack,
+  Text,
 } from '@chakra-ui/react'
 import { useNavigate } from 'react-router-dom'
-import useCustomColorMode from '../hooks/useCustomColors'
+import ProfilePageSkeleton from './ProfilePageSkeleton'
+import useCustomColors from 'hooks/useCustomColors'
 
 const ProfilePage = () => {
   const [error, setError] = useState('')
-  const { currentUser, logout } = useAuth()
+  const { userInfo, logout } = useAuth()
   const navigate = useNavigate()
-  const { bg } = useCustomColorMode()
+  const { navBg } = useCustomColors()
 
   const handleLogout = async () => {
     setError('')
@@ -32,30 +36,56 @@ const ProfilePage = () => {
   }
 
   return (
-    <Center height="60vh" color={bg}>
-      <Container textAlign="center">
-        <Card>
-          <CardHeader>Profile</CardHeader>
-          <CardBody>
-            {error && (
-              <Alert status="error">
-                <AlertIcon />
-                <AlertTitle>Error!</AlertTitle>
-                <AlertDescription>{error}</AlertDescription>
-              </Alert>
-            )}
-            <Text>Email: {currentUser.email}</Text>
-
-            <Button marginTop={2} onClick={() => navigate('/update-profile')}>
-              Update Profile
+    <>
+      {userInfo.image_url ? (
+        <Center height={'80vh'}>
+          <Container textAlign="center">
+            <Card rounded={'lg'} bg={navBg} my={10}>
+              <CardHeader fontSize={'2xl'} fontWeight={'bold'}>
+                Profile
+              </CardHeader>
+              <CardBody>
+                {error && (
+                  <Alert status="error">
+                    <AlertIcon />
+                    <AlertTitle>Error!</AlertTitle>
+                    <AlertDescription>{error}</AlertDescription>
+                  </Alert>
+                )}
+                <VStack>
+                  <Image
+                    src={userInfo.image_url}
+                    rounded={'full'}
+                    width={'56'}
+                  />
+                  <Text
+                    textTransform={'capitalize'}
+                    mt={2}
+                    fontWeight={'semibold'}
+                    fontSize={'3xl'}
+                  >{`${userInfo.firstName} ${userInfo.lastName}`}</Text>
+                  <Text position={'relative'} bottom={3}>
+                    {userInfo.email}
+                  </Text>
+                </VStack>
+                <Button
+                  bg={'cyan.700'}
+                  my={2}
+                  onClick={() => navigate('/update-profile')}
+                >
+                  Update Profile
+                </Button>
+              </CardBody>
+            </Card>
+            <Button colorScheme="red" onClick={handleLogout}>
+              Log Out
             </Button>
-          </CardBody>
-        </Card>
-        <Button variant="link" onClick={handleLogout}>
-          Log Out
-        </Button>
-      </Container>
-    </Center>
+          </Container>
+        </Center>
+      ) : (
+        <ProfilePageSkeleton />
+      )}
+    </>
   )
 }
 

@@ -1,4 +1,4 @@
-import { auth } from 'firebase'
+import { auth, db } from 'firebase'
 import {
   User,
   UserCredential,
@@ -9,6 +9,7 @@ import {
   updateEmail as updateEmailAuth,
   updatePassword as updatePasswordAuth,
 } from 'firebase/auth'
+import { doc, getDoc, DocumentData } from 'firebase/firestore'
 import {
   ReactNode,
   createContext,
@@ -25,6 +26,7 @@ interface AuthContextType {
   resetPassword: (email: string) => Promise<void>
   updateEmail: (email: string) => Promise<void>
   updatePassword: (password: string) => Promise<void>
+  userInfo: DocumentData
 }
 
 const AuthContext = createContext<AuthContextType>({
@@ -35,6 +37,7 @@ const AuthContext = createContext<AuthContextType>({
   resetPassword: () => Promise.resolve(),
   updateEmail: () => Promise.resolve(),
   updatePassword: () => Promise.resolve(),
+  userInfo: [],
 })
 
 // eslint-disable-next-line react-refresh/only-export-components
@@ -48,6 +51,7 @@ export const useAuth = () => {
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [currentUser, setCurrentUser] = useState<User>({} as User)
+  const [userInfo, setUserInfo] = useState<DocumentData>([])
   const [loading, setLoading] = useState(true)
 
   const signup = (email: string, password: string) => {
@@ -75,6 +79,14 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     return updatePasswordAuth(currentUser, password)
   }
 
+  const getUsers = async (user: User | null) => {
+    if (!user || !user.email) return
+    const userDoc = await doc(db, 'users', user.email)
+    const userSnapShot = await getDoc(userDoc)
+
+    return (await userSnapShot.exists()) ? userSnapShot.data() : null
+  }
+
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged((user) => {
       setCurrentUser(user as User)
@@ -84,6 +96,15 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     return unsubscribe
   }, [])
 
+  useEffect(() => {
+    const Retrieval = async () => {
+      const map = await getUsers(currentUser)
+      if (!map) return
+      setUserInfo(map)
+    }
+    Retrieval()
+  }, [currentUser])
+
   const value = {
     currentUser,
     signup,
@@ -92,6 +113,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     resetPassword,
     updateEmail,
     updatePassword,
+    userInfo,
   }
 
   return (
