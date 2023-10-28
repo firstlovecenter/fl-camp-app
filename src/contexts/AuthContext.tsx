@@ -47,6 +47,7 @@ interface AuthContextType {
   updateEmail: (email: string) => Promise<void>
   updatePassword: (password: string) => Promise<void>
   createUserDocument: ({ values, email, addUser }: CreateDocumentProps) => void
+  userInfo: DocumentData
 }
 
 const AuthContext = createContext<AuthContextType>({
@@ -61,6 +62,7 @@ const AuthContext = createContext<AuthContextType>({
   createUserDocument: () => null,
   userInfo: [],
   createUserDocument: () => null,
+  userInfo: [],
 })
 
 // eslint-disable-next-line react-refresh/only-export-components
@@ -222,6 +224,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     createUserDocument,
     userInfo,
     createUserDocument,
+    userInfo,
   }
 
   return (
