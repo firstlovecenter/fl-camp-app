@@ -45,6 +45,7 @@ interface AuthContextType {
   updateEmail: (email: string) => Promise<void>
   updatePassword: (password: string) => Promise<void>
   createUserDocument: ({ values }: CreateDocumentProps) => void
+  userInfo: DocumentData
 }
 
 const AuthContext = createContext<AuthContextType>({
@@ -57,6 +58,7 @@ const AuthContext = createContext<AuthContextType>({
   updatePassword: () => Promise.resolve(),
   userInfo: [],
   createUserDocument: () => null,
+  userInfo: [],
 })
 
 // eslint-disable-next-line react-refresh/only-export-components
@@ -132,6 +134,12 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         console.log('user creation encountered an error', error)
       }
     }
+  const getUsers = async (user: User | null) => {
+    if (!user || !user.email) return
+    const userDoc = await doc(db, 'users', user.email)
+    const userSnapShot = await getDoc(userDoc)
+
+    return (await userSnapShot.exists()) ? userSnapShot.data() : null
   }
 
   const getUsers = async (user: User | null) => {
@@ -169,6 +177,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     updatePassword,
     userInfo,
     createUserDocument,
+    userInfo,
   }
 
   return (
