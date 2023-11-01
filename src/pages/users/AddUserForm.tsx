@@ -10,12 +10,14 @@ import { useForm } from 'react-hook-form'
 import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth'
 import { ValueProps, useAuth } from 'contexts/AuthContext'
 import { useNavigate } from 'react-router-dom'
+import useCustomColors from 'hooks/useCustomColors'
 
 const AddUserForm = () => {
   const auth = getAuth()
   const date = new Date('1990-01-01')
   const { createUserDocument } = useAuth()
   const navigate = useNavigate()
+  const { inputFieldBackground } = useCustomColors()
   const initialValues: ValueProps = {
     firstName: '',
     lastName: '',
@@ -73,59 +75,71 @@ const AddUserForm = () => {
 
   return (
     <Container p={6}>
-      <Heading>Add An Admin</Heading>
+      <Heading textAlign={'center'} my={9}>
+        Add A User
+      </Heading>
 
       <form onSubmit={handleSubmit(onSubmit)}>
-        <Box my={3}>
-          <Input
-            name="firstName"
-            label="First Name"
-            placeholder="First Name"
-            control={control}
-            errors={errors}
-          />
-        </Box>
+        <Input
+          mb={2}
+          fontSize={15}
+          height={59}
+          _placeholder={{ opacity: 1, color: 'whiteAlpha.700' }}
+          backgroundColor={inputFieldBackground}
+          name="firstName"
+          placeholder="First Name"
+          control={control}
+          errors={errors}
+        />
 
-        <Box my={3}>
-          <Input
-            name="lastName"
-            placeholder="Last Name"
-            label="Last Name"
-            control={control}
-            errors={errors}
-          />
-        </Box>
+        <Input
+          mb={2}
+          fontSize={15}
+          height={59}
+          _placeholder={{ opacity: 1, color: 'whiteAlpha.700' }}
+          backgroundColor={inputFieldBackground}
+          name="lastName"
+          placeholder="Last Name"
+          control={control}
+          errors={errors}
+        />
 
-        <Box my={3}>
-          <Input
-            name="email"
-            placeholder="Email"
-            label="Email Address"
-            control={control}
-            errors={errors}
-          />
-        </Box>
+        <Input
+          mb={2}
+          fontSize={15}
+          height={59}
+          _placeholder={{ opacity: 1, color: 'whiteAlpha.700' }}
+          backgroundColor={inputFieldBackground}
+          name="email"
+          placeholder="Email"
+          control={control}
+          errors={errors}
+        />
 
-        <Box my={3}>
-          <Input
-            name="dob"
-            placeholder="Date of Birth"
-            label="Date of Birth"
-            type="date"
-            control={control}
-            errors={errors}
-          />
-        </Box>
+        <Input
+          mb={2}
+          fontSize={15}
+          height={59}
+          _placeholder={{ opacity: 1, color: 'whiteAlpha.700' }}
+          backgroundColor={inputFieldBackground}
+          name="dob"
+          placeholder="Date of Birth"
+          type="date"
+          control={control}
+          errors={errors}
+        />
 
-        <Box my={3}>
-          <Input
-            name="phone"
-            placeholder="Eg. +233 241 23 456"
-            label="Phone Number"
-            control={control}
-            errors={errors}
-          />
-        </Box>
+        <Input
+          mb={2}
+          fontSize={15}
+          height={59}
+          _placeholder={{ opacity: 1, color: 'whiteAlpha.700' }}
+          backgroundColor={inputFieldBackground}
+          name="phone"
+          placeholder="Eg. +233 241 23 456"
+          control={control}
+          errors={errors}
+        />
 
         <Box overflow="clip" my={6}>
           <ImageUpload

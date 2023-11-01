@@ -3,14 +3,11 @@ import React, { useEffect, useState } from 'react'
 import { useAuth } from 'contexts/AuthContext'
 import { Heading } from '@chakra-ui/react'
 import CampCard from 'components/CampCard'
-import {
-  useFirestore,
-  useFirestoreCollectionData,
-  useFirestoreDocData,
-} from 'reactfire'
-import { collection, query, doc, getDoc } from 'firebase/firestore'
+import { useFirestore, useFirestoreDocData } from 'reactfire'
+import { doc, getDoc, DocumentData } from 'firebase/firestore'
 import { ApolloWrapper } from '@jaedag/admin-portal-react-core'
 import { FetchedCampData } from '../../../global'
+import CampCardSkeleton from 'components/CampCardSkeleton'
 
 const AdminHomePage = () => {
   const { currentUser } = useAuth()
@@ -23,14 +20,14 @@ const AdminHomePage = () => {
   const firestore = useFirestore()
 
   const userReference = doc(firestore, 'users', email)
-  const { status, data: user } = useFirestoreDocData(userReference)
+  const { data: user } = useFirestoreDocData(userReference)
 
   useEffect(() => {
     const fetchData = async () => {
       const fetchedCamps: FetchedCampData[] = []
       if (Array.isArray(user?.camp_admin)) {
         await Promise.all(
-          user?.camp_admin?.map(async (camp: any) => {
+          user?.camp_admin?.map(async (camp: DocumentData) => {
             const campee = await getDoc(doc(firestore, 'camps', camp?.campId))
 
             fetchedCamps.push({
@@ -59,6 +56,7 @@ const AdminHomePage = () => {
         <Container my={6}>
           <Heading>Welcome Admin!</Heading>
           <Box mt={6}>
+            {loading && <CampCardSkeleton />}
             {camps &&
               camps?.map((camp, index) => (
                 <CampCard
