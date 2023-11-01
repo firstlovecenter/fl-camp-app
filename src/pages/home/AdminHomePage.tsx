@@ -71,6 +71,7 @@ const AdminHomePage = () => {
                   endDate={camp?.endDate}
                   roomOption={''}
                   key={index}
+                  campId={camp.id}
                 />
               ))}
           </Box>
