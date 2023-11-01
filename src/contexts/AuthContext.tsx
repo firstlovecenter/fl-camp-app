@@ -110,7 +110,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     try {
       if (addUser) {
         await sendPasswordResetEmail(auth, email)
-        console.log('add user')
       }
       const data = {
         firstName: values?.firstName.toLowerCase(),
@@ -159,7 +158,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       setLoading(false)
     })
 
-    return unsubscribe
+    return unsubscribe()
   }, [])
 
   useEffect(() => {
