@@ -24,7 +24,6 @@ const ProfilePageSkeleton = () => {
             </Center>
           </CardBody>
         </Card>
-        <Skeleton height="3rem" width="6rem" />
       </VStack>
     </Center>
   )

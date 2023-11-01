@@ -37,54 +37,56 @@ const ProfilePage = () => {
 
   return (
     <>
-      {userInfo.image_url ? (
-        <Center height={'80vh'}>
-          <Container textAlign="center">
-            <Card rounded={'lg'} bg={navBg} my={10}>
-              <CardHeader fontSize={'2xl'} fontWeight={'bold'}>
-                Profile
-              </CardHeader>
-              <CardBody>
-                {error && (
-                  <Alert status="error">
-                    <AlertIcon />
-                    <AlertTitle>Error!</AlertTitle>
-                    <AlertDescription>{error}</AlertDescription>
-                  </Alert>
-                )}
-                <VStack>
-                  <Image
-                    src={userInfo.image_url}
-                    rounded={'full'}
-                    width={'56'}
-                  />
-                  <Text
-                    textTransform={'capitalize'}
-                    mt={2}
-                    fontWeight={'semibold'}
-                    fontSize={'3xl'}
-                  >{`${userInfo.firstName} ${userInfo.lastName}`}</Text>
-                  <Text position={'relative'} bottom={3}>
-                    {userInfo.email}
-                  </Text>
-                </VStack>
-                <Button
-                  bg={'cyan.700'}
-                  my={2}
-                  onClick={() => navigate('/update-profile')}
-                >
-                  Update Profile
-                </Button>
-              </CardBody>
-            </Card>
-            <Button colorScheme="red" onClick={handleLogout}>
-              Log Out
-            </Button>
-          </Container>
-        </Center>
-      ) : (
-        <ProfilePageSkeleton />
-      )}
+      <Center height={'80vh'}>
+        <VStack>
+          {userInfo.image_url ? (
+            <Container textAlign="center">
+              <Card rounded={'lg'} bg={navBg} my={10}>
+                <CardHeader fontSize={'2xl'} fontWeight={'bold'}>
+                  Profile
+                </CardHeader>
+                <CardBody>
+                  {error && (
+                    <Alert status="error">
+                      <AlertIcon />
+                      <AlertTitle>Error!</AlertTitle>
+                      <AlertDescription>{error}</AlertDescription>
+                    </Alert>
+                  )}
+                  <VStack>
+                    <Image
+                      src={userInfo.image_url}
+                      rounded={'full'}
+                      width={'56'}
+                    />
+                    <Text
+                      textTransform={'capitalize'}
+                      mt={2}
+                      fontWeight={'semibold'}
+                      fontSize={'3xl'}
+                    >{`${userInfo.firstName} ${userInfo.lastName}`}</Text>
+                    <Text position={'relative'} bottom={3}>
+                      {userInfo.email}
+                    </Text>
+                  </VStack>
+                  <Button
+                    bg={'cyan.700'}
+                    my={2}
+                    onClick={() => navigate('/update-profile')}
+                  >
+                    Update Profile
+                  </Button>
+                </CardBody>
+              </Card>
+            </Container>
+          ) : (
+            <ProfilePageSkeleton />
+          )}
+          <Button colorScheme="red" onClick={handleLogout}>
+            Log Out
+          </Button>
+        </VStack>
+      </Center>
     </>
   )
 }
