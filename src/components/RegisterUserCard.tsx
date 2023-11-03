@@ -1,37 +1,67 @@
 import React from 'react'
-import {
-  Card,
-  CardBody,
-  Flex,
-  Avatar,
-  Text,
-  Box,
-  Button,
-} from '@chakra-ui/react'
+import { Card, CardBody, Flex, Avatar, Text, Button } from '@chakra-ui/react'
 import useCustomColors from 'hooks/useCustomColors'
+import useClickCard from 'hooks/useClickCard'
+import { UserCampData } from '../../global'
+import { useFirestore } from 'reactfire'
+import { addDoc, collection } from '@firebase/firestore'
 
 const RegisterUserCard = ({
   name,
   email,
   image,
+  camp_camper,
+  onOpenSelectCampusModal,
 }: {
   name: string
   email: string
   image: string
+  camp_camper: UserCampData[] | undefined
+  onOpenSelectCampusModal: () => void
 }) => {
   const { registerMemberCardBackground } = useCustomColors()
+  const { campId } = useClickCard()
+  const firestore = useFirestore()
+
+  let showButton = false
+
+  if (camp_camper) {
+    showButton = camp_camper?.some(
+      (camp) => camp?.campId === (campId as string)
+    )
+  }
+  const displayName = name.length > 15 ? name.substring(0, 15) + '...' : name
+
+  const registerCamper = async () => {
+    const docRef = await addDoc(collection(firestore, 'registrations'), {
+      campId: campId,
+      country: 'Japan',
+    })
+  }
+
+  const handleClick = async () => {
+    console.log(email)
+  }
+
   return (
-    <Card maxW="md" bg={registerMemberCardBackground}>
+    <Card maxW="md" bg={registerMemberCardBackground} variant={'unstyled'}>
       <CardBody>
         <Flex>
-          <Flex flex="1" gap="4" alignItems="center" flexWrap="wrap">
-            <Avatar name={name} src="https://bit.ly/sage-adebayo" size="sm" />
-
-            <Box>
-              <Text>{name}</Text>
-            </Box>
+          <Flex flex="1" gap="4" alignItems="center">
+            <Avatar name={name} src={image} size="sm" />
+            <Text isTruncated>{displayName}</Text>
           </Flex>
-          <Button size="sm">Remove </Button>
+          {showButton ? (
+            <Button size="sm">Remove </Button>
+          ) : (
+            <Button
+              size="sm"
+              colorScheme={'telegram'}
+              onClick={() => registerCamper()}
+            >
+              Register
+            </Button>
+          )}
         </Flex>
       </CardBody>
     </Card>

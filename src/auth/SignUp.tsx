@@ -15,6 +15,7 @@ import {
   ImageUpload,
   Input,
   PHONE_NUM_REGEX,
+  Select,
 } from '@jaedag/admin-portal-react-core'
 import { useAuth } from 'contexts/AuthContext'
 import * as Yup from 'yup'
@@ -40,11 +41,13 @@ const SignUp = () => {
     pictureUrl: '',
     firstName: '',
     lastName: '',
+    gender: '',
   }
 
   const validationSchema = Yup.object({
     firstName: Yup.string().required('First name is a required field'),
     lastName: Yup.string().required('Last name is a required field'),
+    gender: Yup.string().required('Gender is a required field'),
     email: Yup.string().email().required(),
     password: Yup.string()
       .min(6, 'Password must be at least 6 characters')
@@ -170,6 +173,20 @@ const SignUp = () => {
               errors={errors}
               backgroundColor={inputFieldBackground}
             />
+            <Box mb={2}>
+              <Select
+                name="gender"
+                placeholder="Gender"
+                label="Gender"
+                options={[
+                  { key: 'Male', value: 'male' },
+                  { key: 'Female', value: 'female' },
+                ]}
+                control={control}
+                errors={errors}
+              />
+            </Box>
+
             <Input
               mb={2}
               name="dob"

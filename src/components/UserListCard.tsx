@@ -76,7 +76,6 @@ const UserListCard = ({ name, role, id, image }: UserListProps) => {
                 src={image}
                 alt={name}
                 loading="lazy"
-                // fallbackSrc="https://via.placeholder.com/150"
                 onLoad={() => setImageLoaded(true)} // Set imageLoaded to true when the image is loaded
               />
 

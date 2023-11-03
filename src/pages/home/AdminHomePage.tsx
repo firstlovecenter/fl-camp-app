@@ -4,7 +4,7 @@ import { useAuth } from 'contexts/AuthContext'
 import { Heading } from '@chakra-ui/react'
 import CampCard from 'components/CampCard'
 import { useFirestore, useFirestoreDocData } from 'reactfire'
-import { doc, getDoc } from 'firebase/firestore'
+import { doc, getDoc, DocumentData } from 'firebase/firestore'
 import { ApolloWrapper } from '@jaedag/admin-portal-react-core'
 import { FetchedCampData } from '../../../global'
 import CampCardSkeleton from 'components/CampCardSkeleton'
@@ -27,11 +27,11 @@ const AdminHomePage = () => {
       const fetchedCamps: FetchedCampData[] = []
       if (Array.isArray(user?.camp_admin)) {
         await Promise.all(
-          user?.camp_admin?.map(async (camp) => {
-            const campee = await getDoc(doc(firestore, 'camps', camp.campId))
+          user?.camp_admin?.map(async (camp: DocumentData) => {
+            const campee = await getDoc(doc(firestore, 'camps', camp?.campId))
 
             fetchedCamps.push({
-              id: camp.campId,
+              id: camp?.campId,
               role: 'Admin',
               name: campee.data()?.name,
               campLevel: campee.data()?.campLevel,
@@ -48,7 +48,7 @@ const AdminHomePage = () => {
     }
 
     fetchData()
-  }, [user, email, firestore])
+  }, [user?.camp_admin, email, firestore])
 
   return (
     <ApolloWrapper data={camps} loading={loading}>
