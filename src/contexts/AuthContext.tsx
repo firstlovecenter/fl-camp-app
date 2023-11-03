@@ -30,6 +30,7 @@ export interface ValueProps {
   pictureUrl: string
   firstName: string
   lastName: string
+  gender: string
 }
 
 interface CreateDocumentProps {
@@ -102,6 +103,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   const createUserDocument = async ({ values }: CreateDocumentProps) => {
     try {
+      if (addUser) {
+        await sendPasswordResetEmail(auth, email)
+      }
       const data = {
         firstName: values?.firstName.toLowerCase(),
         lastName: values?.lastName.toLowerCase(),
@@ -109,6 +113,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         phone: values?.phone,
         dob: values?.dob.toISOString().slice(0, 10),
         image_url: values?.pictureUrl,
+        gender: values?.gender,
       }
 
       await setDoc(doc(firestore, 'users', values?.email), { ...data })

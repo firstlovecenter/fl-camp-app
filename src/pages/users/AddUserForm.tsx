@@ -3,6 +3,7 @@ import {
   ImageUpload,
   Input,
   PHONE_NUM_REGEX,
+  Select,
 } from '@jaedag/admin-portal-react-core'
 import * as Yup from 'yup'
 import { yupResolver } from '@hookform/resolvers/yup'
@@ -22,6 +23,7 @@ const AddUserForm = () => {
   const initialValues: ValueProps = {
     firstName: '',
     lastName: '',
+    gender: '',
     email: '',
     phone: '',
     dob: date,
@@ -31,6 +33,7 @@ const AddUserForm = () => {
   const validationSchema = Yup.object({
     firstName: Yup.string().required('First name is a required field'),
     lastName: Yup.string().required('Last name is a required field'),
+    gender: Yup.string().required('Gender is a required field'),
     email: Yup.string().required().email('Email is a required field'),
     dob: Yup.date()
       .required('Date of birth is a required field')
@@ -142,6 +145,19 @@ const AddUserForm = () => {
           control={control}
           errors={errors}
         />
+        <Box my={3}>
+          <Select
+            name="gender"
+            placeholder="Gender"
+            label="Gender"
+            options={[
+              { key: 'Male', value: 'male' },
+              { key: 'Female', value: 'female' },
+            ]}
+            control={control}
+            errors={errors}
+          />
+        </Box>
 
         <Box overflow="clip" my={6}>
           <ImageUpload

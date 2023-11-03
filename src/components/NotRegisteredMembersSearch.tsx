@@ -1,13 +1,14 @@
 import React, { useState } from 'react'
 import { useForm, Controller } from 'react-hook-form'
 import { FormControl, Input, Box, Center } from '@chakra-ui/react'
-import UserListCard from './UserListCard'
+
 import { UserData } from '../../global'
 import { capitalizeFirstLetter } from 'utils/utils'
 import { searchName } from 'queries/SearchQueries'
 import { NO_USERS_FOUND_TEXT } from 'utils/constants'
+import RegisterUserCard from './RegisterUserCard'
 
-const UserSearch = () => {
+const NotRegisteredMembersSearch = () => {
   const [userData, setUserData] = useState<UserData[]>([])
   const [cardText, setCardText] = useState<string>('Type to begin your search')
 
@@ -18,6 +19,7 @@ const UserSearch = () => {
   })
 
   const onSubmit = async (data: { userSearch: string }) => {
+    console.log('data', data)
     const searchResult = await searchName(data.userSearch)
     if (searchResult.length === 0) {
       setCardText(NO_USERS_FOUND_TEXT)
@@ -49,16 +51,16 @@ const UserSearch = () => {
       <Box mt={4}>
         {userData.length > 0 ? (
           userData?.map((user, index) => (
-            <UserListCard
-              id={user?.email}
+            <RegisterUserCard
+              email={user?.email}
               name={
                 capitalizeFirstLetter(user?.firstName) +
                 ' ' +
                 capitalizeFirstLetter(user?.lastName)
               }
               key={index}
-              role={user?.roles as string[]}
               image={user?.image_url}
+              camp_camper={user?.camp_camper}
             />
           ))
         ) : (
@@ -71,4 +73,4 @@ const UserSearch = () => {
   )
 }
 
-export default UserSearch
+export default NotRegisteredMembersSearch

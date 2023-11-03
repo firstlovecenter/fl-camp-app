@@ -11,3 +11,5 @@ export const CAMP_LEVEL_OPTIONS = [
   { key: 'Country', value: 'country' },
   { key: 'Campus', value: 'campus' },
 ]
+
+export const NO_USERS_FOUND_TEXT = 'No Users Found'

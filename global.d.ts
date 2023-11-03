@@ -46,16 +46,11 @@ export interface UserData {
   id: string
   lastName: string
   image_url: string
-<<<<<<< HEAD
-<<<<<<< HEAD
   email: string
-=======
-=======
+  gender: string
   camp_camper?: UserCampData[]
   camp_admin?: UserCampData[]
->>>>>>> 517ff84 (feat: add basic filtered users)
   roles?: string[]
->>>>>>> 9f4cf98 (fix: change user camp data to object field instead of subcollection)
 }
 
 export interface Member {
