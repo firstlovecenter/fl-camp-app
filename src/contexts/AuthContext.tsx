@@ -146,8 +146,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       setCurrentUser(user as User)
       setLoading(false)
     })
-
-    return unsubscribe()
+    return unsubscribe
   }, [])
 
   const value = {

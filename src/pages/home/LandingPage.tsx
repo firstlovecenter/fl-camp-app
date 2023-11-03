@@ -6,15 +6,10 @@ import React, { useEffect, useState } from 'react'
 import { useAuth } from 'contexts/AuthContext'
 import { ApolloWrapper } from '@jaedag/admin-portal-react-core'
 import { Role } from '../../../global'
-import { useNavigate } from 'react-router-dom'
 
 const LandingPage = () => {
-  const { currentUser, logout } = useAuth()
-  // const [error, setError] = useState('')
-
-  const navigate = useNavigate()
+  const { currentUser } = useAuth()
   const [roles, setRoles] = useState<Role[]>([])
-
   const loading = !roles
 
   useEffect(() => {
