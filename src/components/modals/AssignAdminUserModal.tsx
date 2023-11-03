@@ -3,7 +3,6 @@ import {
   Modal,
   ModalOverlay,
   ModalContent,
-  ModalHeader,
   ModalFooter,
   ModalBody,
   ModalCloseButton,
@@ -72,11 +71,10 @@ const AssignAdminToCampModal = ({
         'addClaimsToUsersCallable'
       )
 
-      const callableResponse = await addClaimsToUser({
+      await addClaimsToUser({
         email: user,
         permission: campLevel,
       })
-      console.log('callable response', callableResponse)
 
       const userReference = doc(firestore, 'users', user)
       //TODO check if the camp already exists in the user's camp_admin array
@@ -93,10 +91,10 @@ const AssignAdminToCampModal = ({
       }
       campAdmin.push(newCampObject)
 
-      const res = await updateDoc(userReference, {
+      await updateDoc(userReference, {
         camp_admin: campAdmin,
       })
-
+      onClose()
       toast({
         title: 'User Assigned',
         description: 'User has been made an admin',

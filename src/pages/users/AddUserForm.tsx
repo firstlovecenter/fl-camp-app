@@ -7,10 +7,11 @@ import {
 import * as Yup from 'yup'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { useForm } from 'react-hook-form'
-import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth'
+import { getAuth, sendPasswordResetEmail } from 'firebase/auth'
 import { ValueProps, useAuth } from 'contexts/AuthContext'
 import { useNavigate } from 'react-router-dom'
 import useCustomColors from 'hooks/useCustomColors'
+import { getFunctions, httpsCallable } from 'firebase/functions'
 
 const AddUserForm = () => {
   const auth = getAuth()
@@ -60,13 +61,14 @@ const AddUserForm = () => {
 
   const onSubmit = async (values: typeof initialValues) => {
     try {
-      await createUserWithEmailAndPassword(
-        auth,
-        values?.email,
-        import.meta.env.VITE_DEFAULT_PASSWORD
-      )
-      const addUser = true
-      await createUserDocument({ values, email, addUser })
+      const functions = getFunctions()
+      const createUser = httpsCallable(functions, 'createUserCallable')
+      await createUser({
+        email: values?.email,
+        password: import.meta.env.VITE_DEFAULT_PASSWORD,
+      })
+      await sendPasswordResetEmail(auth, email)
+      await createUserDocument({ values })
       navigate('/users')
     } catch (error) {
       console.log(error)
