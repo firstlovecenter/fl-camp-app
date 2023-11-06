@@ -88,8 +88,8 @@ const ForgotPassword = () => {
 
           <form onSubmit={handleSubmit(onSubmit)}>
             <Input
-              fontSize="1rem"
-              height="3.5rem"
+              fontSize={15}
+              height={59}
               name="email"
               placeholder="Email"
               _placeholder={{ opacity: 1, color: 'whiteAlpha.700' }}
