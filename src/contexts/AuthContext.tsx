@@ -51,7 +51,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [loading, setLoading] = useState(true)
 
   const signup = (email: string, password: string) => {
-    console.log('here')
     return createUserWithEmailAndPassword(auth, email, password)
   }
 
