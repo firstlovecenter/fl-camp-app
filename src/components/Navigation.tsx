@@ -1,6 +1,7 @@
 import {
   Box,
   Button,
+  Divider,
   Drawer,
   DrawerBody,
   DrawerCloseButton,
@@ -22,6 +23,7 @@ import { useUserContext } from 'contexts/UserContext'
 import logo from '../assets/Logo.svg'
 import { useAuth } from 'contexts/AuthContext'
 import useCustomColors from 'hooks/useCustomColors'
+import { FaChevronRight } from 'react-icons/fa'
 
 function Navigation() {
   const { isOpen, onOpen, onClose } = useDisclosure()
@@ -29,7 +31,7 @@ function Navigation() {
   const navigate = useNavigate()
   const { userProfile } = useUserContext()
   const { userInfo } = useAuth()
-  const { navBg } = useCustomColors()
+  const { navBg, sideBarBackground } = useCustomColors()
 
   let menuItems = []
   switch (userProfile) {
@@ -80,24 +82,31 @@ function Navigation() {
         size={{ base: 'full', md: 'xs', lg: 'xs' }}
       >
         <DrawerOverlay />
-        <DrawerContent>
-          <DrawerCloseButton />
-          <DrawerHeader>Menu</DrawerHeader>
+        <DrawerContent bg={sideBarBackground}>
+          <DrawerHeader m={1}>
+            <DrawerCloseButton />
+          </DrawerHeader>
 
-          <DrawerBody>
+          <DrawerBody marginTop={5} padding={0}>
             {menuItems.map((item) => (
-              <Button
-                key={item.name}
-                paddingY={8}
-                marginY={2}
-                width="100%"
-                onClick={() => {
-                  navigate(item.link)
-                  onClose()
-                }}
-              >
-                {item.name}
-              </Button>
+              <Box key={item.name}>
+                <Button
+                  padding={10}
+                  rounded={0}
+                  width="100%"
+                  onClick={() => {
+                    navigate(item.link)
+                    onClose()
+                  }}
+                  justifyContent="space-between"
+                  bg={navBg}
+                  fontWeight="medium"
+                >
+                  {item.name}
+                  <FaChevronRight />
+                </Button>
+                <Divider borderColor={sideBarBackground} />
+              </Box>
             ))}
           </DrawerBody>
 

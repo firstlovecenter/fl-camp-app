@@ -20,6 +20,7 @@ const useCustomColors = () => {
   const campRegistrationsCardBackground = useColorModeValue('#fff', '#5C6CA599')
   const campPaymentsCardBackground = useColorModeValue('#fff', '#258C5BBD')
   const generalBackground = useColorModeValue('#fff', '#1E202C')
+  const sideBarBackground = useColorModeValue('#fff', '#171923')
   const navBg = useColorModeValue('#00000014', '#1A202C')
 
   return {
@@ -43,6 +44,7 @@ const useCustomColors = () => {
     campPaymentsCardBackground,
     generalBackground,
     navBg,
+    sideBarBackground,
   }
 }
 
