@@ -23,6 +23,7 @@ import logo from '../assets/Logo.svg'
 import { useAuth } from 'contexts/AuthContext'
 import useCustomColors from 'hooks/useCustomColors'
 
+        
 function Navigation() {
   const { isOpen, onOpen, onClose } = useDisclosure()
   const btnRef = React.useRef(null)
@@ -30,6 +31,7 @@ function Navigation() {
   const { userProfile } = useUserContext()
   const { userInfo } = useAuth()
   const { navBg } = useCustomColors()
+
 
   let menuItems = []
   switch (userProfile) {
@@ -119,6 +121,7 @@ function Navigation() {
                 <Text fontSize={'sm'}>{userInfo.email}</Text>
               </div>
             </HStack>
+
             <ColorModeSwitcher />
           </DrawerFooter>
         </DrawerContent>

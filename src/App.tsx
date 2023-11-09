@@ -17,8 +17,9 @@ import { UserContextProvider } from 'contexts/UserContext'
 const App = () => {
   const firestoreInstance = getFirestore(useFirebaseApp())
   const location = useLocation()
-  const matchedRoute = authRoutes.find(
-    (route) => route.path === location.pathname
+
+  const isAuthRoute = authRoutes.some(
+    (route) => location.pathname === route.path && route.placeholder
   )
 
   return (

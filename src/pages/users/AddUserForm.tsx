@@ -7,7 +7,7 @@ import {
 import * as Yup from 'yup'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { useForm } from 'react-hook-form'
-import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth'
+import { getAuth, sendPasswordResetEmail } from 'firebase/auth'
 import { ValueProps, useAuth } from 'contexts/AuthContext'
 import { useNavigate } from 'react-router-dom'
 import useCustomColors from 'hooks/useCustomColors'
