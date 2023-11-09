@@ -26,7 +26,6 @@ const ProfilePage = () => {
 
   const handleLogout = async () => {
     setError('')
-
     try {
       await logout()
       navigate('/login')
@@ -38,7 +37,7 @@ const ProfilePage = () => {
   return (
     <>
       {userInfo.image_url ? (
-        <Center height={'80vh'}>
+        <Center mt={28} height={'60vh'}>
           <Container textAlign="center">
             <Card rounded={'lg'} bg={navBg} my={10}>
               <CardHeader fontSize={'2xl'} fontWeight={'bold'}>
@@ -77,14 +76,16 @@ const ProfilePage = () => {
                 </Button>
               </CardBody>
             </Card>
-            <Button colorScheme="red" onClick={handleLogout}>
-              Log Out
-            </Button>
           </Container>
         </Center>
       ) : (
         <ProfilePageSkeleton />
       )}
+      <Center>
+        <Button colorScheme="red" onClick={handleLogout}>
+          Log Out
+        </Button>
+      </Center>
     </>
   )
 }

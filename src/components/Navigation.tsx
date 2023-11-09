@@ -23,7 +23,6 @@ import logo from '../assets/Logo.svg'
 import { useAuth } from 'contexts/AuthContext'
 import useCustomColors from 'hooks/useCustomColors'
 
-        
 function Navigation() {
   const { isOpen, onOpen, onClose } = useDisclosure()
   const btnRef = React.useRef(null)
@@ -31,7 +30,6 @@ function Navigation() {
   const { userProfile } = useUserContext()
   const { userInfo } = useAuth()
   const { navBg } = useCustomColors()
-
 
   let menuItems = []
   switch (userProfile) {
@@ -64,7 +62,7 @@ function Navigation() {
   return (
     <Box bg={navBg} width={'100vw'} py={2} px={5}>
       <HStack justifyContent={'space-between'}>
-        <Image src={logo} width={'80px'} />
+        <Image src={logo} width={'80px'} onClick={() => navigate('/')} />
         <IconButton
           colorScheme="gray"
           aria-label="Side Nav Toggle"
@@ -114,11 +112,10 @@ function Navigation() {
             >
               <Image src={userInfo.image_url} width={10} rounded={'full'} />
               <div>
-                <Text
-                  textTransform={'capitalize'}
-                  fontWeight={'medium'}
-                >{`${userInfo.firstName} ${userInfo.lastName}`}</Text>
-                <Text fontSize={'sm'}>{userInfo.email}</Text>
+                <Text textTransform={'capitalize'} fontWeight={'medium'}>{`${
+                  userInfo.firstName || ''
+                } ${userInfo.lastName || ''}`}</Text>
+                <Text fontSize={'xs'}>{userInfo.email}</Text>
               </div>
             </HStack>
 

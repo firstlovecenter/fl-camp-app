@@ -45,6 +45,7 @@ interface AuthContextType {
   updateEmail: (email: string) => Promise<void>
   updatePassword: (password: string) => Promise<void>
   createUserDocument: ({ values }: CreateDocumentProps) => void
+  userInfo: DocumentData
 }
 
 const AuthContext = createContext<AuthContextType>({
@@ -56,6 +57,7 @@ const AuthContext = createContext<AuthContextType>({
   updateEmail: () => Promise.resolve(),
   updatePassword: () => Promise.resolve(),
   createUserDocument: () => null,
+  userInfo: [],
 })
 
 // eslint-disable-next-line react-refresh/only-export-components
@@ -131,49 +133,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         console.log('user creation encountered an error', error)
       }
     }
-
-
-  const createUserDocument = async ({
-    values,
-    email,
-    addUser,
-  }: CreateDocumentProps) => {
-    try {
-      if (addUser) {
-        await sendPasswordResetEmail(auth, email)
-        console.log('add user')
-      }
-      const data = {
-        firstName: values?.firstName.toLowerCase(),
-        lastName: values?.lastName.toLowerCase(),
-        email: values?.email,
-        phone: values?.phone,
-        dob: values?.dob.toISOString().slice(0, 10),
-        image_url: values?.pictureUrl,
-      }
-
-      await setDoc(doc(firestore, 'users', values?.email), { ...data })
-
-      toast({
-        title: 'Account created.',
-        description: "We've created your account for you.",
-        status: 'success',
-        duration: 4000,
-        isClosable: true,
-      })
-    } catch (error) {
-      if (AuthErrorCodes.EMAIL_EXISTS) {
-        toast({
-          title: 'Error.',
-          description: 'Email already in use.',
-          status: 'error',
-          duration: 4000,
-          isClosable: true,
-        })
-      } else {
-        console.log('user creation encountered an error', error)
-      }
-    }
   }
 
   const getUsers = async (user: User | null) => {
@@ -210,6 +169,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     updateEmail,
     updatePassword,
     createUserDocument,
+    userInfo,
   }
 
   return (

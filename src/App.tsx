@@ -18,8 +18,8 @@ const App = () => {
   const firestoreInstance = getFirestore(useFirebaseApp())
   const location = useLocation()
 
-  const isAuthRoute = authRoutes.some(
-    (route) => location.pathname === route.path && route.placeholder
+  const matchedRoute = authRoutes.find(
+    (route) => route.path === location.pathname
   )
 
   return (
