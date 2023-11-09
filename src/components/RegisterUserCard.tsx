@@ -23,6 +23,8 @@ const RegisterUserCard = ({
   const { campId } = useClickCard()
   const firestore = useFirestore()
 
+  const { clickCard } = useClickCard()
+
   let showButton = false
 
   if (camp_camper) {
@@ -40,7 +42,9 @@ const RegisterUserCard = ({
   }
 
   const handleClick = async () => {
-    console.log(email)
+    const card = { type: 'User', id: email }
+    clickCard(card)
+    onOpenSelectCampusModal()
   }
 
   return (
@@ -57,7 +61,7 @@ const RegisterUserCard = ({
             <Button
               size="sm"
               colorScheme={'telegram'}
-              onClick={() => registerCamper()}
+              onClick={() => handleClick()}
             >
               Register
             </Button>
