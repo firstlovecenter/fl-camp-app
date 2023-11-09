@@ -1,10 +1,9 @@
 import React, { useState } from 'react'
 import { useForm, Controller } from 'react-hook-form'
 import { FormControl, Input, Box, Center } from '@chakra-ui/react'
-
 import { UserData } from '../../global'
 import AdminUserSearchCard from './AdminUserSearchCard'
-import searchName from 'queries/SearchQueries'
+import { searchName } from 'queries/SearchQueries'
 import { capitalizeFirstLetter } from 'utils/utils'
 
 type UserSearchProp = {
