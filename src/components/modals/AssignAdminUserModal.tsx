@@ -30,7 +30,6 @@ interface AssignAdminToCampModalProps extends ModalProps {
 const AssignAdminToCampModal = ({
   isOpen,
   onClose,
-  onSubmit,
   user,
   campOptions,
 }: AssignAdminToCampModalProps) => {
