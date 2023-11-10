@@ -42,6 +42,7 @@ const UserProfile = () => {
   const [isOpenFirstModal, setIsOpenFirstModal] = useState(false)
   const [isOpenSecondModal, setIsOpenSecondModal] = useState(false)
   const navigate = useNavigate()
+  const { navBg } = useCustomColors()
 
   // Handler to open/close the first modal
   const onOpenFirstModal = () => setIsOpenFirstModal(true)
@@ -133,8 +134,11 @@ const UserProfile = () => {
                         icon={<FaEllipsisH />}
                         variant="link"
                       />
-                      <MenuList>
-                        <MenuItem onClick={() => navigate('/edit-user')}>
+                      <MenuList bg={navBg}>
+                        <MenuItem
+                          bg={navBg}
+                          onClick={() => navigate('/edit-user')}
+                        >
                           Edit User
                         </MenuItem>
                       </MenuList>
