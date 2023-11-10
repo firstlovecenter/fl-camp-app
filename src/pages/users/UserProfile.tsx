@@ -154,6 +154,7 @@ const UserProfile = () => {
                           src={user?.image_url}
                           alt={user?.firstName + ' ' + user?.lastName}
                           onLoad={() => setImageLoaded(true)}
+                          objectFit="cover"
                         />
                       </SkeletonCircle>
                     </Box>

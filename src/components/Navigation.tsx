@@ -119,7 +119,12 @@ function Navigation() {
               }}
               cursor={'pointer'}
             >
-              <Image src={userInfo.image_url} width={10} rounded={'full'} />
+              <Image
+                src={userInfo.image_url}
+                boxSize={10}
+                objectFit="cover"
+                rounded={'full'}
+              />
               <div>
                 <Text textTransform={'capitalize'} fontWeight={'medium'}>{`${
                   userInfo.firstName || ''
