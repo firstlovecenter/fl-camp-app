@@ -56,6 +56,7 @@ const ProfilePage = () => {
                     src={userInfo.image_url}
                     rounded={'full'}
                     width={'56'}
+                    objectFit="cover"
                   />
                   <Text
                     textTransform={'capitalize'}
