@@ -36,10 +36,12 @@ import { SelectOptions } from '../../../global'
 import AssignAdminToCampModal from 'components/modals/AssignAdminUserModal'
 import RemoveUserFromCampModal from 'components/modals/RemoveUserFromCampModal'
 import { capitalizeFirstLetter } from 'utils/utils'
+import { useNavigate } from 'react-router-dom'
 
 const UserProfile = () => {
   const [isOpenFirstModal, setIsOpenFirstModal] = useState(false)
   const [isOpenSecondModal, setIsOpenSecondModal] = useState(false)
+  const navigate = useNavigate()
 
   // Handler to open/close the first modal
   const onOpenFirstModal = () => setIsOpenFirstModal(true)
@@ -132,8 +134,9 @@ const UserProfile = () => {
                         variant="link"
                       />
                       <MenuList>
-                        <MenuItem>Edit User</MenuItem>
-                        <MenuItem>Delete User</MenuItem>
+                        <MenuItem onClick={() => navigate('/edit-user')}>
+                          Edit User
+                        </MenuItem>
                       </MenuList>
                     </Menu>
                   </Flex>
