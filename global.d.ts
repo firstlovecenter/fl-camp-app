@@ -40,6 +40,7 @@ export interface UserCampData {
   campId: string
   name: string
   role?: string[]
+  campusRef?: string
 }
 export interface UserData {
   firstName: string
@@ -48,6 +49,8 @@ export interface UserData {
   image_url: string
   email: string
   gender: string
+  phoneNumber?: string
+  whatsappNumber?: string
   camp_camper?: UserCampData[]
   camp_admin?: UserCampData[]
   roles?: string[]

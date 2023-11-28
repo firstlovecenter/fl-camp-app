@@ -19,7 +19,6 @@ const NotRegisteredMembersSearch = () => {
   })
 
   const onSubmit = async (data: { userSearch: string }) => {
-    console.log('data', data)
     const searchResult = await searchName(data.userSearch)
     if (searchResult.length === 0) {
       setCardText(NO_USERS_FOUND_TEXT)
@@ -51,17 +50,7 @@ const NotRegisteredMembersSearch = () => {
       <Box mt={4}>
         {userData.length > 0 ? (
           userData?.map((user, index) => (
-            <RegisterUserCard
-              email={user?.email}
-              name={
-                capitalizeFirstLetter(user?.firstName) +
-                ' ' +
-                capitalizeFirstLetter(user?.lastName)
-              }
-              key={index}
-              image={user?.image_url}
-              camp_camper={user?.camp_camper}
-            />
+            <RegisterUserCard user={user} key={index} />
           ))
         ) : (
           <Box>

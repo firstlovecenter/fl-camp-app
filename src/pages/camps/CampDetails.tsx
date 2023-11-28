@@ -117,7 +117,7 @@ const CampDetails = () => {
               borderLeft="4px"
               borderColor="blue.500"
               bg={homePageCardBackground}
-              onClick={() => navigate('/users')}
+              onClick={() => navigate('/camp/register-members')}
             >
               <CardBody>
                 <Text fontSize="lg">Manage Users</Text>

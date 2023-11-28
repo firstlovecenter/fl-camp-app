@@ -8,13 +8,7 @@ import { searchCampRegistrations } from 'queries/SearchQueries'
 import { NO_USERS_FOUND_TEXT } from 'utils/constants'
 import { capitalizeFirstLetter } from 'utils/utils'
 
-const RegisterMembersSearch = ({
-  campId,
-  onOpenSelectCampusModal,
-}: {
-  campId: string
-  onOpenSelectCampusModal: () => void
-}) => {
+const RegisterMembersSearch = ({ campId }: { campId: string }) => {
   const [userData, setUserData] = useState<UserData[]>([])
   const [cardText, setCardText] = useState<string>('Type to begin your search')
 
@@ -29,6 +23,7 @@ const RegisterMembersSearch = ({
     if (searchResult.length === 0) {
       setCardText(NO_USERS_FOUND_TEXT)
     }
+    console.log('searchResult', searchResult)
     setUserData(searchResult)
   }
 
@@ -56,18 +51,7 @@ const RegisterMembersSearch = ({
       <Box mt={4}>
         {userData.length > 0 ? (
           userData?.map((user, index) => (
-            <RegisterUserCard
-              email={user?.email}
-              name={
-                capitalizeFirstLetter(user?.firstName) +
-                ' ' +
-                capitalizeFirstLetter(user?.lastName)
-              }
-              key={index}
-              image={user?.image_url}
-              camp_camper={user?.camp_camper}
-              onOpenSelectCampusModal={onOpenSelectCampusModal}
-            />
+            <RegisterUserCard user={user} key={index} />
           ))
         ) : (
           <Box>
