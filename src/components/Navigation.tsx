@@ -62,7 +62,7 @@ function Navigation() {
   }
 
   return (
-    <Box bg={navBg} width={'100vw'} py={2} px={5}>
+    <Box bg={navBg} width={'100vw'} px={5}>
       <HStack justifyContent={'space-between'}>
         <Image src={logo} width={'80px'} onClick={() => navigate('/')} />
         <IconButton
