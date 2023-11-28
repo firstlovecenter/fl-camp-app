@@ -1,11 +1,11 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Card, CardBody, Flex, Avatar, Text, Button } from '@chakra-ui/react'
 import useCustomColors from 'hooks/useCustomColors'
 import useClickCard from 'hooks/useClickCard'
 import { UserCampData, UserData } from '../../global'
 import { useFirestore, useFirestoreDocData } from 'reactfire'
 import { useAuth } from 'contexts/AuthContext'
-import { setDoc, doc, getDoc, updateDoc } from '@firebase/firestore'
+import { setDoc, doc, getDoc, updateDoc, deleteDoc } from '@firebase/firestore'
 import { capitalizeFirstLetter } from 'utils/utils'
 
 const RegisterUserCard = ({ user }: { user: UserData }) => {
@@ -15,15 +15,6 @@ const RegisterUserCard = ({ user }: { user: UserData }) => {
   const { campId } = useClickCard()
   const firestore = useFirestore()
   const { currentUser } = useAuth()
-
-  const { clickCard } = useClickCard()
-
-  if (user?.camp_camper) {
-    const showButton = user?.camp_camper?.some(
-      (camp) => camp?.campId === (campId as string)
-    )
-    if (showButton) setIsRegistered(true)
-  }
 
   const fullName =
     capitalizeFirstLetter(user?.firstName) +
@@ -46,6 +37,7 @@ const RegisterUserCard = ({ user }: { user: UserData }) => {
   )
 
   const registerCamper = async () => {
+    console.log('registerCamper')
     try {
       await setDoc(doc(firestore, 'registrations', campId + user?.email), {
         campId: campId,
@@ -75,20 +67,66 @@ const RegisterUserCard = ({ user }: { user: UserData }) => {
       await updateDoc(userReference, {
         camp_camper: campCamper,
       })
+      return true
     } catch (error) {
       console.log(error)
+      return false
     }
   }
 
-  const handleClick = async () => {
-    setIsLoading(true)
-    const card = { type: 'User', id: user.email }
-    clickCard(card)
-    await registerCamper()
-    setIsLoading(false)
+  const removeCamper = async () => {
+    try {
+      // Delete registration document
+      await deleteDoc(doc(firestore, 'registrations', campId + user?.email))
 
-    setIsRegistered(true)
+      const userReference = doc(firestore, 'users', user?.email)
+      const camper = await getDoc(userReference)
+      const camperCamps = camper.data()?.camp_camper || []
+
+      // Remove the camp from the camp_camper array
+      const updatedCampCamper = camperCamps.filter(
+        (camp: any) => camp.campId !== campId
+      )
+
+      // Update the user document
+      await updateDoc(userReference, {
+        camp_camper: updatedCampCamper,
+      })
+
+      return true
+    } catch (error) {
+      console.log(error)
+      return false
+    }
   }
+
+  const handleRegister = async () => {
+    setIsLoading(true)
+    const result = await registerCamper()
+    setIsLoading(false)
+    if (result) {
+      setIsRegistered(true)
+    }
+  }
+
+  const handleRemoval = async () => {
+    setIsLoading(true)
+    const result = await removeCamper()
+    setIsLoading(false)
+    if (result) {
+      setIsRegistered(false)
+    }
+  }
+
+  useEffect(() => {
+    if (user?.camp_camper) {
+      const showButton = user?.camp_camper?.some(
+        (camp) => camp?.campId === (campId as string)
+      )
+
+      setIsRegistered(showButton)
+    }
+  }, [user])
 
   return (
     <Card
@@ -104,14 +142,21 @@ const RegisterUserCard = ({ user }: { user: UserData }) => {
             <Text isTruncated>{displayName}</Text>
           </Flex>
           {isRegistered ? (
-            <Button size="sm">Remove</Button>
+            <Button
+              size="sm"
+              isLoading={isLoading}
+              loadingText="Removing..."
+              onClick={() => handleRemoval()}
+            >
+              Remove
+            </Button>
           ) : (
             <Button
               size="sm"
               colorScheme={'telegram'}
               isLoading={isLoading}
               loadingText="Registering..."
-              onClick={() => handleClick()}
+              onClick={() => handleRegister()}
             >
               Register
             </Button>
