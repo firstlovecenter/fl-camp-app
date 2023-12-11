@@ -27,6 +27,33 @@ import { FaEllipsisV } from 'react-icons/fa'
 import { capitalizeFirstLetter } from 'utils/utils'
 import { useNavigate } from 'react-router-dom'
 
+const infos = [
+  {
+    id: 1,
+    name: 'Register Members',
+    details: 'Register Members for this camp',
+    navigate: '/users',
+  },
+  {
+    id: 2,
+    name: 'Camp Directory',
+    details: 'View the camp registration details',
+    navigate: '/users',
+  },
+  {
+    id: 3,
+    name: 'Rooms Uploads',
+    details: 'Click to setup and manage camp rooms',
+    navigate: '/users',
+  },
+  {
+    id: 4,
+    name: 'Manage Admins',
+    details: 'Click to Manage Admins',
+    navigate: '/camp/assign-camp-admin',
+  },
+]
+
 const CampDetails = () => {
   const { campId } = useClickCard()
   const navigate = useNavigate()
@@ -112,36 +139,23 @@ const CampDetails = () => {
         </Box>
         <Box mt={6}>
           <Tag>Quick Links</Tag>
-          <Box mt={2}>
-            <Card
-              borderLeft="4px"
-              borderColor="blue.500"
-              bg={homePageCardBackground}
-              onClick={() => navigate('/users')}
-            >
-              <CardBody>
-                <Text fontSize="lg">Manage Users</Text>
-                <Text fontSize="sm" color={homePageOptionsSubtitle}>
-                  Add admins, members
-                </Text>
-              </CardBody>
-            </Card>
-          </Box>
-          <Box mt={2}>
-            <Card
-              borderLeft="4px"
-              borderColor="blue.500"
-              bg={homePageCardBackground}
-              onClick={() => navigate('/camp/assign-camp-admin')}
-            >
-              <CardBody>
-                <Text fontSize="lg">Manage Admins</Text>
-                <Text fontSize="sm" color={homePageOptionsSubtitle}>
-                  Add admins
-                </Text>
-              </CardBody>
-            </Card>
-          </Box>
+          {infos.map((info) => (
+            <Box mt={2} key={info.id} cursor="pointer">
+              <Card
+                borderLeft="4px"
+                borderColor="blue.500"
+                bg={homePageCardBackground}
+                onClick={() => navigate(info.navigate)}
+              >
+                <CardBody>
+                  <Text fontSize="lg">{info.name}</Text>
+                  <Text fontSize="sm" color={homePageOptionsSubtitle}>
+                    {info.details}
+                  </Text>
+                </CardBody>
+              </Card>
+            </Box>
+          ))}
         </Box>
       </Container>
     </ApolloWrapper>

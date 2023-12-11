@@ -12,7 +12,16 @@ import {
   updatePassword as updatePasswordAuth,
   AuthErrorCodes,
 } from 'firebase/auth'
-import { doc, getDoc, DocumentData, setDoc } from 'firebase/firestore'
+import {
+  doc,
+  getDoc,
+  DocumentData,
+  setDoc,
+  collection,
+  getDocs,
+  query,
+  where,
+} from 'firebase/firestore'
 import {
   ReactNode,
   createContext,
@@ -20,6 +29,8 @@ import {
   useEffect,
   useState,
 } from 'react'
+import { GiConsoleController } from 'react-icons/gi'
+import { UserData } from '../../global'
 
 export interface ValueProps {
   email: string
