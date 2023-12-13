@@ -34,6 +34,7 @@ const searchName = async (name: string) => {
 
 const searchCampRegistrations = async (name: string, camp: string) => {
   const usersData: Registration[] = []
+  const uniqueWhatsappNumbers = new Set<string>()
 
   const userRef = collection(db, 'camps', camp, 'registrations')
   const queryFirstName = query(
@@ -42,26 +43,30 @@ const searchCampRegistrations = async (name: string, camp: string) => {
     where('firstName', '<=', name.toLowerCase() + '\uf8ff')
   )
 
-  const docs = await getDocs(queryFirstName)
-
   const queryLastName = query(
     userRef,
     where('lastName', '>=', name.toLowerCase()),
     where('lastName', '<=', name.toLowerCase() + '\uf8ff')
   )
-  const docs2 = await getDocs(queryLastName)
+  const [docsFirstName, docsLastName] = await Promise.all([
+    getDocs(queryFirstName),
+    getDocs(queryLastName),
+  ])
 
-  console.log('docs', docs)
-  console.log('docs2', docs2)
+  const processDocs = (docs: any) => {
+    docs.forEach((userDoc: any) => {
+      const userData = userDoc.data()
+      const whatsappNumber = userData.whatsappNumber
 
-  docs?.forEach((userDoc: any) => {
-    console.log('userDoc', userDoc)
-    usersData.push(userDoc.data())
-  })
+      if (!uniqueWhatsappNumbers.has(whatsappNumber)) {
+        uniqueWhatsappNumbers.add(whatsappNumber)
+        usersData.push(userData)
+      }
+    })
+  }
 
-  docs2?.forEach((userDoc: any) => {
-    usersData.push(userDoc.data())
-  })
+  processDocs(docsFirstName)
+  processDocs(docsLastName)
 
   console.log('usersData', usersData)
 
