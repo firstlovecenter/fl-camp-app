@@ -41,6 +41,29 @@ const CampDetails = () => {
   const ref = doc(firestore, 'camps', campId as string)
   const { status, data: campDoc } = useFirestoreDocData(ref, { idField: 'id' })
 
+  const menuItems = [
+    {
+      name: 'Register Members',
+      path: '/camp/register-members',
+      subtitle: 'Register Members for this camp',
+    },
+    {
+      name: 'Camp Directory',
+      path: '#',
+      subtitle: 'View the camp registration details',
+    },
+    {
+      name: 'Rooms Upload',
+      path: '#',
+      subtitle: 'Click to setup and manage rooms',
+    },
+    {
+      name: 'Manage Admins',
+      path: '/camp/assign-camp-admin',
+      subtitle: 'Click to Manage Admins',
+    },
+  ]
+
   const loading = !campDoc
 
   return (
@@ -110,38 +133,27 @@ const CampDetails = () => {
             </Box>
           </HStack>
         </Box>
+
         <Box mt={6}>
           <Tag>Quick Links</Tag>
-          <Box mt={2}>
-            <Card
-              borderLeft="4px"
-              borderColor="blue.500"
-              bg={homePageCardBackground}
-              onClick={() => navigate('/camp/register-members')}
-            >
-              <CardBody>
-                <Text fontSize="lg">Manage Users</Text>
-                <Text fontSize="sm" color={homePageOptionsSubtitle}>
-                  Add admins, members
-                </Text>
-              </CardBody>
-            </Card>
-          </Box>
-          <Box mt={2}>
-            <Card
-              borderLeft="4px"
-              borderColor="blue.500"
-              bg={homePageCardBackground}
-              onClick={() => navigate('/camp/assign-camp-admin')}
-            >
-              <CardBody>
-                <Text fontSize="lg">Manage Admins</Text>
-                <Text fontSize="sm" color={homePageOptionsSubtitle}>
-                  Add admins
-                </Text>
-              </CardBody>
-            </Card>
-          </Box>
+          {menuItems.map((item, index) => (
+            <Box mt={2} key={index}>
+              <Card
+                borderLeft="4px"
+                borderColor="blue.500"
+                bg={homePageCardBackground}
+                onClick={() => navigate(item.path)}
+                key={index}
+              >
+                <CardBody>
+                  <Text fontSize="lg">{item.name}</Text>
+                  <Text fontSize="sm" color={homePageOptionsSubtitle}>
+                    {item.subtitle}
+                  </Text>
+                </CardBody>
+              </Card>
+            </Box>
+          ))}
         </Box>
       </Container>
     </ApolloWrapper>
