@@ -1,5 +1,5 @@
-import { UserData } from '../../global'
-import { collection, query, where, getDocs } from 'firebase/firestore'
+import { Registration, UserData } from '../../global'
+import { collection, query, where, getDocs, limit } from 'firebase/firestore'
 import { db } from '../firebase'
 
 const searchName = async (name: string) => {
@@ -33,9 +33,9 @@ const searchName = async (name: string) => {
 }
 
 const searchCampRegistrations = async (name: string, camp: string) => {
-  const usersData: UserData[] = []
-  console.log('camp', camp)
-  const userRef = collection(db, 'users', camp, 'registrations')
+  const usersData: Registration[] = []
+
+  const userRef = collection(db, 'camps', camp, 'registrations')
   const queryFirstName = query(
     userRef,
     where('firstName', '>=', name.toLowerCase()),
@@ -51,7 +51,11 @@ const searchCampRegistrations = async (name: string, camp: string) => {
   )
   const docs2 = await getDocs(queryLastName)
 
+  console.log('docs', docs)
+  console.log('docs2', docs2)
+
   docs?.forEach((userDoc: any) => {
+    console.log('userDoc', userDoc)
     usersData.push(userDoc.data())
   })
 
@@ -59,7 +63,26 @@ const searchCampRegistrations = async (name: string, camp: string) => {
     usersData.push(userDoc.data())
   })
 
+  console.log('usersData', usersData)
+
   return usersData
 }
 
-export { searchName, searchCampRegistrations }
+const fetchInitialCampRegistrations = async (camp: string) => {
+  const usersData: Registration[] = []
+
+  const userRef = collection(db, 'camps', camp, 'registrations')
+  const queryRegistrations = query(userRef, limit(15))
+
+  const docs = await getDocs(queryRegistrations)
+
+  console.log('docs', docs)
+
+  docs?.forEach((userDoc: any) => {
+    usersData.push(userDoc.data())
+  })
+
+  return usersData
+}
+
+export { searchName, searchCampRegistrations, fetchInitialCampRegistrations }
