@@ -19,6 +19,7 @@ type RoleCardProps = {
 }
 
 const RoleCard = ({ role, name }: RoleCardProps) => {
+  console.log('name', name)
   const navigate = useNavigate()
   const { profileCardBackground } = useCustomColors()
   const { setUserProfile } = useUserContext()

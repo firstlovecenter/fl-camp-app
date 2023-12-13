@@ -32,7 +32,7 @@ import { useFirestore, useFirestoreDocData } from 'reactfire'
 import { db } from 'firebase'
 import { ApolloWrapper } from '@jaedag/admin-portal-react-core'
 import { useNavigate } from 'react-router-dom'
-import { useUserContext } from 'contexts/UserContext'
+
 import { useAuth } from 'contexts/AuthContext'
 
 interface CampCounts {
@@ -59,7 +59,7 @@ const GlobalAdminHomePage = () => {
   const email = currentUser?.email || ' '
 
   const ref = doc(firestore, 'users', email)
-  const { status, data: user } = useFirestoreDocData(ref)
+  const { data: user } = useFirestoreDocData(ref)
 
   useEffect(() => {
     const getCampsCount = async () => {

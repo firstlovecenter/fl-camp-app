@@ -51,20 +51,7 @@ function Navigation() {
 
   switch (userProfile) {
     case 'globalAdmin':
-      menuItems = [
-        {
-          name: 'Home',
-          link: '/',
-        },
-        {
-          name: 'Camps',
-          link: '/camps',
-        },
-        {
-          name: 'Users',
-          link: '/users',
-        },
-      ]
+      menuItems = globalAdminMenuItems
       break
     default:
       menuItems = [

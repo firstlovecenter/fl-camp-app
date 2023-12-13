@@ -19,7 +19,6 @@ import {
   MenuButton,
   MenuList,
   MenuItem,
-  useDisclosure,
 } from '@chakra-ui/react'
 import { FaEllipsisH, FaPhone, FaWhatsapp } from 'react-icons/fa'
 import useClickCard from 'hooks/useClickCard'
@@ -32,7 +31,7 @@ import { doc, collection } from 'firebase/firestore'
 import { ApolloWrapper } from '@jaedag/admin-portal-react-core'
 import useCustomColors from 'hooks/useCustomColors'
 import UserCampsCard from 'components/UserCampsCard'
-import { SelectOptions } from '../../../global'
+import { SelectOptions, UserCampData } from '../../../global'
 import AssignAdminToCampModal from 'components/modals/AssignAdminUserModal'
 import RemoveUserFromCampModal from 'components/modals/RemoveUserFromCampModal'
 import { capitalizeFirstLetter } from 'utils/utils'
@@ -58,7 +57,6 @@ const UserProfile = () => {
   }
 
   const [imageLoaded, setImageLoaded] = useState(false)
-  const { isOpen, onOpen, onClose } = useDisclosure()
 
   const firestore = useFirestore()
   const { userId } = useClickCard()
@@ -66,19 +64,18 @@ const UserProfile = () => {
   const userEmail = userId as string
 
   const userReference = doc(firestore, 'users', userEmail)
-  const { status, data: user } = useFirestoreDocData(userReference)
+  const { data: user } = useFirestoreDocData(userReference)
 
-  let allCamps: any[] = []
+  let allCamps: UserCampData[] = []
   if (user?.camp_admin && user?.camp_camper) {
     allCamps = [...user.camp_admin, ...user.camp_camper]
   }
 
   const campsCollectionRef = collection(firestore, 'camps')
-  const {
-    status: campsStatus,
-    data: campsCollection,
-    error: campError,
-  } = useFirestoreCollectionData(campsCollectionRef, { idField: 'id' })
+  const { data: campsCollection } = useFirestoreCollectionData(
+    campsCollectionRef,
+    { idField: 'id' }
+  )
 
   const campOptions: SelectOptions[] = []
 

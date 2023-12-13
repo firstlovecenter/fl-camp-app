@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { useForm, Controller } from 'react-hook-form'
 import { FormControl, Input, Box, Center, Skeleton } from '@chakra-ui/react'
-import { collection, query, where, getDocs, limit } from 'firebase/firestore'
-import { db } from '../firebase'
 import { Registration } from '../../global'
 
 import {
@@ -12,7 +10,6 @@ import {
 import { NO_USERS_FOUND_TEXT } from 'utils/constants'
 import { ApolloWrapper } from '@jaedag/admin-portal-react-core'
 import RegisteredUsersCard from './RegisteredUsersCard'
-import { useFirestoreCollectionData } from 'reactfire'
 
 const RegisterMembersSearch = ({ campId }: { campId: string }) => {
   const [userData, setUserData] = useState<Registration[]>([])
@@ -33,24 +30,8 @@ const RegisterMembersSearch = ({ campId }: { campId: string }) => {
 
   useEffect(() => {
     fetchInitialMembers()
-  }, [campId])
+  })
 
-  // const initialMembersResult: Registration[] = []
-  // const userRef = collection(db, 'camps', campId, 'registrations')
-  // const queryRegistrations = query(userRef, limit(15))
-
-  // const { status, data: registrations } = useFirestoreCollectionData(
-  //   queryRegistrations,
-  //   {
-  //     idField: 'id',
-  //   }
-  // )
-  // registrations?.forEach((registrationDoc: any) => {
-  //   // console.log('registrationDoc', registrationDoc)
-  //   initialMembersResult.push(registrationDoc)
-  // })
-
-  // setUserData(initialMembersResult)
   const onRemoveCamper = async (userId: string) => {
     setUserData((userData) =>
       userData.filter((user) => user.whatsappNumber !== userId)

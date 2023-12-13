@@ -23,7 +23,7 @@ const AdminUserSearchCard = ({
   modal: () => void
 }) => {
   const { generalBackground } = useCustomColors()
-  const { clickCard, userId } = useClickCard()
+  const { clickCard } = useClickCard()
 
   const handleClick = () => {
     const card = { id: email, type: 'User' }

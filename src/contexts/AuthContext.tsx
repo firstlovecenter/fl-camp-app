@@ -103,9 +103,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   const createUserDocument = async ({ values }: CreateDocumentProps) => {
     try {
-      if (addUser) {
-        await sendPasswordResetEmail(auth, email)
-      }
       const data = {
         firstName: values?.firstName.toLowerCase(),
         lastName: values?.lastName.toLowerCase(),

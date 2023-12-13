@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { Card, CardBody, Flex, Avatar, Text, Button } from '@chakra-ui/react'
 import useCustomColors from 'hooks/useCustomColors'
 import useClickCard from 'hooks/useClickCard'
-import { Registration } from '../../global'
+import { Registration, UserCampData } from '../../global'
 import { useFirestore } from 'reactfire'
 import { doc, getDoc, updateDoc, deleteDoc } from '@firebase/firestore'
 import { capitalizeFirstLetter } from 'utils/utils'
@@ -46,7 +46,7 @@ const RegisteredUsersCard = ({
 
       // Remove the camp from the camp_camper array
       const updatedCampCamper = camperCamps.filter(
-        (camp: any) => camp.campId !== campId
+        (camp: UserCampData) => camp.campId !== campId
       )
 
       // Update the user document
@@ -75,7 +75,7 @@ const RegisteredUsersCard = ({
     if (user?.campId === campId) {
       setIsRegistered(true)
     }
-  }, [user])
+  }, [user, campId])
 
   return (
     <Card

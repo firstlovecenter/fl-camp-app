@@ -1,9 +1,7 @@
 import React, { useState } from 'react'
 import { useForm, Controller } from 'react-hook-form'
 import { FormControl, Input, Box, Center } from '@chakra-ui/react'
-
 import { UserData } from '../../global'
-import { capitalizeFirstLetter } from 'utils/utils'
 import { searchName } from 'queries/SearchQueries'
 import { NO_USERS_FOUND_TEXT } from 'utils/constants'
 import RegisterUserCard from './RegisterUserCard'
