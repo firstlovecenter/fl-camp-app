@@ -15,7 +15,7 @@ import { useFirestore, useFirestoreDocData } from 'reactfire'
 import { doc } from '@firebase/firestore'
 import useClickCard from 'hooks/useClickCard'
 import NotRegisteredMembersSearch from 'components/NotRegisteredMembersSearch'
-import { useAuth } from 'contexts/AuthContext'
+import { ApolloWrapper } from '@jaedag/admin-portal-react-core'
 
 const RegisterMembers = () => {
   let { campId } = useClickCard()
@@ -25,31 +25,35 @@ const RegisterMembers = () => {
   const firestore = useFirestore()
   const { data: camp } = useFirestoreDocData(doc(firestore, 'camps', campId))
 
-  return (
-    <Container p={6} my={3}>
-      <Box>
-        <Center>
-          <Text textAlign={'center'}>{camp?.name}</Text>
-        </Center>
-      </Box>
-      <Box mt={2}>
-        <Tabs isFitted>
-          <TabList>
-            <Tab>Registered Users</Tab>
-            <Tab>All Users</Tab>
-          </TabList>
+  const loading = !camp
 
-          <TabPanels>
-            <TabPanel>
-              <RegisterMembersSearch campId={campId} />
-            </TabPanel>
-            <TabPanel>
-              <NotRegisteredMembersSearch />
-            </TabPanel>
-          </TabPanels>
-        </Tabs>
-      </Box>
-    </Container>
+  return (
+    <ApolloWrapper data={camp} loading={loading}>
+      <Container p={6} my={3}>
+        <Box>
+          <Center>
+            <Text textAlign={'center'}>{camp?.name}</Text>
+          </Center>
+        </Box>
+        <Box mt={2}>
+          <Tabs isFitted>
+            <TabList>
+              <Tab>Registered Users</Tab>
+              <Tab>All Users</Tab>
+            </TabList>
+
+            <TabPanels>
+              <TabPanel>
+                <RegisterMembersSearch campId={campId} />
+              </TabPanel>
+              <TabPanel>
+                <NotRegisteredMembersSearch />
+              </TabPanel>
+            </TabPanels>
+          </Tabs>
+        </Box>
+      </Container>
+    </ApolloWrapper>
   )
 }
 

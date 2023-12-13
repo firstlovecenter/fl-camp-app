@@ -90,3 +90,14 @@ type FormData = {
   country: string | undefined
   campus: string | undefined
 }
+
+export interface Registration {
+  campId: string
+  campusRef: string
+  email: string
+  firstName: string
+  gender: string
+  lastName: string
+  phoneNumber: string
+  whatsappNumber: string
+}

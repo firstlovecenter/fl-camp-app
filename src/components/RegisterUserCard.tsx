@@ -38,17 +38,27 @@ const RegisterUserCard = ({ user }: { user: UserData }) => {
 
   const registerCamper = async () => {
     console.log('registerCamper')
+
     try {
-      await setDoc(doc(firestore, 'registrations', campId + user?.email), {
-        campId: campId,
-        firstName: user.firstName,
-        lastName: user?.lastName,
-        email: user?.email,
-        gender: user?.gender,
-        phoneNumber: user?.phoneNumber,
-        whatsappNumber: user?.whatsappNumber,
-        campusRef: adminCamp?.campusRef,
-      })
+      await setDoc(
+        doc(
+          firestore,
+          'camps',
+          campId as string,
+          'registrations',
+          user?.whatsappNumber as string
+        ),
+        {
+          campId: campId,
+          firstName: user.firstName,
+          lastName: user?.lastName,
+          email: user?.email,
+          gender: user?.gender,
+          phoneNumber: user?.phoneNumber,
+          whatsappNumber: user?.whatsappNumber,
+          campusRef: adminCamp?.campusRef,
+        }
+      )
 
       const userReference = doc(firestore, 'users', user?.email)
       const camper = await getDoc(userReference)
@@ -77,7 +87,15 @@ const RegisterUserCard = ({ user }: { user: UserData }) => {
   const removeCamper = async () => {
     try {
       // Delete registration document
-      await deleteDoc(doc(firestore, 'registrations', campId + user?.email))
+      await deleteDoc(
+        doc(
+          firestore,
+          'camps',
+          campId as string,
+          'registrations',
+          user?.whatsappNumber as string
+        )
+      )
 
       const userReference = doc(firestore, 'users', user?.email)
       const camper = await getDoc(userReference)
