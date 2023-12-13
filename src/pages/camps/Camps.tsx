@@ -9,7 +9,7 @@ import {
 } from '@chakra-ui/react'
 import { ApolloWrapper } from '@jaedag/admin-portal-react-core'
 import CampCard from 'components/CampCard'
-import { collection } from '@firebase/firestore'
+import { collection, DocumentData } from '@firebase/firestore'
 import React from 'react'
 import { useFirestore, useFirestoreCollectionData } from 'reactfire'
 import { Camp } from '../../../global'
@@ -29,8 +29,8 @@ const Camps = () => {
 
   const camps: Camp[] = []
 
-  campDocs?.forEach((camp: any) => {
-    camps.push(camp)
+  campDocs?.forEach((camp: DocumentData) => {
+    camps.push({ id: camp.id, ...camp.data() })
   })
 
   const loading = !camps

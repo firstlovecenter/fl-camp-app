@@ -3,7 +3,6 @@ import {
   Modal,
   ModalOverlay,
   ModalContent,
-  ModalHeader,
   ModalFooter,
   ModalBody,
   ModalCloseButton,
@@ -26,7 +25,7 @@ import { CAMP_ADMIN_ROLES_OPTIONS } from 'utils/constants'
 import { getFunctions, httpsCallable } from 'firebase/functions'
 import useClickCard from 'hooks/useClickCard'
 
-const AssignCampAdminModal = ({ isOpen, onClose, onSubmit }: ModalProps) => {
+const AssignCampAdminModal = ({ isOpen, onClose }: ModalProps) => {
   const { userId, campId } = useClickCard()
   const user = userId || ''
   const camp = campId || ''
@@ -88,7 +87,7 @@ const AssignCampAdminModal = ({ isOpen, onClose, onSubmit }: ModalProps) => {
       }
       campAdmin.push(newCampObject)
 
-      const res = await updateDoc(userReference, {
+      await updateDoc(userReference, {
         camp_admin: campAdmin,
       })
 

@@ -5,14 +5,7 @@ import { Text } from '@chakra-ui/react'
 
 import CampCard from 'components/CampCard'
 import { useFirestore, useFirestoreDocData } from 'reactfire'
-import {
-  collection,
-  query,
-  doc,
-  getDoc,
-  where,
-  getDocs,
-} from 'firebase/firestore'
+import { collection, query, doc, getDoc, getDocs } from 'firebase/firestore'
 import { db } from 'firebase'
 import { ApolloWrapper } from '@jaedag/admin-portal-react-core'
 import { FetchedCampDataCamper } from '../../../global'
@@ -34,7 +27,7 @@ const CamperHomePage = () => {
   const firestore = useFirestore()
 
   const userReference = doc(firestore, 'users', email)
-  const { status, data: user } = useFirestoreDocData(userReference)
+  const { data: user } = useFirestoreDocData(userReference)
 
   useEffect(() => {
     const fetchData = async () => {

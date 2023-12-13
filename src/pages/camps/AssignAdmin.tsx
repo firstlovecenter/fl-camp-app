@@ -1,6 +1,6 @@
-import { Button, Container, useToast, Heading } from '@chakra-ui/react'
+import { Container, Heading } from '@chakra-ui/react'
 import AssignAdminUserSearch from 'components/AssignAdminUserSearch'
-import { collection } from '@firebase/firestore'
+import { collection, DocumentData } from '@firebase/firestore'
 import { useFirestore, useFirestoreCollectionData } from 'reactfire'
 import React, { useState } from 'react'
 import { UserData } from '../../../global'
@@ -11,7 +11,6 @@ const AssignAdmin = () => {
   const [isOpenFirstModal, setIsOpenFirstModal] = useState(false)
   const onOpenFirstModal = () => setIsOpenFirstModal(true)
   const onCloseFirstModal = () => setIsOpenFirstModal(false)
-  const toast = useToast()
 
   const firestore = useFirestore()
   const userCollection = collection(firestore, 'users')
@@ -23,8 +22,8 @@ const AssignAdmin = () => {
 
   const usersData: UserData[] = []
 
-  users?.forEach((user: any) => {
-    usersData.push(user)
+  users?.forEach((user: DocumentData) => {
+    usersData.push({ id: user.id, ...user.data() })
   })
 
   // Submit handler for both modals

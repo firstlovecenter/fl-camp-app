@@ -110,7 +110,7 @@ const StartCampForm = () => {
 
         const continents: SelectOptions[] = []
         const querySnapshot = await getDocs(continentsCollection)
-        const data = querySnapshot.docs.map((doc) =>
+        querySnapshot.docs.map((doc) =>
           continents.push({ key: doc.data().name, value: doc.id })
         )
 

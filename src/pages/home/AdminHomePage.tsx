@@ -20,7 +20,7 @@ const AdminHomePage = () => {
   const firestore = useFirestore()
 
   const userReference = doc(firestore, 'users', email)
-  const { status, data: user } = useFirestoreDocData(userReference)
+  const { data: user } = useFirestoreDocData(userReference)
 
   useEffect(() => {
     const fetchData = async () => {

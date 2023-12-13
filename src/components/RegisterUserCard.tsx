@@ -29,7 +29,7 @@ const RegisterUserCard = ({ user }: { user: UserData }) => {
     currentUser?.email as string
   )
 
-  const { status, data: adminDoc } = useFirestoreDocData(adminDocReference)
+  const { data: adminDoc } = useFirestoreDocData(adminDocReference)
 
   const adminCamp = adminDoc?.camp_admin.find(
     (camp: UserCampData) =>
@@ -144,7 +144,7 @@ const RegisterUserCard = ({ user }: { user: UserData }) => {
 
       setIsRegistered(showButton)
     }
-  }, [user])
+  }, [user, campId])
 
   return (
     <Card

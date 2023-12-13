@@ -1,5 +1,13 @@
 import { Registration, UserData } from '../../global'
-import { collection, query, where, getDocs, limit } from 'firebase/firestore'
+import {
+  collection,
+  query,
+  where,
+  getDocs,
+  limit,
+  DocumentData,
+  QuerySnapshot,
+} from 'firebase/firestore'
 import { db } from '../firebase'
 
 const searchName = async (name: string) => {
@@ -21,11 +29,11 @@ const searchName = async (name: string) => {
   )
   const docs2 = await getDocs(queryLastName)
 
-  docs?.forEach((userDoc: any) => {
+  docs?.forEach((userDoc: DocumentData) => {
     usersData.push(userDoc.data())
   })
 
-  docs2?.forEach((userDoc: any) => {
+  docs2?.forEach((userDoc: DocumentData) => {
     usersData.push(userDoc.data())
   })
 
@@ -53,8 +61,8 @@ const searchCampRegistrations = async (name: string, camp: string) => {
     getDocs(queryLastName),
   ])
 
-  const processDocs = (docs: any) => {
-    docs.forEach((userDoc: any) => {
+  const processDocs = (docs: QuerySnapshot<DocumentData>) => {
+    docs.forEach((userDoc: DocumentData) => {
       const userData = userDoc.data()
       const whatsappNumber = userData.whatsappNumber
 
@@ -83,7 +91,7 @@ const fetchInitialCampRegistrations = async (camp: string) => {
 
   console.log('docs', docs)
 
-  docs?.forEach((userDoc: any) => {
+  docs?.forEach((userDoc: DocumentData) => {
     usersData.push(userDoc.data())
   })
 

@@ -39,7 +39,7 @@ const CampDetails = () => {
   } = useCustomColors()
 
   const ref = doc(firestore, 'camps', campId as string)
-  const { status, data: campDoc } = useFirestoreDocData(ref, { idField: 'id' })
+  const { data: campDoc } = useFirestoreDocData(ref, { idField: 'id' })
 
   const menuItems = [
     {
