@@ -1,0 +1,9 @@
+[build]
+  command =  "npm i && cd web-react-ts && npm i && npm run build"
+  publish = "web-react-ts/dist"
+ 
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200

@@ -1,0 +1,77 @@
+{
+  "name": "chakra-typescript-template",
+  "private": true,
+  "version": "0.0.0",
+  "author": {
+    "name": "John-Dag Addy",
+    "email": "johndagaddy@firstlovecenter.com"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/firstlovecenter/flow-giving.git"
+  },
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "lint": "eslint src --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
+    "preview": "vite preview",
+    "release:major": "node scripts/release.js major",
+    "release:minor": "node scripts/release.js minor",
+    "release:patch": "node scripts/release.js patch"
+  },
+  "lint-staged": {
+    "*.{js,ts,tsx}": [
+      "prettier --write",
+      "eslint --cache --fix"
+    ]
+  },
+  "eslintConfig": {
+    "extends": "react-app",
+    "plugins": [
+      "@typescript-eslint",
+      "no-relative-import-paths",
+      "import"
+    ],
+    "rules": {
+      "import/no-unresolved": "off",
+      "no-console": "off",
+      "@typescript-eslint/no-explicit-any": "off",
+      "no-relative-import-paths/no-relative-import-paths": "off"
+    }
+  },
+  "dependencies": {
+    "@chakra-ui/icons": "^2.1.1",
+    "@chakra-ui/react": "^2.5.5",
+    "@emotion/react": "^11.9.3",
+    "@emotion/styled": "^11.9.3",
+    "@hookform/resolvers": "^3.2.0",
+    "@jaedag/admin-portal-react-core": "^2.0.7",
+    "@vitejs/plugin-react": "^3.1.0",
+    "axios": "^1.5.1",
+    "execa": "^4.0.2",
+    "firebase-tools": "^12.4.8",
+    "firebaseui": "^6.0.2",
+    "firestore": "^1.1.6",
+    "framer-motion": "^10.15.2",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-hook-form": "^7.45.4",
+    "react-icons": "^4.11.0",
+    "react-router-dom": "^6.3.0",
+    "react-spinners": "^0.13.8",
+    "reactfire": "^4.2.3",
+    "vite-plugin-svgr": "^4.2.0",
+    "vite-tsconfig-paths": "^4.2.3",
+    "web-vitals": "^0.2.4",
+    "yup": "^1.1.1"
+  },
+  "devDependencies": {
+    "@svgr/webpack": "^8.1.0",
+    "@types/node": "^20.1.0",
+    "@types/react": "^18.0.28",
+    "@types/react-dom": "^18.0.11",
+    "@vitejs/plugin-react-swc": "^3.0.0",
+    "typescript": "^5.0.2",
+    "vite": "^4.3.2"
+  }
+}
