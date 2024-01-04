@@ -30,6 +30,7 @@ const StartCampForm = () => {
   const date = new Date('1990-01-01')
   const navigate = useNavigate()
   const firestore = useFirestore()
+  const [planets, setPlanets] = useState<SelectOptions[]>([])
   const [continents, setContinents] = useState<SelectOptions[]>([])
   const [countries, setCountries] = useState<SelectOptions[]>([])
   const [campuses, setCampuses] = useState<SelectOptions[]>([])
@@ -97,11 +98,34 @@ const StartCampForm = () => {
       levelId: levelId,
     }
 
-    const docRef = await addDoc(collection(firestore, 'camps'), data)
-    console.log('Document written with ID: ', docRef.id)
+    // // const docRef = await addDoc(collection(firestore, 'camps'), data)
+    // // console.log('Document written with ID: ', docRef.id)
 
-    navigate('/camps')
+    // navigate('/camps')
   }
+
+  useEffect(() => {
+    const fetchPlanets = async () => {
+      try {
+        const planetsCollections = collection(firestore, 'planets')
+
+        const planets: SelectOptions[] = []
+        const querySnapshot = await getDocs(planetsCollections)
+        querySnapshot.docs.map((doc) =>
+          planets.push({ key: doc.data().name, value: doc.id })
+        )
+
+        console.log('planets', planets)
+        console.log('snapshot', querySnapshot)
+
+        setPlanets(planets)
+      } catch (error) {
+        console.error(error)
+      }
+    }
+
+    fetchPlanets()
+  }, [firestore, watchCampLevel])
 
   useEffect(() => {
     const fetchContinents = async () => {
@@ -215,10 +239,10 @@ const StartCampForm = () => {
           watchCampLevel == 'campus') && (
           <Box my={3}>
             <Select
-              name="world"
-              placeholder="world"
-              label="Select World"
-              options={[{ key: 'Earth', value: 'earth' }]}
+              name="planet"
+              placeholder="planet"
+              label="Select Planet"
+              options={planets}
               control={control}
               errors={errors}
             />
