@@ -21,7 +21,8 @@ import { GiHamburgerMenu } from 'react-icons/gi'
 import { useNavigate } from 'react-router-dom'
 import { ColorModeSwitcher } from './ColorModeSwitcher'
 import { useUserContext } from '../contexts/UserContext'
-import logo from '../assets/logo.svg?react'
+import logo from '../../assets/logo.svg'
+import FLCOutlineLogo from '../assets/flcOutlineLogo'
 import { useAuth } from '../contexts/AuthContext'
 import useCustomColors from '../hooks/useCustomColors'
 import { FaChevronRight } from 'react-icons/fa'
@@ -67,11 +68,9 @@ function Navigation() {
   return (
     <Box bg={navBg} width={'100vw'} px={5}>
       <HStack justifyContent={'space-between'}>
-        <Image
-          src={'../../assets/logo.svg'}
-          width={'80px'}
-          onClick={() => navigate('/')}
-        />
+        <Box maxW={'80px'} onClick={() => navigate('/')}>
+          <FLCOutlineLogo />
+        </Box>
         <IconButton
           colorScheme="gray"
           aria-label="Side Nav Toggle"
