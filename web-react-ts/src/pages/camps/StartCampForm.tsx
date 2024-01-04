@@ -11,7 +11,7 @@ import { SelectOptions } from '../../../global'
 import { CAMP_LEVEL_OPTIONS } from '../../utils/constants'
 import { FormData } from '../../../global'
 
-const camplevelIderence = (campLevel: string, values: FormData) => {
+const campLevelReference = (campLevel: string, values: FormData) => {
   switch (campLevel) {
     case 'global':
       return values?.world as string
@@ -83,7 +83,7 @@ const StartCampForm = () => {
 
   const onSubmit = async (values: FormData) => {
     console.log(values)
-    const levelId = camplevelIderence(watchCampLevel, values)
+    const levelId = campLevelReference(watchCampLevel, values)
     const data = {
       name: values?.campName,
       campLevel: values?.campLevel,
