@@ -18,7 +18,7 @@ import { Input } from '@jaedag/admin-portal-react-core'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { Link as RouterLink, useNavigate } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
-import logo from '../assets/CampLogo.svg?react'
+import CampLogo from '../assets/CampLogo'
 import useCustomColors from '../hooks/useCustomColors'
 
 const LogIn = () => {
@@ -60,7 +60,7 @@ const LogIn = () => {
       <Center height="100vh">
         <Container>
           <Center marginBottom="3rem">
-            <Image src={logo} />
+            <CampLogo classname={''} />
           </Center>
           {error && (
             <Alert status="error">

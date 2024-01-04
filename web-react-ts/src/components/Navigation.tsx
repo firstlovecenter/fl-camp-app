@@ -67,7 +67,11 @@ function Navigation() {
   return (
     <Box bg={navBg} width={'100vw'} px={5}>
       <HStack justifyContent={'space-between'}>
-        <Image src={logo} width={'80px'} onClick={() => navigate('/')} />
+        <Image
+          src={'../../assets/logo.svg'}
+          width={'80px'}
+          onClick={() => navigate('/')}
+        />
         <IconButton
           colorScheme="gray"
           aria-label="Side Nav Toggle"
