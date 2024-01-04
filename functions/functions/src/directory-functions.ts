@@ -4,7 +4,7 @@ import { Camp } from '../types'
 const db = getFirestore()
 
 const campusDirectory = async (camp: Camp, campId: string) => {
-  const campusesRef = db.collection('campuses').doc(camp.levelRef)
+  const campusesRef = db.collection('campuses').doc(camp.levelId)
   const campusDoc = await campusesRef.get()
 
   const campusData = {
@@ -25,7 +25,7 @@ const campusDirectory = async (camp: Camp, campId: string) => {
 }
 
 const countryDirectory = async (camp: Camp, campId: string) => {
-  const countriesRef = db.collection('countries').doc(camp.levelRef)
+  const countriesRef = db.collection('countries').doc(camp.levelId)
   const countryDoc = await countriesRef.get()
 
   const countryData = {
@@ -70,7 +70,7 @@ const continentsWrite = async (
 
 const continentDirectory = async (camp: Camp, campId: string) => {
   try {
-    const continentsRef = db.collection('continents').doc(camp.levelRef)
+    const continentsRef = db.collection('continents').doc(camp.levelId)
     const continentDoc = await continentsRef.get()
 
     const continentData = {
@@ -186,7 +186,7 @@ const createPlaces = async (upperRef: string, campId: string, type: string) => {
 }
 
 const planetDirectory = async (camp: Camp, campId: string) => {
-  const planetRef = db.collection('planets').doc(camp.levelRef)
+  const planetRef = db.collection('planets').doc(camp.levelId)
   const planetDoc = await planetRef.get()
 
   const planetData = {
@@ -211,8 +211,8 @@ const planetDirectory = async (camp: Camp, campId: string) => {
   await createCampuses(campId)
 }
 
-const createContinents = async (campLevelRef: string, campId: string) => {
-  await createPlaces(campLevelRef, campId, 'continents')
+const createContinents = async (camplevelId: string, campId: string) => {
+  await createPlaces(camplevelId, campId, 'continents')
 }
 
 interface DirectoryItem {

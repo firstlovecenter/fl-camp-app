@@ -11,7 +11,7 @@ import { SelectOptions } from '../../../global'
 import { CAMP_LEVEL_OPTIONS } from '../../utils/constants'
 import { FormData } from '../../../global'
 
-const campLevelReference = (campLevel: string, values: FormData) => {
+const camplevelIderence = (campLevel: string, values: FormData) => {
   switch (campLevel) {
     case 'global':
       return values?.world as string
@@ -83,7 +83,7 @@ const StartCampForm = () => {
 
   const onSubmit = async (values: FormData) => {
     console.log(values)
-    const levelRef = campLevelReference(watchCampLevel, values)
+    const levelId = camplevelIderence(watchCampLevel, values)
     const data = {
       name: values?.campName,
       campLevel: values?.campLevel,
@@ -94,7 +94,7 @@ const StartCampForm = () => {
         .toISOString()
         .slice(0, 10),
       paymentDeadline: values?.paymentDeadline.toISOString().slice(0, 10),
-      levelRef: levelRef,
+      levelId: levelId,
     }
 
     const docRef = await addDoc(collection(firestore, 'camps'), data)
