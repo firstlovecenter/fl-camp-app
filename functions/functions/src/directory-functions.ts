@@ -1,5 +1,5 @@
 import { getFirestore, DocumentReference } from 'firebase-admin/firestore'
-import { Camp } from './types'
+import { Camp } from '../functions'
 
 const db = getFirestore()
 
