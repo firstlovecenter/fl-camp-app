@@ -1,7 +1,7 @@
 type Camp = {
   campLevel: string
   endDate: string
-  levelRef: string
+  levelId: string
   name: string
   paymentDeadline: string
   registrationDeadline: string
