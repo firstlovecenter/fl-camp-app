@@ -1,6 +1,7 @@
 [build]
+  command =  "npm i && cd web-react-ts && npm i && npm run build"
   publish = "web-react-ts/dist"
-  command =  "npm i && cd web-react-ts && npm run build"
+ 
 
 [[redirects]]
   from = "/*"
