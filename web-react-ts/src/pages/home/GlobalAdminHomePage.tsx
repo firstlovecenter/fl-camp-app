@@ -25,10 +25,15 @@ import {
   collection,
   getCountFromServer,
   query,
-  where,
+  getDocs,
   doc,
+  Timestamp,
 } from 'firebase/firestore'
-import { useFirestore, useFirestoreDocData } from 'reactfire'
+import {
+  useFirestore,
+  useFirestoreDocData,
+  useFirestoreCollectionData,
+} from 'reactfire'
 import { db } from '../../firebase'
 import { ApolloWrapper } from '@jaedag/admin-portal-react-core'
 import { useNavigate } from 'react-router-dom'
@@ -66,13 +71,22 @@ const GlobalAdminHomePage = () => {
       try {
         const coll = collection(db, 'camps')
         const snapshot = await getCountFromServer(coll)
-        const { count: totalCount } = snapshot.data()
 
-        const q = query(coll, where('campStatus', '==', true))
-        const activeCampSnapshot = await getCountFromServer(q)
-        const { count: activeTotalCount } = activeCampSnapshot.data()
+        const campsQuery = query(coll)
 
-        setCampCounts({ totalCount, activeTotalCount })
+        const campsSnapshot = await getDocs(campsQuery)
+
+        const activeCamps = campsSnapshot.docs.filter((doc) => {
+          const currentDate = Timestamp.fromDate(new Date()).valueOf()
+          if (doc.data().endDate.valueOf() > currentDate) {
+            return doc.data()
+          }
+        })
+
+        setCampCounts({
+          totalCount: campsSnapshot.size,
+          activeTotalCount: activeCamps.length,
+        })
       } catch (error) {
         console.error(error)
       }
