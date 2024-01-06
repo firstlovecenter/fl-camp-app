@@ -21,19 +21,8 @@ import {
   Spacer,
 } from '@chakra-ui/react'
 import useCustomColors from '../../hooks/useCustomColors'
-import {
-  collection,
-  getCountFromServer,
-  query,
-  getDocs,
-  doc,
-  Timestamp,
-} from 'firebase/firestore'
-import {
-  useFirestore,
-  useFirestoreDocData,
-  useFirestoreCollectionData,
-} from 'reactfire'
+import { collection, query, getDocs, doc, Timestamp } from 'firebase/firestore'
+import { useFirestore, useFirestoreDocData } from 'reactfire'
 import { db } from '../../firebase'
 import { ApolloWrapper } from '@jaedag/admin-portal-react-core'
 import { useNavigate } from 'react-router-dom'
