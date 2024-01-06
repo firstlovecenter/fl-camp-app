@@ -85,7 +85,7 @@ type FormData = {
   campEnd: Date
   registrationDeadline: Date
   paymentDeadline: Date
-  world?: string | undefined
+  planet?: string | undefined
   continent?: string | undefined
   country?: string | undefined
   campus?: string | undefined

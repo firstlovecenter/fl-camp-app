@@ -1,7 +1,14 @@
-import { getFirestore, DocumentReference } from 'firebase-admin/firestore'
+import { getFirestore } from 'firebase-admin/firestore'
 import { Camp } from '../types'
 
 const db = getFirestore()
+
+interface DirectoryItem {
+  name: string
+  upperChurchId: string
+  type: string
+  id: string
+}
 
 const campusDirectory = async (camp: Camp, campId: string) => {
   const campusesRef = db.collection('campuses').doc(camp.levelId)
@@ -9,7 +16,7 @@ const campusDirectory = async (camp: Camp, campId: string) => {
 
   const campusData = {
     name: campusDoc.data()?.name,
-    countryRef: campusDoc.data()?.countryRef,
+    upperChurchId: campusDoc.data()?.upperChurchId,
   }
 
   const campRef = db.collection('camps').doc(campId)
@@ -22,167 +29,6 @@ const campusDirectory = async (camp: Camp, campId: string) => {
     .doc(campusDoc.id)
 
   await directoryRef.set(campusData)
-}
-
-const countryDirectory = async (camp: Camp, campId: string) => {
-  const countriesRef = db.collection('countries').doc(camp.levelId)
-  const countryDoc = await countriesRef.get()
-
-  const countryData = {
-    name: countryDoc.data()?.name,
-    countryRef: countryDoc.data()?.upperRef,
-  }
-
-  // const campRef = db.collection('camps').doc(campId)
-  // await campRef.get()
-
-  const directoryRef = db
-    .collection('camps')
-    .doc(campId)
-    .collection('countries')
-    .doc(countryDoc.id)
-
-  await directoryRef.set(countryData)
-
-  await createPlaces(countryDoc.id, campId, 'campuses')
-}
-
-const continentsWrite = async (
-  continentData: {
-    name: string
-    countryRef: string
-  },
-  continentDocId: string,
-  campRef: DocumentReference
-) => {
-  // Create continents subcollection
-  const batch = db.batch()
-  const continentsDirectoryRef = campRef
-    .collection('continents')
-    .doc(continentDocId)
-  batch.set(continentsDirectoryRef, {
-    ...continentData,
-    type: 'continent', // add a type field to identify the entity type
-  })
-
-  await batch.commit()
-}
-
-const continentDirectory = async (camp: Camp, campId: string) => {
-  try {
-    const continentsRef = db.collection('continents').doc(camp.levelId)
-    const continentDoc = await continentsRef.get()
-
-    const continentData = {
-      name: continentDoc.data()?.name,
-      countryRef: continentDoc.data()?.upperRef,
-    }
-
-    const campRef = db.collection('camps').doc(campId)
-
-    // Create continents subcollection
-
-    await continentsWrite(continentData, continentDoc.id, campRef)
-
-    // Create countries subcollection
-
-    await countriesWrite(continentDoc.id, campRef)
-
-    await campusesWrite(campRef)
-  } catch (error) {
-    console.error('Error in continentDirectory:', error)
-  }
-}
-
-const countriesWrite = async (
-  continentDocId: string,
-  campRef: DocumentReference
-) => {
-  try {
-    const batch = db.batch()
-    const countriesRef = db.collection('countries')
-    const countriesSnapshot = await countriesRef
-      .where('upperRef', '==', continentDocId)
-      .get()
-
-    await Promise.all(
-      countriesSnapshot.docs.map(async (country) => {
-        const countryData = {
-          name: country.data()?.name,
-          upperRef: country.data()?.upperRef,
-          type: 'country',
-        }
-
-        const countriesDirectoryRef = campRef
-          .collection('countries')
-          .doc(country.id)
-
-        batch.set(countriesDirectoryRef, countryData)
-      })
-    )
-
-    // Commit the batch after all operations are complete
-    await batch.commit()
-    console.log('Batch committed successfully')
-  } catch (error) {
-    console.error('Error in countriesWrite:', error)
-  }
-}
-
-const campusesWrite = async (campRef: DocumentReference) => {
-  try {
-    const batch = db.batch()
-    const campCountriesRef = campRef.collection('countries')
-    const campCountries = await campCountriesRef.get()
-
-    await Promise.all(
-      campCountries.docs.map(async (campCountry) => {
-        const campusesRef = db.collection('campuses')
-        const campusesSnapshot = await campusesRef
-          .where('upperRef', '==', campCountry.id)
-          .get()
-
-        campusesSnapshot.forEach((campus) => {
-          const campusesDirectoryRef = campRef
-            .collection('campuses')
-            .doc(campus.id)
-          batch.set(campusesDirectoryRef, {
-            name: campus.data()?.name,
-            upperRef: campus.data()?.upperRef,
-            type: 'campus',
-          })
-        })
-      })
-    )
-
-    // Commit the batch after all operations are complete
-    await batch.commit()
-  } catch (error) {
-    console.error('Error in campusesWrite:', error)
-  }
-}
-
-const createPlaces = async (upperRef: string, campId: string, type: string) => {
-  const placeRef = db.collection(type)
-
-  const placeSnapshot = await placeRef.where('upperRef', '==', upperRef).get()
-
-  console.log('placeSnapshot', placeSnapshot)
-
-  placeSnapshot.forEach(async (place) => {
-    const directoryRef = db
-      .collection('camps')
-      .doc(campId)
-      .collection(type)
-      .doc(place.id)
-
-    await directoryRef.set({
-      name: place.data()?.name,
-      upperRef: place.data()?.upperRef,
-    })
-
-    await directoryRef.get()
-  })
 }
 
 const planetDirectory = async (camp: Camp, campId: string) => {
@@ -204,68 +50,268 @@ const planetDirectory = async (camp: Camp, campId: string) => {
 
   await directoryRef.set(planetData)
 
-  await createContinents(planetDoc.id, campId)
+  const continentsRef = db.collection('continents')
+  const campContinentsDocs = await continentsRef
+    .where('upperChurchId', '==', planetDoc.id)
+    .get()
 
-  await createCountries(campId)
-
-  await createCampuses(campId)
-}
-
-const createContinents = async (camplevelId: string, campId: string) => {
-  await createPlaces(camplevelId, campId, 'continents')
-}
-
-interface DirectoryItem {
-  name: string
-  upperRef: string
-  type: string
-  id: string
-}
-
-const createCountries = async (campId: string) => {
-  const campRef = db.collection('camps').doc(campId)
-  const campContinents = await campRef.collection('continents').get()
-
-  // const view = campContinents.docs.map((doc) => doc.data())
-  // console.log('view', view)
-
-  const campContinentsArray: DirectoryItem[] = []
-
-  campContinents.forEach((campContinent) => {
-    campContinentsArray.push({
+  const campContinentsArray: DirectoryItem[] = campContinentsDocs.docs.map(
+    (campContinent) => ({
       name: campContinent.data()?.name,
-      upperRef: campContinent.data()?.upperRef,
-      type: campContinent.data()?.type,
+      upperChurchId: campContinent.data()?.upperChurchId,
+      type: 'continent',
       id: campContinent.id,
     })
+  )
+
+  const countryPromises = campContinentsArray.map(async (continent) => {
+    const countriesRef = db.collection('countries')
+    const campCountriesDocs = await countriesRef
+      .where('upperChurchId', '==', continent.id)
+      .get()
+
+    return campCountriesDocs.docs.map((campCountry) => ({
+      name: campCountry.data()?.name,
+      upperChurchId: campCountry.data()?.upperChurchId,
+      type: 'country',
+      id: campCountry.id,
+    }))
   })
 
-  console.log('campContinentsArray', campContinentsArray)
+  // Wait for all country promises to resolve
+  const campCountriesArrays = await Promise.all(countryPromises)
 
-  for (const continent of campContinentsArray) {
-    await createPlaces(continent.id, campId, 'countries')
+  // Flatten the array of arrays
+  const campCountriesArray = campCountriesArrays.flat()
+
+  const campusPromises = campCountriesArray.map(async (country) => {
+    const campusesRef = db.collection('campuses')
+    const campCampusesDoc = await campusesRef
+      .where('upperChurchId', '==', country.id)
+      .get()
+
+    return campCampusesDoc.docs.map((campCampus) => ({
+      name: campCampus.data()?.name,
+      upperChurchId: campCampus.data()?.upperChurchId,
+      type: 'campus',
+      id: campCampus.id,
+    }))
+  })
+
+  // Wait for all campus promises to resolve
+  const campCampusesArrays = await Promise.all(campusPromises)
+
+  // Flatten the array of arrays
+  const campCampusesArray = campCampusesArrays.flat()
+
+  for (const campContinent of campContinentsArray) {
+    const batch = db.batch()
+
+    const campContinentsRef = campRef
+      .collection('continents')
+      .doc(campContinent.id)
+
+    batch.set(campContinentsRef, campContinent)
+
+    await batch.commit()
+  }
+
+  for (const campCountry of campCountriesArray) {
+    const batch = db.batch()
+
+    const campCountryRef = campRef.collection('countries').doc(campCountry.id)
+
+    batch.set(campCountryRef, campCountry)
+
+    await batch.commit()
+  }
+
+  for (const campCampus of campCampusesArray) {
+    const batch = db.batch()
+
+    const campCampusRef = campRef.collection('campuses').doc(campCampus.id)
+
+    batch.set(campCampusRef, campCampus)
+
+    await batch.commit()
   }
 }
 
-const createCampuses = async (campId: string) => {
+const continentDirectory = async (camp: Camp, campId: string) => {
+  const continentRef = db.collection('continents').doc(camp.levelId)
+  const continentDoc = await continentRef.get()
+
+  const continentData = {
+    name: continentDoc.data()?.name,
+    upperChurchId: continentDoc.data()?.upperChurchId,
+    id: continentDoc.id,
+  }
+
   const campRef = db.collection('camps').doc(campId)
-  const campCountries = await campRef.collection('countries').get()
+  await campRef.get()
 
-  const campCountriesArray: DirectoryItem[] = []
+  const directoryRef = db
+    .collection('camps')
+    .doc(campId)
+    .collection('continents')
+    .doc(continentData.id)
 
-  campCountries.forEach((campCountries) => {
-    campCountriesArray.push({
-      name: campCountries.data()?.name,
-      upperRef: campCountries.data()?.upperRef,
-      type: campCountries.data()?.type,
-      id: campCountries.id,
-    })
+  await directoryRef.set(continentData)
+
+  const campContinentsDoc = await continentRef.get()
+
+  const campContinentsArray: DirectoryItem[] = [
+    {
+      name: campContinentsDoc.data()?.name,
+      upperChurchId: campContinentsDoc.data()?.upperChurchId,
+      type: 'continent',
+      id: campContinentsDoc.id,
+    },
+  ]
+
+  const countryPromises = campContinentsArray.map(async (continent) => {
+    const countriesRef = db.collection('countries')
+    const campCountriesDocs = await countriesRef
+      .where('upperChurchId', '==', continent.id)
+      .get()
+
+    return campCountriesDocs.docs.map((campCountry) => ({
+      name: campCountry.data()?.name,
+      upperChurchId: campCountry.data()?.upperChurchId,
+      type: 'country',
+      id: campCountry.id,
+    }))
   })
 
-  console.log('campCountriesArray', campCountriesArray)
+  // Wait for all country promises to resolve
+  const campCountriesArrays = await Promise.all(countryPromises)
 
-  for (const country of campCountriesArray) {
-    await createPlaces(country.id, campId, 'campuses')
+  // Flatten the array of arrays
+  const campCountriesArray = campCountriesArrays.flat()
+
+  const campusPromises = campCountriesArray.map(async (country) => {
+    const campusesRef = db.collection('campuses')
+    const campCampusesDoc = await campusesRef
+      .where('upperChurchId', '==', country.id)
+      .get()
+
+    return campCampusesDoc.docs.map((campCampus) => ({
+      name: campCampus.data()?.name,
+      upperChurchId: campCampus.data()?.upperChurchId,
+      type: 'campus',
+      id: campCampus.id,
+    }))
+  })
+
+  // Wait for all campus promises to resolve
+  const campCampusesArrays = await Promise.all(campusPromises)
+
+  // Flatten the array of arrays
+  const campCampusesArray = campCampusesArrays.flat()
+
+  for (const campContinent of campContinentsArray) {
+    const batch = db.batch()
+
+    const campContinentsRef = campRef
+      .collection('continents')
+      .doc(campContinent.id)
+
+    batch.set(campContinentsRef, campContinent)
+
+    await batch.commit()
+  }
+
+  for (const campCountry of campCountriesArray) {
+    const batch = db.batch()
+
+    const campCountryRef = campRef.collection('countries').doc(campCountry.id)
+
+    batch.set(campCountryRef, campCountry)
+
+    await batch.commit()
+  }
+
+  for (const campCampus of campCampusesArray) {
+    const batch = db.batch()
+
+    const campCampusRef = campRef.collection('campuses').doc(campCampus.id)
+
+    batch.set(campCampusRef, campCampus)
+
+    await batch.commit()
+  }
+}
+
+const countryDirectory = async (camp: Camp, campId: string) => {
+  const countryRef = db.collection('countries').doc(camp.levelId)
+  const countryDoc = await countryRef.get()
+
+  const countryData = {
+    name: countryDoc.data()?.name,
+    upperChurchId: countryDoc.data()?.upperChurchId,
+    id: countryDoc.id,
+  }
+
+  const campRef = db.collection('camps').doc(campId)
+  await campRef.get()
+
+  const directoryRef = db
+    .collection('camps')
+    .doc(campId)
+    .collection('countries')
+    .doc(countryData.id)
+
+  await directoryRef.set(countryData)
+
+  const campCountryDoc = await countryRef.get()
+
+  const campCountriesArray: DirectoryItem[] = [
+    {
+      name: campCountryDoc.data()?.name,
+      upperChurchId: campCountryDoc.data()?.upperChurchId,
+      type: 'country',
+      id: campCountryDoc.id,
+    },
+  ]
+
+  const campusPromises = campCountriesArray.map(async (country) => {
+    const campusesRef = db.collection('campuses')
+    const campCampusesDoc = await campusesRef
+      .where('upperChurchId', '==', country.id)
+      .get()
+
+    return campCampusesDoc.docs.map((campCampus) => ({
+      name: campCampus.data()?.name,
+      upperChurchId: campCampus.data()?.upperChurchId,
+      type: 'campus',
+      id: campCampus.id,
+    }))
+  })
+
+  // Wait for all campus promises to resolve
+  const campCampusesArrays = await Promise.all(campusPromises)
+
+  // Flatten the array of arrays
+  const campCampusesArray = campCampusesArrays.flat()
+
+  for (const campCountry of campCountriesArray) {
+    const batch = db.batch()
+
+    const campCountryRef = campRef.collection('countries').doc(campCountry.id)
+
+    batch.set(campCountryRef, campCountry)
+
+    await batch.commit()
+  }
+
+  for (const campCampus of campCampusesArray) {
+    const batch = db.batch()
+
+    const campCampusRef = campRef.collection('campuses').doc(campCampus.id)
+
+    batch.set(campCampusRef, campCampus)
+
+    await batch.commit()
   }
 }
 
