@@ -70,7 +70,6 @@ const GlobalAdminHomePage = () => {
     const getCampsCount = async () => {
       try {
         const coll = collection(db, 'camps')
-        const snapshot = await getCountFromServer(coll)
 
         const campsQuery = query(coll)
 
