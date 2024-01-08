@@ -12,75 +12,78 @@ const aggregateRegistration = async (registration: Registration) => {
     .doc(campId)
     .collection('campuses')
     .doc(campusRef)
+  try {
+    const campReference = db.collection('camps').doc(campId)
+    const camp = await campReference.get()
 
-  const camp = await db.collection('camps').doc(campId).get()
+    await campReference.update({
+      registrations: increment,
+      timestamp: FieldValue.serverTimestamp(),
+    })
 
-  console.log('camp', camp.data())
+    // Common update for all cases
+    await campusReference.update({
+      registrations: increment,
+      timestamp: FieldValue.serverTimestamp(),
+    })
 
-  console.log('campLevel', camp.data()?.campLevel)
+    if (
+      camp.data()?.campLevel === 'country' ||
+      camp.data()?.campLevel === 'continent' ||
+      camp.data()?.campLevel === 'planet'
+    ) {
+      const campus = await campusReference.get()
+      const countryId = campus.data()?.upperChurchId
 
-  // Common update for all cases
-  await campusReference.update({
-    registrations: increment,
-    timestamp: FieldValue.serverTimestamp(),
-  })
-
-  if (
-    camp.data()?.campLevel === 'country' ||
-    camp.data()?.campLevel === 'continent' ||
-    camp.data()?.campLevel === 'planet'
-  ) {
-    const campus = await campusReference.get()
-    const countryId = campus.data()?.upperChurchId
-
-    if (countryId) {
-      const countryReference = db
-        .collection('camps')
-        .doc(campId)
-        .collection('countries')
-        .doc(countryId)
-
-      await countryReference.update({
-        registration: increment,
-        timestamp: FieldValue.serverTimestamp(),
-      })
-
-      if (
-        camp.data()?.campLevel === 'continent' ||
-        camp.data()?.campLevel === 'planet'
-      ) {
-        const country = await countryReference.get()
-        const continentId = country.data()?.upperChurchId
-
-        const continentReference = db
+      if (countryId) {
+        const countryReference = db
           .collection('camps')
           .doc(campId)
-          .collection('continents')
-          .doc(continentId)
+          .collection('countries')
+          .doc(countryId)
 
-        await continentReference.update({
+        await countryReference.update({
           registration: increment,
           timestamp: FieldValue.serverTimestamp(),
         })
 
-        if (camp.data()?.campLevel === 'planet') {
-          const continent = await countryReference.get()
-          const planetId = continent.data()?.upperChurchId
+        if (
+          camp.data()?.campLevel === 'continent' ||
+          camp.data()?.campLevel === 'planet'
+        ) {
+          const country = await countryReference.get()
+          const continentId = country.data()?.upperChurchId
 
-          const planetReference = db
+          const continentReference = db
             .collection('camps')
             .doc(campId)
-            .collection('planets')
-            .doc(planetId)
+            .collection('continents')
+            .doc(continentId)
 
-          await planetReference.update({
+          await continentReference.update({
             registration: increment,
             timestamp: FieldValue.serverTimestamp(),
           })
+
+          if (camp.data()?.campLevel === 'planet') {
+            const continent = await countryReference.get()
+            const planetId = continent.data()?.upperChurchId
+
+            const planetReference = db
+              .collection('camps')
+              .doc(campId)
+              .collection('planets')
+              .doc(planetId)
+
+            await planetReference.update({
+              registration: increment,
+              timestamp: FieldValue.serverTimestamp(),
+            })
+          }
         }
       }
     }
-  }
+  } catch (error) {}
 }
 
 export default aggregateRegistration
