@@ -1,9 +1,6 @@
 import React, { useState } from 'react'
 import { Container, Heading } from '@chakra-ui/react'
 import AssignAdminUserSearch from '../../components/AssignAdminUserSearch'
-import { collection, DocumentData } from '@firebase/firestore'
-import { useFirestore, useFirestoreCollectionData } from 'reactfire'
-import { UserData } from '../../../global'
 import { ApolloWrapper } from '@jaedag/admin-portal-react-core'
 import AssignCampAdminModal from '../../components/modals/AssignCampAdminModal'
 
@@ -12,19 +9,12 @@ const AssignAdmin = () => {
   const onOpenFirstModal = () => setIsOpenFirstModal(true)
   const onCloseFirstModal = () => setIsOpenFirstModal(false)
 
-  const firestore = useFirestore()
-  const userCollection = collection(firestore, 'users')
-  const { data: users } = useFirestoreCollectionData(userCollection, {
-    idField: 'id',
-  })
+  const loading = false
 
-  const loading = !users
-
-  const usersData: UserData[] = []
-
-  users?.forEach((user: DocumentData) => {
-    usersData.push({ id: user.id, ...user.data() })
-  })
+  const data = [
+    { id: '1', name: 'John Doe' },
+    { id: '2', name: 'Jane Doe' },
+  ]
 
   // Submit handler for both modals
   const onSubmitModal = () => {
@@ -32,7 +22,7 @@ const AssignAdmin = () => {
   }
 
   return (
-    <ApolloWrapper data={usersData} loading={loading}>
+    <ApolloWrapper data={data} loading={loading}>
       <Container p={6}>
         <AssignCampAdminModal
           isOpen={isOpenFirstModal}

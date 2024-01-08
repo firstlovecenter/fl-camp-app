@@ -196,7 +196,7 @@ const StartCampForm = () => {
 
           const campusesQuery = query(
             campusesCollection,
-            where('countryRef', '==', watchCountry)
+            where('upperChurchId', '==', watchCountry)
           )
 
           const campusesSnapshot = await getDocs(campusesQuery)

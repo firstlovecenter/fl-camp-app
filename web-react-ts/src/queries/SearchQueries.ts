@@ -89,8 +89,6 @@ const fetchInitialCampRegistrations = async (camp: string) => {
 
   const docs = await getDocs(queryRegistrations)
 
-  console.log('docs', docs)
-
   docs?.forEach((userDoc: DocumentData) => {
     usersData.push(userDoc.data())
   })
