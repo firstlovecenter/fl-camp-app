@@ -244,10 +244,10 @@ const StartCampForm = () => {
           />
         </Box>
 
-        {(watchCampLevel == 'planet' ||
-          watchCampLevel == 'continent' ||
-          watchCampLevel == 'country' ||
-          watchCampLevel == 'campus') && (
+        {(watchCampLevel === 'planet' ||
+          watchCampLevel === 'continent' ||
+          watchCampLevel === 'country' ||
+          watchCampLevel === 'campus') && (
           <Box my={3}>
             <Select
               name="planet"
@@ -260,9 +260,9 @@ const StartCampForm = () => {
           </Box>
         )}
 
-        {(watchCampLevel == 'continent' ||
-          watchCampLevel == 'country' ||
-          watchCampLevel == 'campus') && (
+        {(watchCampLevel === 'continent' ||
+          watchCampLevel === 'country' ||
+          watchCampLevel === 'campus') && (
           <Box my={3}>
             <Select
               name="continent"
@@ -275,7 +275,7 @@ const StartCampForm = () => {
           </Box>
         )}
 
-        {(watchCampLevel == 'country' || watchCampLevel == 'campus') && (
+        {(watchCampLevel === 'country' || watchCampLevel === 'campus') && (
           <Box my={3}>
             <Select
               name="country"
@@ -288,7 +288,7 @@ const StartCampForm = () => {
           </Box>
         )}
 
-        {watchCampLevel == 'campus' && (
+        {watchCampLevel === 'campus' && (
           <Box my={3}>
             <Select
               name="campus"
