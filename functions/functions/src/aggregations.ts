@@ -20,7 +20,7 @@ const aggregateRegistration = async (registration: Registration) => {
   console.log('campLevel', camp.data()?.campLevel)
 
   // Common update for all cases
-  const campusUpdateRespons = await campusReference.update({
+  await campusReference.update({
     registrations: increment,
     timestamp: FieldValue.serverTimestamp(),
   })
