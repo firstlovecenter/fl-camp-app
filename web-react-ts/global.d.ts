@@ -1,15 +1,18 @@
+import { Timestamp } from '@firebase/firestore-types'
+
 interface Camp {
   name: string
   roomOption: string
   role: string
-  startDate: string
-  endDate: string
-  campType: string
+  startDate: Timestamp
+  endDate: Timestamp
+  campLevel: string
   registrationStatus?: string
   paymentStatus?: string
-  campStatus?: boolean
   campId?: string
   id?: string
+  registrationDeadline?: Timestamp
+  paymentDeadline?: Timestamp
 }
 
 type Role =
