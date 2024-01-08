@@ -1,15 +1,18 @@
+import { Timestamp } from '@firebase/firestore-types'
+
 interface Camp {
   name: string
   roomOption: string
   role: string
-  startDate: string
-  endDate: string
-  campType: string
+  startDate: Timestamp
+  endDate: Timestamp
+  campLevel: string
   registrationStatus?: string
   paymentStatus?: string
-  campStatus?: boolean
   campId?: string
   id?: string
+  registrationDeadline?: Timestamp
+  paymentDeadline?: Timestamp
 }
 
 type Role =
@@ -85,10 +88,10 @@ type FormData = {
   campEnd: Date
   registrationDeadline: Date
   paymentDeadline: Date
-  world: string | undefined
-  continent: string | undefined
-  country: string | undefined
-  campus: string | undefined
+  planet?: string | undefined
+  continent?: string | undefined
+  country?: string | undefined
+  campus?: string | undefined
 }
 
 export interface Registration {
@@ -100,4 +103,13 @@ export interface Registration {
   lastName: string
   phoneNumber: string
   whatsappNumber: string
+}
+
+interface MenuItem {
+  name: string
+  path: string
+}
+
+interface CampMenuItem extends MenuItem {
+  subtitle: string
 }

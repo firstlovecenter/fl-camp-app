@@ -1,3 +1,5 @@
+import { Timestamp } from '@firebase/firestore-types'
+
 export const parseRegistrationOptions = (data: any) => {
   const res: {
     value: string
@@ -27,11 +29,11 @@ export const parseRegistrationOptions = (data: any) => {
 }
 
 export const formatDateRange = (
-  startDateTimestamp: string,
-  endDateTimestamp: string
+  startDateTimestamp: Timestamp,
+  endDateTimestamp: Timestamp
 ) => {
-  const startDate = new Date(startDateTimestamp)
-  const endDate = new Date(endDateTimestamp)
+  const startDate = startDateTimestamp.toDate()
+  const endDate = endDateTimestamp.toDate()
 
   // Format day with 'st', 'nd', 'rd', or 'th'
   const formatDay = (day: number) => {

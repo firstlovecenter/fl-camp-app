@@ -9,7 +9,7 @@ import { useUserContext } from '../contexts/UserContext'
 
 const CampCard = ({
   name,
-  campType,
+  campLevel,
   roomOption,
   role,
   registrationStatus,
@@ -35,7 +35,7 @@ const CampCard = ({
   }
 
   const currentDate = new Date()
-  const deadline = new Date(endDate)
+  const deadline = endDate.toDate()
   return (
     <Card
       onClick={() => handleClick()}
@@ -51,7 +51,7 @@ const CampCard = ({
           </Text>
           <Wrap>
             <Tag borderRadius={0} bg="blue.600">
-              {campType && capitalizeFirstLetter(campType)} Camp
+              {campLevel && capitalizeFirstLetter(campLevel)} Camp
             </Tag>
             {/* admin stuff */}
             {role === 'Admin' && (

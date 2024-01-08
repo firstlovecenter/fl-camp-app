@@ -6,7 +6,7 @@ interface DataItem {
 }
 
 interface ContinentsDataItem extends DataItem {
-  earthRef?: string
+  planetRef?: string
 }
 
 interface CountriesDataItem extends DataItem {

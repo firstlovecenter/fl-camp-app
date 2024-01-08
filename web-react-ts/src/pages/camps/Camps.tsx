@@ -29,17 +29,15 @@ const Camps = () => {
 
   const camps: Camp[] = []
 
-  console.log('campDocs', campDocs)
-
   campDocs?.forEach((camp: DocumentData) => {
     camps.push({
       id: camp.id,
       name: camp.name,
-      campType: camp.campType,
+      campLevel: camp.campLevel,
       roomOption: '',
       role: '',
-      startDate: '',
-      endDate: '',
+      startDate: camp.startDate,
+      endDate: camp.endDate,
     })
   })
 
@@ -69,7 +67,7 @@ const Camps = () => {
           camps?.map((camp: Camp, index: number) => (
             <CampCard
               name={camp?.name}
-              campType={camp?.campType}
+              campLevel={camp?.campLevel}
               roomOption={camp?.roomOption}
               startDate={camp?.startDate}
               endDate={camp?.endDate}

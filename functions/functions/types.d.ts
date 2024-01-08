@@ -15,4 +15,16 @@ interface Place {
 interface Campus extends Place {
   countryRef: string
 }
-export { Camp, Campus }
+
+type Registration = {
+  email: string
+  firstName: string
+  lastName: string
+  campId: string
+  campusRef: string
+  gender: string
+  phoneNumber: string
+  whatsappNumber: string
+}
+
+export { Camp, Campus, Registration }

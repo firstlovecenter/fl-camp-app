@@ -5,7 +5,7 @@
       "queryScope": "COLLECTION",
       "fields": [
         {
-          "fieldPath": "earthId",
+          "fieldPath": "planetId",
           "order": "ASCENDING"
         },
         {

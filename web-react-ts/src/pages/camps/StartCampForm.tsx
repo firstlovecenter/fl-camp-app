@@ -5,7 +5,14 @@ import * as Yup from 'yup'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { useForm } from 'react-hook-form'
 import { useNavigate } from 'react-router-dom'
-import { collection, addDoc, getDocs, where, query } from 'firebase/firestore'
+import {
+  collection,
+  addDoc,
+  getDocs,
+  where,
+  query,
+  Timestamp,
+} from 'firebase/firestore'
 import { useFirestore } from 'reactfire'
 import { SelectOptions } from '../../../global'
 import { CAMP_LEVEL_OPTIONS } from '../../utils/constants'
@@ -13,8 +20,8 @@ import { FormData } from '../../../global'
 
 const campLevelReference = (campLevel: string, values: FormData) => {
   switch (campLevel) {
-    case 'global':
-      return values?.world as string
+    case 'planet':
+      return values?.planet as string
     case 'continent':
       return values?.continent as string
     case 'country':
@@ -22,7 +29,7 @@ const campLevelReference = (campLevel: string, values: FormData) => {
     case 'campus':
       return values?.campus as string
     default:
-      return values?.world as string
+      return values?.planet as string
   }
 }
 
@@ -30,6 +37,7 @@ const StartCampForm = () => {
   const date = new Date('1990-01-01')
   const navigate = useNavigate()
   const firestore = useFirestore()
+  const [planets, setPlanets] = useState<SelectOptions[]>([])
   const [continents, setContinents] = useState<SelectOptions[]>([])
   const [countries, setCountries] = useState<SelectOptions[]>([])
   const [campuses, setCampuses] = useState<SelectOptions[]>([])
@@ -77,7 +85,7 @@ const StartCampForm = () => {
   })
 
   const watchCampLevel = watch('campLevel')
-  const watchWorld = watch('world')
+  const watchWorld = watch('planet')
   const watchContinent = watch('continent')
   const watchCountry = watch('country')
 
@@ -88,14 +96,14 @@ const StartCampForm = () => {
       name: values?.campName,
       campLevel: values?.campLevel,
       campType: values?.campLevel,
-      startDate: values?.campStart.toISOString().slice(0, 10),
-      endDate: values?.campEnd.toISOString().slice(0, 10),
-      registrationDeadline: values?.registrationDeadline
-        .toISOString()
-        .slice(0, 10),
-      paymentDeadline: values?.paymentDeadline.toISOString().slice(0, 10),
+      startDate: Timestamp.fromDate(values?.campStart),
+      endDate: Timestamp.fromDate(values?.campEnd),
+      registrationDeadline: Timestamp.fromDate(values?.registrationDeadline),
+      paymentDeadline: Timestamp.fromDate(values?.paymentDeadline),
       levelId: levelId,
     }
+
+    console.log(data)
 
     const docRef = await addDoc(collection(firestore, 'camps'), data)
     console.log('Document written with ID: ', docRef.id)
@@ -104,12 +112,39 @@ const StartCampForm = () => {
   }
 
   useEffect(() => {
+    const fetchPlanets = async () => {
+      try {
+        const planetsCollections = collection(firestore, 'planets')
+
+        const planets: SelectOptions[] = []
+        const querySnapshot = await getDocs(planetsCollections)
+        querySnapshot.docs.map((doc) =>
+          planets.push({ key: doc.data().name, value: doc.id })
+        )
+
+        console.log('planets', planets)
+        console.log('snapshot', querySnapshot)
+
+        setPlanets(planets)
+      } catch (error) {
+        console.error(error)
+      }
+    }
+
+    fetchPlanets()
+  }, [firestore, watchCampLevel])
+
+  useEffect(() => {
     const fetchContinents = async () => {
       try {
         const continentsCollection = collection(firestore, 'continents')
 
         const continents: SelectOptions[] = []
-        const querySnapshot = await getDocs(continentsCollection)
+        const continentsQuery = query(
+          continentsCollection,
+          where('upperChurchId', '==', watchWorld)
+        )
+        const querySnapshot = await getDocs(continentsQuery)
         querySnapshot.docs.map((doc) =>
           continents.push({ key: doc.data().name, value: doc.id })
         )
@@ -131,7 +166,7 @@ const StartCampForm = () => {
 
           const countriesQuery = query(
             countriesCollection,
-            where('continentRef', '==', watchContinent)
+            where('upperChurchId', '==', watchContinent)
           )
 
           const countriesSnapshot = await getDocs(countriesQuery)
@@ -161,7 +196,7 @@ const StartCampForm = () => {
 
           const campusesQuery = query(
             campusesCollection,
-            where('countryRef', '==', watchCountry)
+            where('upperChurchId', '==', watchCountry)
           )
 
           const campusesSnapshot = await getDocs(campusesQuery)
@@ -209,25 +244,25 @@ const StartCampForm = () => {
           />
         </Box>
 
-        {(watchCampLevel == 'global' ||
-          watchCampLevel == 'continent' ||
-          watchCampLevel == 'country' ||
-          watchCampLevel == 'campus') && (
+        {(watchCampLevel === 'planet' ||
+          watchCampLevel === 'continent' ||
+          watchCampLevel === 'country' ||
+          watchCampLevel === 'campus') && (
           <Box my={3}>
             <Select
-              name="world"
-              placeholder="world"
-              label="Select World"
-              options={[{ key: 'Earth', value: 'earth' }]}
+              name="planet"
+              placeholder="planet"
+              label="Select Planet"
+              options={planets}
               control={control}
               errors={errors}
             />
           </Box>
         )}
 
-        {(watchCampLevel == 'continent' ||
-          watchCampLevel == 'country' ||
-          watchCampLevel == 'campus') && (
+        {(watchCampLevel === 'continent' ||
+          watchCampLevel === 'country' ||
+          watchCampLevel === 'campus') && (
           <Box my={3}>
             <Select
               name="continent"
@@ -240,7 +275,7 @@ const StartCampForm = () => {
           </Box>
         )}
 
-        {(watchCampLevel == 'country' || watchCampLevel == 'campus') && (
+        {(watchCampLevel === 'country' || watchCampLevel === 'campus') && (
           <Box my={3}>
             <Select
               name="country"
@@ -253,7 +288,7 @@ const StartCampForm = () => {
           </Box>
         )}
 
-        {watchCampLevel == 'campus' && (
+        {watchCampLevel === 'campus' && (
           <Box my={3}>
             <Select
               name="campus"
