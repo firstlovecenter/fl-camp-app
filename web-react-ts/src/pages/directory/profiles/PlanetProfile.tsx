@@ -6,16 +6,23 @@ import { doc } from '@firebase/firestore'
 import { useChurchId } from '../../../contexts/IdContext'
 import { useFirestore, useFirestoreDocData } from 'reactfire'
 import { ApolloWrapper } from '@jaedag/admin-portal-react-core'
+import useClickCard from '../../../hooks/useClickCard'
+import { capitalizeFirstLetter } from '../../../utils/utils'
 
-const EarthProfile = () => {
+const PlanetProfile = () => {
   const navigate = useNavigate()
   const { planetId } = useChurchId()
+  const { campId } = useClickCard()
+
+  console.log('planetId', planetId)
 
   const firestore = useFirestore()
-  const ref = doc(firestore, 'earth', planetId)
-  const { status, data: earth } = useFirestoreDocData(ref)
+  const ref = doc(firestore, 'camps', campId as string, 'planets', planetId)
+  const { status, data: planet } = useFirestoreDocData(ref)
 
-  const loading = !earth
+  console.log('planet', planet)
+
+  const loading = !planet
 
   let error = ''
   if (status === 'error') {
@@ -23,26 +30,27 @@ const EarthProfile = () => {
   }
 
   return (
-    <ApolloWrapper data={earth} loading={loading} error={error}>
+    <ApolloWrapper data={planet} loading={loading} error={error}>
       <Container>
         <Box>
-          <Heading mt={6}>{earth?.name}</Heading>
+          <Heading mt={6}>{capitalizeFirstLetter(planet?.name)}</Heading>
           <Text>World</Text>
           <Box my={6}>
             <DetailsCard
-              number={earth?.registrations}
+              number={planet?.registrations ? planet.registrations : 0}
               title={'Registrations'}
             />
             <DetailsCard
-              number={earth?.paidRegistrations}
+              number={planet?.paidRegistrations ? planet?.paidRegistrations : 0}
               title={'Paid Registrations'}
             />
+            {/*add number of continents to this*/}
             <DetailsCard number={2} title={'Continents'} />
             <Stack direction="column" spacing={1}>
               <Button
                 colorScheme="yellow"
                 variant="solid"
-                onClick={() => navigate('/continents-by-earth')}
+                onClick={() => navigate('/camp/continents-by-planet')}
                 my={3}
               >
                 View All Continents
@@ -55,4 +63,4 @@ const EarthProfile = () => {
   )
 }
 
-export default EarthProfile
+export default PlanetProfile

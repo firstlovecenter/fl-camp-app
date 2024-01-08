@@ -12,6 +12,7 @@ import {
 import { useNavigate } from 'react-router-dom'
 import useCustomColorMode from '../hooks/useCustomColors'
 import { useChurchId } from '../contexts/IdContext'
+import { capitalizeFirstLetter } from '../utils/utils'
 
 const MenuCard = ({
   paidRegistrations,
@@ -21,8 +22,8 @@ const MenuCard = ({
   route,
   type,
 }: {
-  paidRegistrations: number
-  registrations: number
+  paidRegistrations?: number
+  registrations?: number
   name: string
   id: string
   route: string
@@ -37,11 +38,11 @@ const MenuCard = ({
     cardRegistrationsText,
     cardSubtitle,
   } = useCustomColorMode()
-  const loading = !name || !registrations || !paidRegistrations
+  const loading = !name
 
   const handleClick = () => {
     switch (type) {
-      case 'earth':
+      case 'planet':
         setPlanetId(id)
         break
       case 'continents':
@@ -67,7 +68,7 @@ const MenuCard = ({
     >
       <SkeletonText isLoaded={!loading}>
         <Text fontSize="2xl" fontWeight="bold" mr={4}>
-          {name}
+          {capitalizeFirstLetter(name)}
         </Text>
       </SkeletonText>
 
@@ -75,7 +76,7 @@ const MenuCard = ({
         <Stat>
           <StatNumber color={cardRegistrationsText}>
             <Skeleton isLoaded={!loading} noOfLines={2} marginY={2}>
-              {registrations}
+              {registrations ? registrations : 0}
             </Skeleton>
           </StatNumber>
           <StatLabel color={cardSubtitle}>
@@ -88,7 +89,7 @@ const MenuCard = ({
         <Stat>
           <StatNumber color={cardPaidRegistrationsText}>
             <Skeleton isLoaded={!loading} noOfLines={2} marginY={2}>
-              {paidRegistrations}
+              {paidRegistrations ? paidRegistrations : 0}
             </Skeleton>
           </StatNumber>
           <StatLabel color={cardSubtitle}>

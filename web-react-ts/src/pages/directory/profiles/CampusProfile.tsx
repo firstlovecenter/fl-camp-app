@@ -6,13 +6,15 @@ import { doc } from '@firebase/firestore'
 import { useChurchId } from '../../../contexts/IdContext'
 import { useFirestore, useFirestoreDocData } from 'reactfire'
 import { ApolloWrapper } from '@jaedag/admin-portal-react-core'
+import useClickCard from '../../../hooks/useClickCard'
 
 const CampusProfile = () => {
   const navigate = useNavigate()
   const { campusId } = useChurchId()
+  const { campId } = useClickCard()
 
   const firestore = useFirestore()
-  const ref = doc(firestore, 'campuses', campusId)
+  const ref = doc(firestore, 'camps', campId as string, 'campuses', campusId)
   const { status, data: campus } = useFirestoreDocData(ref)
 
   const loading = !campus
@@ -30,15 +32,15 @@ const CampusProfile = () => {
           <Text>Campus</Text>
           <Box my={6}>
             <DetailsCard
-              number={campus?.registrations}
+              number={campus?.registrations ? campus?.registrations : 0}
               title={'Registrations'}
             />
             <DetailsCard
-              number={campus?.paidRegistrations}
+              number={campus?.paidRegistrations ? campus?.paidRegistrations : 0}
               title={'Paid Registrations'}
             />
 
-            <Stack direction="column" spacing={1}>
+            {/* <Stack direction="column" spacing={1}>
               <Button
                 colorScheme="yellow"
                 variant="solid"
@@ -47,7 +49,7 @@ const CampusProfile = () => {
               >
                 Add An Admin
               </Button>
-            </Stack>
+            </Stack> */}
           </Box>
         </Box>
       </Container>

@@ -11,7 +11,7 @@ import useCustomColorMode from '../hooks/useCustomColors'
 
 function DetailsCard({ title, number }: { title: string; number: number }) {
   const { cardBackground, cardRegistrationsText } = useCustomColorMode()
-  const loading = !title || !number
+  const loading = !title
 
   return (
     <Box p={4} borderRadius="md" my={3} bg={cardBackground}>

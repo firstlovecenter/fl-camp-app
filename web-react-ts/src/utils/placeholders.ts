@@ -1,7 +1,7 @@
 export const menuItemsPlaceholder = [
   {
-    name: 'Earth',
-    link: '/continents-by-earth',
+    name: 'planet',
+    link: '/continents-by-planet',
     paidRegistrations: 0,
     registrations: 0,
     id: '1',

@@ -9,20 +9,24 @@ import {
   useFirestoreDocData,
 } from 'reactfire'
 import { ApolloWrapper } from '@jaedag/admin-portal-react-core'
+import useClickCard from '../../hooks/useClickCard'
 
 const CampusesByCountry = () => {
   const { countryId } = useChurchId()
+  const { campId } = useClickCard()
   const type = 'campuses'
 
   const firestore = useFirestore()
 
-  const ref = doc(firestore, 'countries', countryId)
+  const campRef = doc(firestore, 'camps', campId as string)
+
+  const ref = doc(campRef, 'countries', countryId)
   const { data: country } = useFirestoreDocData(ref)
 
-  const campusesCollection = collection(firestore, type)
+  const campusesCollection = collection(campRef, type)
   const campusesQuery = query(
     campusesCollection,
-    where('countryRef', '==', countryId)
+    where('upperChurchId', '==', countryId)
     // orderBy('name', 'asc')
   )
 
@@ -49,7 +53,7 @@ const CampusesByCountry = () => {
             id={item.id}
             type={type}
             key={index}
-            route={'/campus-profile'}
+            route={'/camp/campus-profile'}
           />
         ))}
       </Container>
