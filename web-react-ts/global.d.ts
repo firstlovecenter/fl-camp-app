@@ -104,3 +104,12 @@ export interface Registration {
   phoneNumber: string
   whatsappNumber: string
 }
+
+interface MenuItem {
+  name: string
+  path: string
+}
+
+interface CampMenuItem extends MenuItem {
+  subtitle: string
+}

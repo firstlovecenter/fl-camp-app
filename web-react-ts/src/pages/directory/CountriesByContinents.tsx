@@ -9,20 +9,24 @@ import {
   useFirestoreDocData,
 } from 'reactfire'
 import { ApolloWrapper } from '@jaedag/admin-portal-react-core'
+import useClickCard from '../../hooks/useClickCard'
 
 const CountriesByContinent = () => {
   const { continentId } = useChurchId()
+  const { campId } = useClickCard()
   const type = 'countries'
 
   const firestore = useFirestore()
 
-  const ref = doc(firestore, 'continents', continentId)
+  const campRef = doc(firestore, 'camps', campId as string)
+
+  const ref = doc(campRef, 'continents', continentId)
   const { data: continent } = useFirestoreDocData(ref)
 
-  const countriesCollection = collection(firestore, type)
+  const countriesCollection = collection(campRef, 'countries')
   const countriesQuery = query(
     countriesCollection,
-    where('continentRef', '==', continentId)
+    where('upperChurchId', '==', continentId)
     // orderBy('name', 'asc')
   )
 
@@ -32,6 +36,8 @@ const CountriesByContinent = () => {
       idField: 'id',
     }
   )
+
+  console.log('countries', countries)
 
   const loading = !countries || !continent
 
@@ -46,13 +52,13 @@ const CountriesByContinent = () => {
         <Heading my={6}>Countries in {continent?.name}</Heading>
         {countries?.map((item, index) => (
           <MenuCard
-            paidRegistrations={item.paidRegistrations}
-            registrations={item.registrations}
+            paidRegistrations={item?.paidRegistrations}
+            registrations={item?.registrations}
             name={item.name}
             id={item.id}
             type={type}
             key={index}
-            route={'/country-profile'}
+            route={'/camp/country-profile'}
           />
         ))}
       </Container>

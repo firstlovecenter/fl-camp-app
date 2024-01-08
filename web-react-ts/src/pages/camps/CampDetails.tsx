@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import {
   Container,
   Flex,
@@ -25,11 +25,14 @@ import useCustomColors from '../../hooks/useCustomColors'
 import { FaEllipsisV } from 'react-icons/fa'
 import { capitalizeFirstLetter } from '../../utils/utils'
 import { useNavigate } from 'react-router-dom'
+import { CampMenuItem } from '../../../global'
+import { useChurchId } from '../../contexts/IdContext'
 
 const CampDetails = () => {
   const { campId } = useClickCard()
   const navigate = useNavigate()
   const firestore = useFirestore()
+  const [menuItems, setMenuItems] = useState<CampMenuItem[]>([])
   const {
     homePageCardBackground,
     homePageOptionsSubtitle,
@@ -39,31 +42,66 @@ const CampDetails = () => {
 
   const ref = doc(firestore, 'camps', campId as string)
   const { data: campDoc } = useFirestoreDocData(ref, { idField: 'id' })
+  const { setContinentId, setCountryId, setCampusId } = useChurchId()
 
-  const menuItems = [
-    {
-      name: 'Register Members',
-      path: '/camp/register-members',
-      subtitle: 'Register Members for this camp',
-    },
-    {
-      name: 'Camp Directory',
-      path: '#',
-      subtitle: 'View the camp registration details',
-    },
-    {
-      name: 'Rooms Upload',
-      path: '#',
-      subtitle: 'Click to setup and manage rooms',
-    },
-    {
-      name: 'Manage Admins',
-      path: '/camp/assign-camp-admin',
-      subtitle: 'Click to Manage Admins',
-    },
-  ]
+  const getDirectoryPath = (campLevel: string) => {
+    switch (campLevel) {
+      case 'planet':
+        return '/camp/directory'
+      case 'continent':
+        setContinentId(campDoc.levelId)
+        return '/camp/continent-profile'
+      case 'country':
+        setCountryId(campDoc.levelId)
+        return '/camp/country-profile'
+      case 'campus':
+        setCampusId(campDoc.levelId)
+        return '/camp/campus-profile'
+      default:
+        return '#'
+    }
+  }
 
-  const loading = !campDoc
+  useEffect(() => {
+    // Check if campDoc is available
+    if (campDoc) {
+      let directoryPath = ''
+      if (campDoc.campLevel) {
+        directoryPath = getDirectoryPath(campDoc.campLevel)
+      }
+
+      const menuItems: CampMenuItem[] = [
+        {
+          name: 'Camp Directory',
+          path: directoryPath,
+          subtitle: 'View the camp registration details',
+        },
+        {
+          name: 'Rooms Upload',
+          path: '#',
+          subtitle: 'Click to setup and manage rooms',
+        },
+        {
+          name: 'Manage Admins',
+          path: '/camp/assign-camp-admin',
+          subtitle: 'Click to Manage Admins',
+        },
+      ]
+
+      // Check if endDate is available and compare dates
+      if (campDoc.endDate && campDoc.endDate.toDate() > new Date()) {
+        menuItems.unshift({
+          name: 'Register Members',
+          path: '/camp/register-members',
+          subtitle: 'Register Members for this camp',
+        })
+      }
+
+      setMenuItems(menuItems)
+    }
+  }, [campDoc, getDirectoryPath()])
+
+  const loading = !campDoc || !menuItems
 
   return (
     <ApolloWrapper data={campDoc} loading={loading}>

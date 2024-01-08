@@ -6,13 +6,21 @@ import { doc } from '@firebase/firestore'
 import { useChurchId } from '../../../contexts/IdContext'
 import { useFirestore, useFirestoreDocData } from 'reactfire'
 import { ApolloWrapper } from '@jaedag/admin-portal-react-core'
+import useClickCard from '../../../hooks/useClickCard'
 
 const ContinentProfile = () => {
   const navigate = useNavigate()
   const { continentId } = useChurchId()
+  const { campId } = useClickCard()
 
   const firestore = useFirestore()
-  const ref = doc(firestore, 'continents', continentId)
+  const ref = doc(
+    firestore,
+    'camps',
+    campId as string,
+    'continents',
+    continentId
+  )
   const { status, data: continents } = useFirestoreDocData(ref)
 
   const loading = !continents
@@ -30,19 +38,26 @@ const ContinentProfile = () => {
           <Text>Continent</Text>
           <Box my={6}>
             <DetailsCard
-              number={continents?.registrations}
+              number={continents?.registrations ? continents?.registrations : 0}
               title={'Registrations'}
             />
             <DetailsCard
-              number={continents?.paidRegistrations}
+              number={
+                continents?.paidRegistrations
+                  ? continents?.paidRegistrations
+                  : 0
+              }
               title={'Paid Registrations'}
             />
-            <DetailsCard number={continents?.countries} title={'Countries'} />
+            <DetailsCard
+              number={continents?.countries ? continents?.countries : 0}
+              title={'Countries'}
+            />
             <Stack direction="column" spacing={1}>
               <Button
                 colorScheme="yellow"
                 variant="solid"
-                onClick={() => navigate('/countries-by-continent')}
+                onClick={() => navigate('/camp/countries-by-continent')}
                 my={3}
               >
                 View All Countries

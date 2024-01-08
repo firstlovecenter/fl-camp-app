@@ -6,17 +6,28 @@ import { collection, query, orderBy } from '@firebase/firestore'
 import { menuItemsPlaceholder } from '../../utils/placeholders'
 import { useFirestore, useFirestoreCollectionData } from 'reactfire'
 import { ApolloWrapper } from '@jaedag/admin-portal-react-core'
+import useClickCard from '../../hooks/useClickCard'
 
 const Directory = () => {
   const firestore = useFirestore()
-  const earthCollection = collection(firestore, 'earth')
-  const earthQuery = query(earthCollection, orderBy('name', 'asc'))
+  const { campId } = useClickCard()
+  const campPlanetsCollection = collection(
+    firestore,
+    'camps',
+    campId as string,
+    'planets'
+  )
+  const campPlanetsQuery = query(campPlanetsCollection)
 
-  const { status, data: earth } = useFirestoreCollectionData(earthQuery, {
-    idField: 'id',
-  })
+  const { status, data: planets } = useFirestoreCollectionData(
+    campPlanetsQuery,
+    {
+      idField: 'id',
+    }
+  )
+  console.log(planets)
 
-  const loading = !earth
+  const loading = !planets
 
   let error = ''
   if (status === 'error') {
@@ -24,22 +35,22 @@ const Directory = () => {
   }
 
   return (
-    <ApolloWrapper data={earth} loading={loading} error={error}>
+    <ApolloWrapper data={planets} loading={loading} error={error}>
       <Container>
         <Heading my={6}>Directory</Heading>
-        {earth?.map((item, index) => (
+        {planets?.map((item, index) => (
           <MenuCard
-            registrations={item.registrations}
-            paidRegistrations={item.paidRegistrations}
+            registrations={item?.registrations}
+            paidRegistrations={item?.paidRegistrations}
             name={item.name}
             id={item.id}
             key={index}
-            type={'earth'}
-            route={'/earth-profile'}
+            type={'planet'}
+            route={'/camp/planet-profile'}
           />
         ))}
 
-        {earth?.length === 0 && (
+        {planets?.length === 0 && (
           <>
             {menuItemsPlaceholder.map((item, index) => (
               <MenuCard
@@ -48,8 +59,8 @@ const Directory = () => {
                 name={item.name}
                 id={item.id}
                 key={index}
-                type={'earth'}
-                route={'/continents-by-earth'}
+                type={'planet'}
+                route={'/continents-by-planet'}
               />
             ))}
           </>
