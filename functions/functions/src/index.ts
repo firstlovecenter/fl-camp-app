@@ -22,7 +22,7 @@ import {
   createUser,
   removeClaims,
 } from './add-user'
-import { createCampDirectoryLevels } from './registration'
+import { createCampDirectoryLevels, registerCampUser } from './registration'
 
 // Start writing functions
 // https://firebase.google.com/docs/functions/typescript
@@ -105,23 +105,7 @@ export const createUserCallable = onCall(async (req: any) => {
   return { result: userResult }
 })
 
-export const registerUser = onDocumentCreated(
-  'registrations/{registrationId}',
-  (event: { data: any }) => {
-    const snapshot = event.data
-    if (!snapshot) {
-      console.log('No data associated with the event')
-      return
-    }
-    const data = snapshot.data()
-
-    // access a particular field as you would any JS property
-    // const name = data.name
-    console.log('data', data)
-
-    // perform more operations ...
-  }
-)
+export { registerCampUser }
 
 export const createCampDirectory = onDocumentCreated(
   'camps/{campId}',
