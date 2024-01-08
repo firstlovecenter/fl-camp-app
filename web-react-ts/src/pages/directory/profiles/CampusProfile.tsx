@@ -1,7 +1,7 @@
 import React from 'react'
-import { Box, Button, Container, Heading, Stack, Text } from '@chakra-ui/react'
+import { Box, Container, Heading, Text } from '@chakra-ui/react'
 import DetailsCard from '../../../components/DetailsCard'
-import { useNavigate } from 'react-router-dom'
+// import { useNavigate } from 'react-router-dom'
 import { doc } from '@firebase/firestore'
 import { useChurchId } from '../../../contexts/IdContext'
 import { useFirestore, useFirestoreDocData } from 'reactfire'
@@ -9,7 +9,7 @@ import { ApolloWrapper } from '@jaedag/admin-portal-react-core'
 import useClickCard from '../../../hooks/useClickCard'
 
 const CampusProfile = () => {
-  const navigate = useNavigate()
+  // const navigate = useNavigate()
   const { campusId } = useChurchId()
   const { campId } = useClickCard()
 

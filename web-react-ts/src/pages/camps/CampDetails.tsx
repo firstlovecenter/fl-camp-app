@@ -99,7 +99,7 @@ const CampDetails = () => {
 
       setMenuItems(menuItems)
     }
-  }, [campDoc, getDirectoryPath()])
+  }, [campDoc])
 
   const loading = !campDoc || !menuItems
 

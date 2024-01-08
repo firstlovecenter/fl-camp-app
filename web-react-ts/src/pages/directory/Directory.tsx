@@ -1,7 +1,7 @@
 import React from 'react'
 import MenuCard from '../../components/MenuCard'
 import { Container, Heading } from '@chakra-ui/react'
-import { collection, query, orderBy } from '@firebase/firestore'
+import { collection, query } from '@firebase/firestore'
 
 import { menuItemsPlaceholder } from '../../utils/placeholders'
 import { useFirestore, useFirestoreCollectionData } from 'reactfire'

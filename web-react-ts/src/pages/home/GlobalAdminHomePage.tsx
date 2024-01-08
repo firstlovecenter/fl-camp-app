@@ -69,6 +69,7 @@ const GlobalAdminHomePage = () => {
           if (doc.data().endDate.valueOf() > currentDate) {
             return doc.data()
           }
+          return null
         })
 
         setCampCounts({
