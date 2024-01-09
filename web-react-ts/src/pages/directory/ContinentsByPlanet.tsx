@@ -22,7 +22,6 @@ const ContinentsByPlanet = () => {
   const continentsQuery = query(
     campContinentsCollection,
     where('upperChurchId', '==', planetId)
-    // orderBy('name', 'asc')
   )
 
   const { status, data: continents } = useFirestoreCollectionData(
@@ -31,8 +30,6 @@ const ContinentsByPlanet = () => {
       idField: 'id',
     }
   )
-
-  console.log(continents)
 
   const loading = !continents
 
