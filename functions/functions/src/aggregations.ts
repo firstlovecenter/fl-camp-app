@@ -4,14 +4,14 @@ import { Registration } from '../types'
 const db = getFirestore()
 
 const aggregateRegistration = async (registration: Registration) => {
-  const { campId, campusRef } = registration
+  const { campId, campusId } = registration
   const increment = FieldValue.increment(1)
 
-  const campusReference = db
+  const campusIderence = db
     .collection('camps')
     .doc(campId)
     .collection('campuses')
-    .doc(campusRef)
+    .doc(campusId)
   try {
     const campReference = db.collection('camps').doc(campId)
     const camp = await campReference.get()
@@ -22,7 +22,7 @@ const aggregateRegistration = async (registration: Registration) => {
     })
 
     // Common update for all cases
-    await campusReference.update({
+    await campusIderence.update({
       registrations: increment,
       timestamp: FieldValue.serverTimestamp(),
     })
@@ -32,7 +32,7 @@ const aggregateRegistration = async (registration: Registration) => {
       camp.data()?.campLevel === 'continent' ||
       camp.data()?.campLevel === 'planet'
     ) {
-      const campus = await campusReference.get()
+      const campus = await campusIderence.get()
       const countryId = campus.data()?.upperChurchId
 
       if (countryId) {

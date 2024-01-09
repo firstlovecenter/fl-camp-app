@@ -43,7 +43,7 @@ export interface UserCampData {
   campId: string
   name: string
   role?: string[]
-  campusRef?: string
+  campusId?: string
 }
 export interface UserData {
   firstName: string
@@ -96,7 +96,7 @@ type FormData = {
 
 export interface Registration {
   campId: string
-  campusRef: string
+  campusId: string
   email: string
   firstName: string
   gender: string

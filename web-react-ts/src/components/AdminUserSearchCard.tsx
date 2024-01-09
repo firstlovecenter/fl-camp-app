@@ -25,6 +25,8 @@ const AdminUserSearchCard = ({
   const { generalBackground } = useCustomColors()
   const { clickCard } = useClickCard()
 
+  const { userId } = useClickCard()
+
   const handleClick = () => {
     const card = { id: email, type: 'User' }
     clickCard(card)

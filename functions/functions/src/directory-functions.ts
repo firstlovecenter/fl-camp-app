@@ -129,9 +129,9 @@ const planetDirectory = async (camp: Camp, campId: string) => {
   for (const campCampus of campCampusesArray) {
     const batch = db.batch()
 
-    const campCampusRef = campRef.collection('campuses').doc(campCampus.id)
+    const campcampusId = campRef.collection('campuses').doc(campCampus.id)
 
-    batch.set(campCampusRef, campCampus)
+    batch.set(campcampusId, campCampus)
 
     await batch.commit()
   }
@@ -234,9 +234,9 @@ const continentDirectory = async (camp: Camp, campId: string) => {
   for (const campCampus of campCampusesArray) {
     const batch = db.batch()
 
-    const campCampusRef = campRef.collection('campuses').doc(campCampus.id)
+    const campcampusId = campRef.collection('campuses').doc(campCampus.id)
 
-    batch.set(campCampusRef, campCampus)
+    batch.set(campcampusId, campCampus)
 
     await batch.commit()
   }
@@ -307,9 +307,9 @@ const countryDirectory = async (camp: Camp, campId: string) => {
   for (const campCampus of campCampusesArray) {
     const batch = db.batch()
 
-    const campCampusRef = campRef.collection('campuses').doc(campCampus.id)
+    const campcampusId = campRef.collection('campuses').doc(campCampus.id)
 
-    batch.set(campCampusRef, campCampus)
+    batch.set(campcampusId, campCampus)
 
     await batch.commit()
   }

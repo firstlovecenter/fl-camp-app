@@ -21,7 +21,7 @@ type Registration = {
   firstName: string
   lastName: string
   campId: string
-  campusRef: string
+  campusId: string
   gender: string
   phoneNumber: string
   whatsappNumber: string
