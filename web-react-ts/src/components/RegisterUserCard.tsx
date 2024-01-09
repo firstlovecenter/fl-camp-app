@@ -58,7 +58,7 @@ const RegisterUserCard = ({ user }: { user: UserData }) => {
         gender: user?.gender,
         phoneNumber: user?.phoneNumber,
         whatsappNumber: user?.whatsappNumber,
-        campusRef: adminCamp?.campusRef,
+        campusId: adminCamp?.campusId,
         timestamp: serverTimestamp(),
       })
 
