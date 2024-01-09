@@ -83,7 +83,9 @@ const aggregateRegistration = async (registration: Registration) => {
         }
       }
     }
-  } catch (error) {}
+  } catch (error) {
+    console.error(error)
+  }
 }
 
 export default aggregateRegistration

@@ -27,7 +27,6 @@ const CountriesByContinent = () => {
   const countriesQuery = query(
     countriesCollection,
     where('upperChurchId', '==', continentId)
-    // orderBy('name', 'asc')
   )
 
   const { status, data: countries } = useFirestoreCollectionData(
@@ -36,8 +35,6 @@ const CountriesByContinent = () => {
       idField: 'id',
     }
   )
-
-  console.log('countries', countries)
 
   const loading = !countries || !continent
 

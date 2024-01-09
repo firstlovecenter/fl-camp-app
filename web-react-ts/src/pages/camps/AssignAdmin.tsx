@@ -9,20 +9,13 @@ const AssignAdmin = () => {
   const onOpenFirstModal = () => setIsOpenFirstModal(true)
   const onCloseFirstModal = () => setIsOpenFirstModal(false)
 
-  const loading = false
-
-  const data = [
-    { id: '1', name: 'John Doe' },
-    { id: '2', name: 'Jane Doe' },
-  ]
-
   // Submit handler for both modals
   const onSubmitModal = () => {
     // Handle submission logic here
   }
 
   return (
-    <ApolloWrapper data={data} loading={loading}>
+    <ApolloWrapper data={'data'} loading={false}>
       <Container p={6}>
         <AssignCampAdminModal
           isOpen={isOpenFirstModal}
