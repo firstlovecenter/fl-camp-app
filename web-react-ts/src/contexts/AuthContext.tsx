@@ -141,7 +141,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     const userDoc = await doc(db, 'users', user.email)
     const userSnapShot = await getDoc(userDoc)
 
-    return (await userSnapShot.exists()) ? userSnapShot.data() : null
+    return userSnapShot.exists() ? userSnapShot.data() : null
   }
 
   useEffect(() => {
