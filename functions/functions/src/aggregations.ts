@@ -7,11 +7,12 @@ const aggregateRegistration = async (registration: Registration) => {
   const { campId, campusId } = registration
   const increment = FieldValue.increment(1)
 
-  const campusIderence = db
+  const campusReference = db
     .collection('camps')
     .doc(campId)
     .collection('campuses')
     .doc(campusId)
+
   try {
     const campReference = db.collection('camps').doc(campId)
     const camp = await campReference.get()
@@ -22,7 +23,7 @@ const aggregateRegistration = async (registration: Registration) => {
     })
 
     // Common update for all cases
-    await campusIderence.update({
+    await campusReference.update({
       registrations: increment,
       timestamp: FieldValue.serverTimestamp(),
     })
@@ -32,7 +33,7 @@ const aggregateRegistration = async (registration: Registration) => {
       camp.data()?.campLevel === 'continent' ||
       camp.data()?.campLevel === 'planet'
     ) {
-      const campus = await campusIderence.get()
+      const campus = await campusReference.get()
       const countryId = campus.data()?.upperChurchId
 
       if (countryId) {
@@ -43,7 +44,7 @@ const aggregateRegistration = async (registration: Registration) => {
           .doc(countryId)
 
         await countryReference.update({
-          registration: increment,
+          registrations: increment,
           timestamp: FieldValue.serverTimestamp(),
         })
 
@@ -61,7 +62,7 @@ const aggregateRegistration = async (registration: Registration) => {
             .doc(continentId)
 
           await continentReference.update({
-            registration: increment,
+            registrations: increment,
             timestamp: FieldValue.serverTimestamp(),
           })
 
