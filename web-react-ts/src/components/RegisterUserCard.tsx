@@ -43,8 +43,6 @@ const RegisterUserCard = ({ user }: { user: UserData }) => {
       camp.campId === campId && camp.role?.includes('campusAdmin')
   )
 
-  // console.log('adminCamp', adminCamp)
-
   const registerCamper = async () => {
     console.log(adminCamp)
     const docId = campId + (user?.whatsappNumber ?? '')
