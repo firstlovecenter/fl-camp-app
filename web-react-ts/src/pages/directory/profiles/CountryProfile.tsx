@@ -13,14 +13,9 @@ const CountryProfile = () => {
   const { countryId } = useChurchId()
   const { campId } = useClickCard()
 
-  console.log('countryId', countryId)
-  console.log('campId', campId)
-
   const firestore = useFirestore()
   const ref = doc(firestore, 'camps', campId as string, 'countries', countryId)
   const { status, data: country } = useFirestoreDocData(ref)
-
-  console.log('country', country)
 
   const loading = !country
 

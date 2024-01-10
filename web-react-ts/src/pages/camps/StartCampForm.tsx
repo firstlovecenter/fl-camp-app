@@ -90,7 +90,6 @@ const StartCampForm = () => {
   const watchCountry = watch('country')
 
   const onSubmit = async (values: FormData) => {
-    console.log(values)
     const levelId = campLevelReference(watchCampLevel, values)
     const data = {
       name: values?.campName,

@@ -25,7 +25,6 @@ const Directory = () => {
       idField: 'id',
     }
   )
-  console.log(planets)
 
   const loading = !planets
 

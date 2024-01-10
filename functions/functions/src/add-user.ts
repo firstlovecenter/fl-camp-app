@@ -20,7 +20,6 @@ const addAdminUser = async (user: any) => {
     const userDetails = await getAuth().getUser(userRecord?.uid)
     const email = userDetails?.email ?? ''
     if (userDetails.customClaims !== null) {
-      console.log('custom claims', userDetails?.customClaims?.admin)
       await getFirestore()
         .collection('users')
         .doc(email)
@@ -66,7 +65,6 @@ const createUser = async (email: string, password: string) => {
 
 const addClaimsToTesters = async (email: string) => {
   try {
-    console.log('email', email)
     const userRecord = await getAuth().getUserByEmail(email)
     await getAuth().setCustomUserClaims(userRecord?.uid, {
       roles: ['campAdmin', 'globalAdmin', 'campCamper'],
@@ -81,12 +79,9 @@ const addClaimsToTesters = async (email: string) => {
 
 const removeClaims = async (email: string, permission: string) => {
   try {
-    console.log('email', email)
     const userRecord = await getAuth().getUserByEmail(email)
 
     const userDetails = await getAuth().getUser(userRecord?.uid)
-    console.log('userDetails', userDetails?.customClaims)
-    console.log('userDetails', userDetails?.customClaims?.roles)
     if (userDetails?.customClaims?.roles.length > 0) {
       const roles: string[] = userDetails?.customClaims?.roles
 
@@ -122,7 +117,6 @@ const removeClaims = async (email: string, permission: string) => {
 
 const addClaims = async (email: string, permission: string) => {
   try {
-    console.log('email', email)
     const userRecord = await getAuth().getUserByEmail(email)
 
     const userDetails = await getAuth().getUser(userRecord?.uid)

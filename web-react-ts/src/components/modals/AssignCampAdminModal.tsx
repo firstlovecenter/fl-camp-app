@@ -27,11 +27,9 @@ import useClickCard from '../../hooks/useClickCard'
 
 const AssignCampAdminModal = ({ isOpen, onClose }: ModalProps) => {
   const { userId, campId } = useClickCard()
-  console.log('userId', userId, 'campId', campId)
+
   const user = userId || ''
   const camp = campId || ''
-
-  console.log('user', user, 'campId', campId)
 
   const firestore = useFirestore()
 
@@ -64,7 +62,6 @@ const AssignCampAdminModal = ({ isOpen, onClose }: ModalProps) => {
         'addClaimsToUsersCallable'
       )
 
-      console.log(user, camp)
       const callableResponse = await addClaimsToUser({
         email: user,
         permission: campLevel,

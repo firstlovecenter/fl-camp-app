@@ -76,8 +76,6 @@ const searchCampRegistrations = async (name: string, camp: string) => {
   processDocs(docsFirstName)
   processDocs(docsLastName)
 
-  console.log('usersData', usersData)
-
   return usersData
 }
 
