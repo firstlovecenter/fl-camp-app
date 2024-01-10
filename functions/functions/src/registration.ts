@@ -22,10 +22,6 @@ const registerCampUser = onDocumentCreated(
     }
     const data = snapshot.data()
 
-    // access a particular field as you would any JS property
-    // const name = data.name
-    console.log('data', data)
-
     const campRegistrationsRef = db
       .collection('camps')
       .doc(data.campId)

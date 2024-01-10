@@ -14,13 +14,9 @@ const PlanetProfile = () => {
   const { planetId } = useChurchId()
   const { campId } = useClickCard()
 
-  console.log('planetId', planetId)
-
   const firestore = useFirestore()
   const ref = doc(firestore, 'camps', campId as string, 'planets', planetId)
   const { status, data: planet } = useFirestoreDocData(ref)
-
-  console.log('planet', planet)
 
   const loading = !planet
 
