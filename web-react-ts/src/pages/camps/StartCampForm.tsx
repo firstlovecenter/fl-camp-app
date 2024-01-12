@@ -102,8 +102,6 @@ const StartCampForm = () => {
       levelId: levelId,
     }
 
-    console.log(data)
-
     const docRef = await addDoc(collection(firestore, 'camps'), data)
     console.log('Document written with ID: ', docRef.id)
 
@@ -121,9 +119,6 @@ const StartCampForm = () => {
           planets.push({ key: doc.data().name, value: doc.id })
         )
 
-        console.log('planets', planets)
-        console.log('snapshot', querySnapshot)
-
         setPlanets(planets)
       } catch (error) {
         console.error(error)
@@ -136,19 +131,21 @@ const StartCampForm = () => {
   useEffect(() => {
     const fetchContinents = async () => {
       try {
-        const continentsCollection = collection(firestore, 'continents')
+        if (watchWorld) {
+          const continentsCollection = collection(firestore, 'continents')
 
-        const continents: SelectOptions[] = []
-        const continentsQuery = query(
-          continentsCollection,
-          where('upperChurchId', '==', watchWorld)
-        )
-        const querySnapshot = await getDocs(continentsQuery)
-        querySnapshot.docs.map((doc) =>
-          continents.push({ key: doc.data().name, value: doc.id })
-        )
+          const continents: SelectOptions[] = []
+          const continentsQuery = query(
+            continentsCollection,
+            where('upperChurchId', '==', watchWorld)
+          )
+          const querySnapshot = await getDocs(continentsQuery)
+          querySnapshot.docs.map((doc) =>
+            continents.push({ key: doc.data().name, value: doc.id })
+          )
 
-        setContinents(continents)
+          setContinents(continents)
+        }
       } catch (error) {
         console.error(error)
       }

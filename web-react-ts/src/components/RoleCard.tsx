@@ -33,6 +33,7 @@ const RoleCard = ({ role, name }: RoleCardProps) => {
     case 'campusAdmin':
     case 'countryAdmin':
     case 'continentAdmin':
+    case 'campAdmin':
       roleText = 'Admin'
       route = '/admin'
       break

@@ -7,6 +7,8 @@ import React, {
 } from 'react'
 
 interface UserContextType {
+  userRoles: string[]
+  setUserRoles: (roles: string[]) => void
   userProfile: string
   setUserProfile: (userProfile: string) => void
 }
@@ -14,6 +16,8 @@ interface UserContextType {
 const UserContext = createContext<UserContextType>({
   userProfile: '',
   setUserProfile: () => null,
+  userRoles: [],
+  setUserRoles: () => null,
 })
 
 export const useUserContext = () => {
@@ -21,6 +25,15 @@ export const useUserContext = () => {
 }
 
 export const UserContextProvider = ({ children }: { children: ReactNode }) => {
+  const [userRoles, setUserRoles] = useState<string[]>(
+    JSON.parse(sessionStorage.getItem('userRoles') || '[]')
+  )
+
+  const setUserRolesArray = (roles: string[]) => {
+    setUserRoles(roles)
+    sessionStorage.setItem('userRoles', JSON.stringify(roles))
+  }
+
   const [userProfile, setUserProfile] = useState<string>(
     sessionStorage.getItem('userProfile') ?? ''
   )
@@ -32,10 +45,12 @@ export const UserContextProvider = ({ children }: { children: ReactNode }) => {
 
   const value = useMemo(
     () => ({
+      userRoles,
+      setUserRoles: setUserRolesArray,
       userProfile,
       setUserProfile: setUserProfileText,
     }),
-    [userProfile]
+    [userRoles]
   )
 
   return <UserContext.Provider value={value}>{children}</UserContext.Provider>

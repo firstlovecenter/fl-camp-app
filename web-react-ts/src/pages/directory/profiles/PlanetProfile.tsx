@@ -29,7 +29,7 @@ const PlanetProfile = () => {
     <ApolloWrapper data={planet} loading={loading} error={error}>
       <Container>
         <Box>
-          <Heading mt={6}>{capitalizeFirstLetter(planet?.name)}</Heading>
+          <Heading mt={6}>{planet?.name}</Heading>
           <Text>World</Text>
           <Box my={6}>
             <DetailsCard

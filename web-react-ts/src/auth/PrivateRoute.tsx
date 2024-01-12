@@ -44,7 +44,9 @@ const PrivateRoute: React.FC<ProtectedRouteProps> = (props) => {
     return children
   }
 
-  !currentUser && <Navigate to="/login" />
+  if (!currentUser) {
+    return <Navigate to="/login" />
+  }
 
   if (isAuthorised(roles, userRoles)) {
     return children
