@@ -5,10 +5,12 @@ import RoleCard from '../../components/RoleCard'
 import { useAuth } from '../../contexts/AuthContext'
 import { ApolloWrapper } from '@jaedag/admin-portal-react-core'
 import { Role } from '../../../global'
+import { useUserContext } from '../../contexts/UserContext'
 
 const LandingPage = () => {
   const { currentUser } = useAuth()
   const [roles, setRoles] = useState<Role[]>([])
+  const { setUserRoles, userRoles } = useUserContext()
   const loading = !roles
 
   useEffect(() => {
@@ -17,22 +19,32 @@ const LandingPage = () => {
       let roles: string[] = []
       if (token?.claims?.roles) {
         roles = [...token.claims.roles]
+        setUserRoles(roles)
       }
 
-      const roleMappings: { [key: string]: string } = {
-        countryAdmin: 'campAdmin',
-        campusAdmin: 'campAdmin',
-        continentAdmin: 'campAdmin',
-      }
+      console.log('originalroles', roles)
 
-      // Use filter to keep only 'globalAdmin', 'campCamper', and roles mapped to 'campAdmin'
-      const filteredRoles = roles.filter((role) => {
-        return (
-          role === 'globalAdmin' ||
-          role === 'campCamper' ||
-          roleMappings[role] === 'campAdmin'
-        )
-      })
+      // Check if any of the roles to be replaced exists in the roles array
+      const hasCampRoles = roles.some((role) =>
+        ['continentAdmin', 'countryAdmin', 'campusAdmin'].includes(role)
+      )
+
+      // If any of the roles exist, include 'campAdmin', otherwise keep the original roles
+      const filteredRoles = hasCampRoles
+        ? [
+            ...roles.filter(
+              (role) =>
+                !['continentAdmin', 'countryAdmin', 'campusAdmin'].includes(
+                  role
+                )
+            ),
+            'campAdmin',
+          ]
+        : roles.filter(
+            (role) => role === 'globalAdmin' || role === 'campCamper'
+          )
+
+      console.log('here', filteredRoles)
 
       setRoles(filteredRoles as Role[])
     }

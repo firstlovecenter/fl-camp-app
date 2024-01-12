@@ -138,7 +138,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   const getUsers = async (user: User | null) => {
     if (!user || !user.email) return
-    const userDoc = await doc(db, 'users', user.email)
+    const userDoc = doc(db, 'users', user.email)
     const userSnapShot = await getDoc(userDoc)
 
     return userSnapShot.exists() ? userSnapShot.data() : null
@@ -149,16 +149,24 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       setCurrentUser(user as User)
       setLoading(false)
     })
+
     return unsubscribe
   }, [])
 
   useEffect(() => {
+    let isMounted = true
+
     const Retrieval = async () => {
       const map = await getUsers(currentUser)
-      if (!map) return
+      if (!map || !isMounted) return
+
       setUserInfo(map)
     }
     Retrieval()
+
+    return () => {
+      isMounted = false // Set isMounted to false when the component unmounts
+    }
   }, [currentUser])
 
   const value = {

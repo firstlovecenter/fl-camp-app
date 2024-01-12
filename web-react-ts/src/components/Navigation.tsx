@@ -31,7 +31,8 @@ function Navigation() {
   const btnRef = React.useRef(null)
   const navigate = useNavigate()
   const { userProfile } = useUserContext()
-  const { userInfo } = useAuth()
+
+  const { userInfo, currentUser } = useAuth()
   const { navBg, sideBarBackground } = useCustomColors()
 
   let menuItems: { name: string; link: string }[] = []
