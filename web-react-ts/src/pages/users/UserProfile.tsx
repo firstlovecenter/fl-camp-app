@@ -65,10 +65,16 @@ const UserProfile = () => {
 
   const userReference = doc(firestore, 'users', userEmail)
   const { data: user } = useFirestoreDocData(userReference)
+  console.log('user', user)
 
-  let allCamps: UserCampData[] = []
-  if (user?.camp_admin && user?.camp_camper) {
-    allCamps = [...user.camp_admin, ...user.camp_camper]
+  const allCamps: UserCampData[] = []
+
+  if (user?.camp_camper) {
+    allCamps.push(...user?.camp_camper)
+  }
+
+  if (user?.camp_admin) {
+    allCamps.push(...user?.camp_admin)
   }
 
   const campsCollectionRef = collection(firestore, 'camps')
@@ -84,6 +90,8 @@ const UserProfile = () => {
       campOptions.push({ key: camp.name, value: camp.id })
     })
   }
+
+  console.log('allCamps', allCamps)
 
   const loading = !user || !campsCollection
 
