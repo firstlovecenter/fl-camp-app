@@ -91,3 +91,12 @@ export const churchLevel = (campLevel: string) => {
 }
 
 export const PHONE_NUM_REGEX = /^[+][(]{0,1}[1-9]{1,4}[)]{0,1}[-\s/0-9]*$/
+
+export const convertStringToDate = (dateString: string | Date) => {
+  const dateRaw = dateString as string
+  console.log('this is it', dateRaw)
+  console.log('this is thet', typeof dateRaw)
+  const [year, month, day] = dateRaw.split('-').map(Number)
+  // Month in JavaScript Date is 0-indexed, so we subtract 1
+  return new Date(year, month - 1, day)
+}

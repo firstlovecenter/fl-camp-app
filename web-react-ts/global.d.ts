@@ -81,19 +81,6 @@ export interface SelectOptions {
   value: string
 }
 
-type FormData = {
-  campName: string
-  campLevel: string
-  campStart: Date
-  campEnd: Date
-  registrationDeadline: Date
-  paymentDeadline: Date
-  planet?: string | undefined
-  continent?: string | undefined
-  country?: string | undefined
-  campus?: string | undefined
-}
-
 export interface Registration {
   campId: string
   campusId: string

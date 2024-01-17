@@ -12,29 +12,45 @@ import {
   where,
   query,
   Timestamp,
+  DocumentData,
 } from 'firebase/firestore'
 import { useFirestore } from 'reactfire'
 import { SelectOptions } from '../../../global'
 import { CAMP_LEVEL_OPTIONS } from '../../utils/constants'
-import { FormData } from '../../../global'
+import { convertStringToDate } from '../../utils/utils'
 
-const campLevelReference = (campLevel: string, values: FormData) => {
-  switch (campLevel) {
-    case 'planet':
-      return values?.planet as string
-    case 'continent':
-      return values?.continent as string
-    case 'country':
-      return values?.country as string
-    case 'campus':
-      return values?.campus as string
-    default:
-      return values?.planet as string
-  }
+type InitialValues = {
+  campName: string
+  campLevel: string
+  startDate: Date | string
+  endDate: Date | string
+  registrationDeadline: Date | string
+  paymentDeadline: Date | string
+  planet: string
+  continent?: string
+  country?: string
+  campus?: string
+}
+
+const campLevelReference = (campLevel: string, values: InitialValues) =>
+  ({
+    planet: values?.planet,
+    continent: values?.continent,
+    country: values?.country,
+    campus: values?.campus,
+  }[campLevel] || values?.planet)
+
+const formatDate = (date: Date) => {
+  const year = date.getFullYear()
+  const month = String(date.getMonth() + 1).padStart(2, '0') // Adding 1 because months are zero-indexed
+  const day = String(date.getDate()).padStart(2, '0')
+
+  return `${year}-${month}-${day}`
 }
 
 const StartCampForm = () => {
-  const date = new Date('1990-01-01')
+  const date = new Date()
+  const formattedDate = formatDate(date)
   const navigate = useNavigate()
   const firestore = useFirestore()
   const [planets, setPlanets] = useState<SelectOptions[]>([])
@@ -42,36 +58,62 @@ const StartCampForm = () => {
   const [countries, setCountries] = useState<SelectOptions[]>([])
   const [campuses, setCampuses] = useState<SelectOptions[]>([])
 
-  const initialValues = {
+  const initialValues: InitialValues = {
     campName: '',
     campLevel: '',
-    campStart: date,
-    campEnd: date,
-    registrationDeadline: date,
-    paymentDeadline: date,
-    world: '' || undefined,
-    continent: '' || undefined,
-    country: '' || undefined,
-    campus: '' || undefined,
+    startDate: formattedDate,
+    endDate: formattedDate,
+    registrationDeadline: formattedDate,
+    paymentDeadline: formattedDate,
+    planet: '',
+    continent: '',
+    country: '',
+    campus: '',
   }
 
   const validationSchema = Yup.object({
     campName: Yup.string().required('Camp name is a required field'),
     campLevel: Yup.string().required('Camp Level is a required field'),
-    campStart: Yup.date().required('Camp Start Date is a required field'),
-    campEnd: Yup.date()
+    startDate: Yup.date().required('Camp Start Date is a required field'),
+    endDate: Yup.date()
       .required('Camp End Date is a required field')
-      .min(new Date(), 'You cannot end a camp before today'),
+      .test('endDate', 'You cannot end a camp before today', function (value) {
+        return value && !isBefore(value, new Date())
+      }),
     registrationDeadline: Yup.date()
       .required('Registration Deadline Date is a required field')
-      .min(new Date(), 'Registration deadline cannot be before today'),
+      .test(
+        'registrationDeadline',
+        'Registration deadline cannot be before today',
+        function (value) {
+          return value && !isBefore(value, new Date())
+        }
+      ),
     paymentDeadline: Yup.date()
       .required('Payment Deadline Date is a required field')
-      .min(new Date(), 'Payment deadline cannot be before today'),
-    world: Yup.string(),
-    continent: Yup.string(),
-    country: Yup.string(),
-    campus: Yup.string(),
+      .test(
+        'paymentDeadline',
+        'Payment deadline cannot be before today',
+        function (value) {
+          return value && !isBefore(value, new Date())
+        }
+      ),
+    planet: Yup.string().required('Planet is a required field'),
+    continent: Yup.string().when('campLevel', ([campLevel], schema) => {
+      return campLevel === 'continent'
+        ? schema.required('Continent is a required field')
+        : schema
+    }),
+    country: Yup.string().when('campLevel', ([campLevel], schema) => {
+      return campLevel === 'country'
+        ? schema.required('Country is a required field')
+        : schema
+    }),
+    campus: Yup.string().when('campLevel', ([campLevel], schema) => {
+      return campLevel === 'campus'
+        ? schema.required('Campus is a required field')
+        : schema
+    }),
   })
 
   const {
@@ -79,8 +121,8 @@ const StartCampForm = () => {
     control,
     watch,
     formState: { errors, isSubmitting },
-  } = useForm<FormData>({
-    resolver: yupResolver(validationSchema),
+  } = useForm<InitialValues>({
+    resolver: yupResolver<InitialValues>(validationSchema),
     defaultValues: initialValues,
   })
 
@@ -89,128 +131,106 @@ const StartCampForm = () => {
   const watchContinent = watch('continent')
   const watchCountry = watch('country')
 
-  const onSubmit = async (values: FormData) => {
-    const levelId = campLevelReference(watchCampLevel, values)
-    const data = {
-      name: values?.campName,
-      campLevel: values?.campLevel,
-      campType: values?.campLevel,
-      startDate: Timestamp.fromDate(values?.campStart),
-      endDate: Timestamp.fromDate(values?.campEnd),
-      registrationDeadline: Timestamp.fromDate(values?.registrationDeadline),
-      paymentDeadline: Timestamp.fromDate(values?.paymentDeadline),
-      levelId: levelId,
+  const onSubmit = async (values: InitialValues) => {
+    try {
+      const levelId = campLevelReference(watchCampLevel, values)
+      const data = {
+        name: values?.campName,
+        campLevel: values?.campLevel,
+        campType: values?.campLevel,
+        startDate: Timestamp.fromDate(values?.startDate as Date),
+        endDate: Timestamp.fromDate(values?.endDate as Date),
+        registrationDeadline: Timestamp.fromDate(
+          values?.registrationDeadline as Date
+        ),
+        paymentDeadline: Timestamp.fromDate(values?.paymentDeadline as Date),
+        levelId: levelId,
+      }
+
+      const docRef = await addDoc(collection(firestore, 'camps'), data)
+      console.log('Document written with ID: ', docRef.id)
+
+      navigate('/camps')
+    } catch (error) {
+      console.log('Error adding document: ', error)
     }
+  }
 
-    const docRef = await addDoc(collection(firestore, 'camps'), data)
-    console.log('Document written with ID: ', docRef.id)
-
-    navigate('/camps')
+  const fetchOptions = async (collectionRef: any, setOptions: any) => {
+    try {
+      const querySnapshot = await getDocs(collectionRef)
+      const options: SelectOptions[] = querySnapshot.docs.map(
+        (doc: DocumentData) => ({
+          key: doc.data().name,
+          value: doc.id,
+        })
+      )
+      setOptions(options)
+    } catch (error) {
+      console.error(error)
+    }
   }
 
   useEffect(() => {
-    const fetchPlanets = async () => {
-      try {
-        const planetsCollections = collection(firestore, 'planets')
-
-        const planets: SelectOptions[] = []
-        const querySnapshot = await getDocs(planetsCollections)
-        querySnapshot.docs.map((doc) =>
-          planets.push({ key: doc.data().name, value: doc.id })
-        )
-
-        setPlanets(planets)
-      } catch (error) {
-        console.error(error)
-      }
-    }
-
+    const fetchPlanets = () =>
+      fetchOptions(collection(firestore, 'planets'), setPlanets)
     fetchPlanets()
-  }, [firestore, watchCampLevel])
+  }, [firestore])
 
   useEffect(() => {
-    const fetchContinents = async () => {
+    const fetchContinents = () => {
       try {
-        if (watchWorld) {
-          const continentsCollection = collection(firestore, 'continents')
-
-          const continents: SelectOptions[] = []
-          const continentsQuery = query(
-            continentsCollection,
-            where('upperChurchId', '==', watchWorld)
+        if (watchWorld !== undefined && watchWorld !== '') {
+          fetchOptions(
+            query(
+              collection(firestore, 'continents'),
+              where('upperChurchId', '==', watchWorld)
+            ),
+            setContinents
           )
-          const querySnapshot = await getDocs(continentsQuery)
-          querySnapshot.docs.map((doc) =>
-            continents.push({ key: doc.data().name, value: doc.id })
-          )
-
-          setContinents(continents)
         }
       } catch (error) {
-        console.error(error)
+        console.log(error)
       }
     }
-
     fetchContinents()
   }, [firestore, watchWorld])
 
   useEffect(() => {
-    const fetchCountries = async () => {
-      if (watchContinent) {
-        try {
-          const countriesCollection = collection(firestore, 'countries')
-
-          const countriesQuery = query(
-            countriesCollection,
-            where('upperChurchId', '==', watchContinent)
+    const fetchCountries = () => {
+      try {
+        if (watchContinent !== undefined && watchContinent !== '') {
+          fetchOptions(
+            query(
+              collection(firestore, 'countries'),
+              where('upperChurchId', '==', watchContinent)
+            ),
+            setCountries
           )
-
-          const countriesSnapshot = await getDocs(countriesQuery)
-
-          const data = countriesSnapshot.docs.map((doc) => ({
-            key: doc.data().name,
-            value: doc.id,
-          }))
-
-          setCountries(data)
-        } catch (error) {
-          console.error(error)
         }
-      } else {
-        setCountries([])
+      } catch (error) {
+        console.log(error)
       }
     }
-
     fetchCountries()
   }, [firestore, watchContinent])
 
   useEffect(() => {
-    const fetchCampuses = async () => {
-      if (watchCountry) {
-        try {
-          const campusesCollection = collection(firestore, 'campuses')
-
-          const campusesQuery = query(
-            campusesCollection,
-            where('upperChurchId', '==', watchCountry)
+    const fetchCampuses = () => {
+      try {
+        if (watchCountry !== undefined && watchCountry !== '') {
+          fetchOptions(
+            query(
+              collection(firestore, 'campuses'),
+              where('upperChurchId', '==', watchCountry)
+            ),
+            setCampuses
           )
-
-          const campusesSnapshot = await getDocs(campusesQuery)
-
-          const data = campusesSnapshot.docs.map((doc) => ({
-            key: doc.data().name,
-            value: doc.id,
-          }))
-
-          setCampuses(data)
-        } catch (error) {
-          console.error(error)
         }
-      } else {
-        setCampuses([])
+      } catch (error) {
+        console.log(error)
       }
     }
-
     fetchCampuses()
   }, [firestore, watchCountry])
 
@@ -299,7 +319,7 @@ const StartCampForm = () => {
 
         <Box my={3}>
           <Input
-            name="campStart"
+            name="startDate"
             placeholder="Camp Start"
             label="Camp Start"
             type="date"
@@ -310,7 +330,7 @@ const StartCampForm = () => {
 
         <Box my={3}>
           <Input
-            name="campEnd"
+            name="endDate"
             placeholder="Camp End"
             label="Camp End"
             type="date"
@@ -357,3 +377,7 @@ const StartCampForm = () => {
 }
 
 export default StartCampForm
+
+const isBefore = (value: any, currentDate: Date) => {
+  return value < currentDate
+}
