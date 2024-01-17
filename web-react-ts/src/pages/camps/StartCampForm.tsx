@@ -17,7 +17,6 @@ import {
 import { useFirestore } from 'reactfire'
 import { SelectOptions } from '../../../global'
 import { CAMP_LEVEL_OPTIONS } from '../../utils/constants'
-import { convertStringToDate } from '../../utils/utils'
 
 type InitialValues = {
   campName: string
