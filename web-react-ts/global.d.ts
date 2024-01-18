@@ -28,8 +28,8 @@ interface FetchedCampData {
   id: string
   name: string
   campLevel: string
-  startDate: string
-  endDate: string
+  startDate: Timestamp
+  endDate: Timestamp
   campType: string
 }
 

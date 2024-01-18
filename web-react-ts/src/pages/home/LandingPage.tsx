@@ -22,8 +22,6 @@ const LandingPage = () => {
         setUserRoles(roles)
       }
 
-      console.log('originalroles', roles)
-
       // Check if any of the roles to be replaced exists in the roles array
       const hasCampRoles = roles.some((role) =>
         ['continentAdmin', 'countryAdmin', 'campusAdmin'].includes(role)
@@ -43,8 +41,6 @@ const LandingPage = () => {
         : roles.filter(
             (role) => role === 'globalAdmin' || role === 'campCamper'
           )
-
-      console.log('here', filteredRoles)
 
       setRoles(filteredRoles as Role[])
     }
