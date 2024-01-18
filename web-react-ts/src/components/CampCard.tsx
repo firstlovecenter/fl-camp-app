@@ -20,17 +20,19 @@ const CampCard = ({
 }: Camp) => {
   const { cardBackground } = useCustomColorMode()
   const date = formatDateRange(startDate, endDate)
-  const { clickCard } = useClickCard()
+  const { clickCard, campId: campPull } = useClickCard()
   const navigate = useNavigate()
   const { userProfile } = useUserContext()
 
   const handleClick = () => {
     const card = { id: campId as string, type: 'Camp' }
     clickCard(card)
-    if (userProfile === 'campCamper') {
-      navigate(`/camper`)
-    } else {
-      navigate(`/camp/camp-details`)
+    if (campPull) {
+      if (userProfile === 'campCamper') {
+        navigate(`/camper`)
+      } else {
+        navigate(`/camp/camp-details`)
+      }
     }
   }
 
