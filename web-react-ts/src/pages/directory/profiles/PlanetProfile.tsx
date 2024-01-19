@@ -7,7 +7,6 @@ import { useChurchId } from '../../../contexts/IdContext'
 import { useFirestore, useFirestoreDocData } from 'reactfire'
 import { ApolloWrapper } from '@jaedag/admin-portal-react-core'
 import useClickCard from '../../../hooks/useClickCard'
-import { capitalizeFirstLetter } from '../../../utils/utils'
 
 const PlanetProfile = () => {
   const navigate = useNavigate()

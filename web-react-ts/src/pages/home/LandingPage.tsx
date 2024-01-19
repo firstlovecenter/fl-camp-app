@@ -10,7 +10,7 @@ import { useUserContext } from '../../contexts/UserContext'
 const LandingPage = () => {
   const { currentUser } = useAuth()
   const [roles, setRoles] = useState<Role[]>([])
-  const { setUserRoles, userRoles } = useUserContext()
+  const { setUserRoles } = useUserContext()
   const loading = !roles
 
   useEffect(() => {
@@ -46,7 +46,7 @@ const LandingPage = () => {
     }
 
     getRoles()
-  }, [currentUser])
+  }, [currentUser, setUserRoles])
 
   return (
     <ApolloWrapper data={roles} loading={loading}>

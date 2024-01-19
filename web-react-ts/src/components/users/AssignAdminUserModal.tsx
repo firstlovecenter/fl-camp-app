@@ -107,7 +107,7 @@ const AssignAdminToCampModal = ({
     }
 
     campUserRoles(currentUser?.email || '', watchCamp)
-  }, [watchCamp, userRoles])
+  }, [watchCamp, userRoles, currentUser?.email, firestore])
 
   useEffect(() => {
     const fetchCampuses = async (campId: string) => {
@@ -125,7 +125,7 @@ const AssignAdminToCampModal = ({
     if (watchCamp) {
       fetchCampuses(watchCamp)
     }
-  }, [watchCampLevel, watchCamp])
+  }, [watchCampLevel, watchCamp, firestore])
 
   const handleSubmitForm = async (values: typeof initialValues) => {
     try {

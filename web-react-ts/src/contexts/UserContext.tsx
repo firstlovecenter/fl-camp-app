@@ -50,7 +50,7 @@ export const UserContextProvider = ({ children }: { children: ReactNode }) => {
       userProfile,
       setUserProfile: setUserProfileText,
     }),
-    [userRoles]
+    [userRoles, userProfile]
   )
 
   return <UserContext.Provider value={value}>{children}</UserContext.Provider>

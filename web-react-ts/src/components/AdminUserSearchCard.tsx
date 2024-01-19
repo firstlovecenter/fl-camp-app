@@ -29,7 +29,6 @@ const AdminUserSearchCard = ({
 
   const handleClick = () => {
     const card = { id: email, type: 'User' }
-    console.log(card)
     clickCard(card)
     setUserId(email)
     modal()
