@@ -46,26 +46,27 @@ const CampDetails = () => {
   const { data: campDoc } = useFirestoreDocData(ref, { idField: 'id' })
   const { setContinentId, setCountryId, setCampusId } = useChurchId()
 
-  const getDirectoryPath = (campLevel: string) => {
-    switch (campLevel) {
-      case 'planet':
-        return '/camp/directory'
-      case 'continent':
-        setContinentId(campDoc.levelId)
-        return '/camp/continent-profile'
-      case 'country':
-        setCountryId(campDoc.levelId)
-        return '/camp/country-profile'
-      case 'campus':
-        setCampusId(campDoc.levelId)
-        return '/camp/campus-profile'
-      default:
-        return '#'
-    }
-  }
-
   useEffect(() => {
     // Check if campDoc is available
+
+    const getDirectoryPath = (campLevel: string) => {
+      switch (campLevel) {
+        case 'planet':
+          return '/camp/directory'
+        case 'continent':
+          setContinentId(campDoc.levelId)
+          return '/camp/continent-profile'
+        case 'country':
+          setCountryId(campDoc.levelId)
+          return '/camp/country-profile'
+        case 'campus':
+          setCampusId(campDoc.levelId)
+          return '/camp/campus-profile'
+        default:
+          return '#'
+      }
+    }
+
     if (campDoc) {
       let directoryPath = ''
       if (campDoc.campLevel) {
@@ -101,7 +102,7 @@ const CampDetails = () => {
 
       setMenuItems(menuItems)
     }
-  }, [campDoc])
+  }, [campDoc, setCampusId, setContinentId, setCountryId])
 
   const loading = !campDoc || !menuItems
 

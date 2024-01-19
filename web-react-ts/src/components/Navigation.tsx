@@ -32,7 +32,7 @@ function Navigation() {
   const navigate = useNavigate()
   const { userProfile } = useUserContext()
 
-  const { userInfo, currentUser } = useAuth()
+  const { userInfo } = useAuth()
   const { navBg, sideBarBackground } = useCustomColors()
 
   let menuItems: { name: string; link: string }[] = []

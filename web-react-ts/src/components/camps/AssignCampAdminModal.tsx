@@ -99,7 +99,7 @@ const AssignCampAdminModal = ({
     }
 
     getCampAdminOptions(currentUser?.email || '', camp)
-  }, [currentUser, camp, userRoles])
+  }, [currentUser, camp, userRoles, firestore])
 
   useEffect(() => {
     const getCampusOptions = async (campId: string) => {
