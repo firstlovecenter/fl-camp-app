@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useCallback, useEffect } from 'react'
 
 type Card = {
   id: string
@@ -6,32 +6,46 @@ type Card = {
 }
 
 const useClickCard = () => {
-  const [userId, setUserId] = useState(
-    sessionStorage.getItem('userId') ? sessionStorage.getItem('userId') : ''
+  const [userId, setUserId] = useState(sessionStorage.getItem('userId') || '')
+  const [campId, setCampId] = useState(sessionStorage.getItem('campId') || '')
+  const [email, setEmail] = useState(sessionStorage.getItem('email') || '')
+
+  const clickCard = useCallback(
+    (card: Card) => {
+      if (!card) {
+        return null
+      }
+
+      switch (card.type) {
+        case 'User':
+          setUserId(card.id)
+          break
+        case 'Camp':
+          setCampId(card.id)
+          break
+        case 'email':
+          setEmail(card.id)
+          break
+        default:
+          break
+      }
+    },
+    [setUserId, setCampId, setEmail]
   )
 
-  const [campId, setCampId] = useState(
-    sessionStorage.getItem('campId') ? sessionStorage.getItem('campId') : ''
-  )
+  useEffect(() => {
+    sessionStorage.setItem('userId', userId)
+  }, [userId])
 
-  const clickCard = (card: Card) => {
-    if (!card) {
-      return null
-    }
+  useEffect(() => {
+    sessionStorage.setItem('campId', campId)
+  }, [campId])
 
-    switch (card.type) {
-      case 'User':
-        setUserId(card.id)
-        sessionStorage.setItem('userId', card.id)
-        break
-      case 'Camp':
-        setCampId(card.id)
-        sessionStorage.setItem('campId', card.id)
-        break
-    }
-  }
+  useEffect(() => {
+    sessionStorage.setItem('email', email)
+  }, [email])
 
-  return { clickCard, userId, setUserId, campId, setCampId }
+  return { clickCard, userId, setUserId, campId, setCampId, email, setEmail }
 }
 
 export default useClickCard

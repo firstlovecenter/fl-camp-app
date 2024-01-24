@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import {
   Modal,
   ModalOverlay,
@@ -13,20 +13,29 @@ import {
   useToast,
 } from '@chakra-ui/react'
 import { Select } from '@jaedag/admin-portal-react-core'
-import { ModalProps } from '../../../global'
+import { ModalProps, SelectOptions, UserCampData } from '../../../global'
 import * as Yup from 'yup'
 import { useForm } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
-import { churchLevel } from '../../utils/utils'
-import { doc, getDoc, updateDoc } from 'firebase/firestore'
+import { adminLevels, assignAdmin, highestUserRole } from '../../utils/utils'
+import { doc, getDoc, collection, getDocs } from 'firebase/firestore'
 import { useFirestore } from 'reactfire'
-import { CAMP_ADMIN_ROLES_OPTIONS } from '../../utils/constants'
-
-import { getFunctions, httpsCallable } from 'firebase/functions'
 import useClickCard from '../../hooks/useClickCard'
+import { useUserContext } from '../../contexts/UserContext'
+import { useAuth } from '../../contexts/AuthContext'
 
-const AssignCampAdminModal = ({ isOpen, onClose }: ModalProps) => {
-  const { userId, campId } = useClickCard()
+type InitialValues = { campLevel: string; campus?: string }
+
+const AssignCampAdminModal = ({
+  isOpen,
+  onClose,
+  userId,
+}: ModalProps & { userId: string }) => {
+  const { campId } = useClickCard()
+  const { currentUser } = useAuth()
+  const { userRoles } = useUserContext()
+  const [campAdminOptions, setCampAdminOptions] = useState<SelectOptions[]>([])
+  const [campusOptions, setCampusOptions] = useState<SelectOptions[]>([])
 
   const user = userId || ''
   const camp = campId || ''
@@ -35,69 +44,95 @@ const AssignCampAdminModal = ({ isOpen, onClose }: ModalProps) => {
 
   const toast = useToast()
 
-  const initialValues = {
+  const initialValues: InitialValues = {
     campLevel: '',
+    campus: '',
   }
 
   const validationSchema = Yup.object({
     campLevel: Yup.string().required('Camp Level is a required field'),
+    campus: Yup.string().when('campLevel', ([campLevel], schema) => {
+      return campLevel === 'campus'
+        ? schema.required('Campus is a required field')
+        : schema
+    }),
   })
 
   const {
     handleSubmit,
     control,
+    watch,
     formState: { errors, isSubmitting },
   } = useForm<typeof initialValues>({
     resolver: yupResolver(validationSchema),
     defaultValues: initialValues,
   })
 
+  const watchCampLevel = watch('campLevel')
+
+  useEffect(() => {
+    const getCampAdminOptions = async (userEmail: string, campId: string) => {
+      const currenUserDoc = doc(firestore, 'users', userEmail || '')
+      const currenUserData = await getDoc(currenUserDoc)
+      const campAdmin: UserCampData[] = currenUserData?.data()?.camp_admin || []
+      const userCamp = campAdmin.find((camp) => camp.campId === campId)
+
+      if (userRoles.includes('globalAdmin')) {
+        setCampAdminOptions([])
+        const adminLevelsResponse = await adminLevels(
+          campId,
+          ['globalAdmin'],
+          firestore
+        )
+        if (adminLevelsResponse) setCampAdminOptions(adminLevelsResponse)
+      } else if (userCamp?.role) {
+        const highestRole = highestUserRole(userCamp?.role)
+
+        const adminLevelsResponse = await adminLevels(
+          campId,
+          [highestRole],
+          firestore
+        )
+
+        if (adminLevelsResponse) setCampAdminOptions(adminLevelsResponse)
+      }
+    }
+
+    getCampAdminOptions(currentUser?.email || '', camp)
+  }, [currentUser, camp, userRoles])
+
+  useEffect(() => {
+    const getCampusOptions = async (campId: string) => {
+      const campusesReference = collection(
+        firestore,
+        'camps',
+        campId,
+        'campuses'
+      )
+      const campusesCollection = await getDocs(campusesReference)
+
+      const campusOptions: SelectOptions[] = []
+      campusesCollection.forEach((campus) => {
+        campusOptions.push({ key: campus.data().name, value: campus.id })
+      })
+
+      if (watchCampLevel === 'campus') setCampusOptions(campusOptions)
+    }
+
+    getCampusOptions(camp)
+  }, [camp, firestore, watchCampLevel])
+
   const handleSubmitForm = async (values: typeof initialValues) => {
     try {
-      const campLevel = values.campLevel
-      //TODO: check if the user already has the camp assinged with the admin level
-      const functions = getFunctions()
-      const addClaimsToUser = httpsCallable(
-        functions,
-        'addClaimsToUsersCallable'
+      const response = await assignAdmin(
+        firestore,
+        values?.campLevel,
+        camp,
+        values?.campus,
+        user
       )
-
-      const callableResponse = await addClaimsToUser({
-        email: user,
-        permission: campLevel,
-      })
-      console.log('callable response', callableResponse)
-
-      const campReference = doc(firestore, 'camps', camp)
-      //TODO check if the camp already exists in the user's camp_admin array
-      const campData = await getDoc(campReference)
-
-      const userReference = doc(firestore, 'users', user)
-      //TODO check if the camp already exists in the user's camp_admin array
-      const userData = await getDoc(doc(firestore, 'users', user))
-      const adminCamps = userData.data()?.camp_admin || []
-
-      const campAdmin = [...adminCamps]
-
-      const newCampObject = {
-        campId: campId,
-        churchLevel: churchLevel(campLevel),
-        name: campData?.data()?.name,
-        role: campLevel,
-      }
-      campAdmin.push(newCampObject)
-
-      await updateDoc(userReference, {
-        camp_admin: campAdmin,
-      })
-
-      toast({
-        title: 'User Assigned',
-        description: 'User has been made an admin',
-        status: 'success',
-        duration: 4000,
-        isClosable: true,
-      })
+      onClose()
+      toast(response)
     } catch (error) {
       console.log(error)
       toast({
@@ -130,11 +165,24 @@ const AssignCampAdminModal = ({ isOpen, onClose }: ModalProps) => {
                 name="campLevel"
                 label="Level"
                 placeholder="Level"
-                options={CAMP_ADMIN_ROLES_OPTIONS}
+                options={campAdminOptions}
                 control={control}
                 errors={errors}
               />
             </Box>
+
+            {watchCampLevel === 'campus' && (
+              <Box my={3}>
+                <Select
+                  name="campus"
+                  label="Campus"
+                  placeholder="Campus"
+                  options={campusOptions}
+                  control={control}
+                  errors={errors}
+                />
+              </Box>
+            )}
 
             <ModalFooter>
               <Button
