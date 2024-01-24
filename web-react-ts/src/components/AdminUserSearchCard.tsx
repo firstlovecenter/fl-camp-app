@@ -16,18 +16,22 @@ const AdminUserSearchCard = ({
   email,
   image,
   modal,
+  setUserId,
 }: {
   name: string
   email: string
   image: string
   modal: () => void
+  setUserId: React.Dispatch<React.SetStateAction<string>>
 }) => {
   const { generalBackground } = useCustomColors()
   const { clickCard } = useClickCard()
 
   const handleClick = () => {
     const card = { id: email, type: 'User' }
+    console.log(card)
     clickCard(card)
+    setUserId(email)
     modal()
   }
 

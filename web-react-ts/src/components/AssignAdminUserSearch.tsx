@@ -8,9 +8,10 @@ import { capitalizeFirstLetter } from '../utils/utils'
 
 type UserSearchProp = {
   modal: () => void
+  setUserId: React.Dispatch<React.SetStateAction<string>>
 }
 
-const AssignAdminUserSearch = ({ modal }: UserSearchProp) => {
+const AssignAdminUserSearch = ({ modal, setUserId }: UserSearchProp) => {
   const [userData, setUserData] = useState<UserData[]>([])
   const [cardText, setCardText] = useState<string>('Type to begin your search')
 
@@ -64,6 +65,7 @@ const AssignAdminUserSearch = ({ modal }: UserSearchProp) => {
               key={index}
               modal={modal}
               image={user?.image_url}
+              setUserId={setUserId}
             />
           ))
         ) : (
