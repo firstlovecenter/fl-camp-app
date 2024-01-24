@@ -40,8 +40,6 @@ const CampDetails = () => {
     campPaymentsCardBackground,
   } = useCustomColors()
 
-  console.log('camoId', campId)
-
   const ref = doc(firestore, 'camps', campId as string)
   const { data: campDoc } = useFirestoreDocData(ref, { idField: 'id' })
   const { setContinentId, setCountryId, setCampusId } = useChurchId()
