@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react'
-
 import { Heading, Text, Box, Container } from '@chakra-ui/react'
 import RoleCard from '../../components/RoleCard'
 import { useAuth } from '../../contexts/AuthContext'
@@ -9,44 +8,44 @@ import { useUserContext } from '../../contexts/UserContext'
 
 const LandingPage = () => {
   const { currentUser } = useAuth()
-  const [roles, setRoles] = useState<Role[]>([])
-  const { setUserRoles } = useUserContext()
-  const loading = !roles
-
-  useEffect(() => {
-    const getRoles = async () => {
+  const { userRoles, setUserRoles } = useUserContext()
+  const [roles, setRoles] = useState<string[]>([])
+  const [loading, setLoading] = useState(true)
+  const allowedRoles = [
+    'globalAdmin',
+    'campCamper',
+    'countryAdmin',
+    'continentAdmin',
+    'campusAdmin',
+  ]
+  const getRoles = async () => {
+    try {
       const token = await currentUser?.getIdTokenResult()
-      let roles: string[] = []
-      if (token?.claims?.roles) {
-        roles = [...token.claims.roles]
-        setUserRoles(roles)
-      }
+      const newRoles = token?.claims?.roles || []
 
-      // Check if any of the roles to be replaced exists in the roles array
-      const hasCampRoles = roles.some((role) =>
-        ['continentAdmin', 'countryAdmin', 'campusAdmin'].includes(role)
+      const filteredRoles = newRoles.filter((role) =>
+        allowedRoles.includes(role)
       )
 
-      // If any of the roles exist, include 'campAdmin', otherwise keep the original roles
-      const filteredRoles = hasCampRoles
-        ? [
-            ...roles.filter(
-              (role) =>
-                !['continentAdmin', 'countryAdmin', 'campusAdmin'].includes(
-                  role
-                )
-            ),
-            'campAdmin',
-          ]
-        : roles.filter(
-            (role) => role === 'globalAdmin' || role === 'campCamper'
-          )
-
-      setRoles(filteredRoles as Role[])
+      setRoles(filteredRoles)
+    } catch (error) {
+      console.error('Error fetching roles:', error)
+    } finally {
+      setLoading(false)
     }
+  }
 
-    getRoles()
-  }, [currentUser, setUserRoles])
+  useEffect(() => {
+    if (userRoles.length === 0) {
+      getRoles()
+    } else {
+      const filteredRoles = userRoles.filter((role) =>
+        allowedRoles.includes(role)
+      )
+      setRoles(filteredRoles)
+      setLoading(false)
+    }
+  }, [currentUser, setUserRoles, userRoles, allowedRoles])
 
   return (
     <ApolloWrapper data={roles} loading={loading}>
@@ -63,8 +62,8 @@ const LandingPage = () => {
             ))
           ) : (
             <Text>
-              Unfotunately you have no roles. Kindly contact the global admin to
-              assign you correctly
+              Unfortunately, you have no roles. Kindly contact the global admin
+              to assign you correctly
             </Text>
           )}
         </Container>

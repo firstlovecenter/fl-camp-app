@@ -35,34 +35,37 @@ function Navigation() {
   const { userInfo } = useAuth()
   const { navBg, sideBarBackground } = useCustomColors()
 
-  let menuItems: { name: string; link: string }[] = []
-
-  const defaultMenuItems = [
+  const menuItems: { name: string; link: string }[] = [
     {
       name: 'Home',
       link: '/',
     },
-  ]
-  const globalAdminMenuItems = [
-    ...defaultMenuItems,
     {
       name: 'Camps',
       link: '/camps',
     },
   ]
 
-  switch (userProfile) {
-    case 'globalAdmin':
-      menuItems = globalAdminMenuItems
-      break
-    default:
-      menuItems = [
-        {
-          name: 'Home',
-          link: '/',
-        },
-      ]
-      break
+  const defaultMenuItems = []
+  const globalAdminMenuItems = [
+    {
+      name: 'Camps',
+      link: '/camps',
+    },
+  ]
+
+  // switch (userProfile) {
+  //   case 'globalAdmin':
+  //     menuItems.push(...globalAdminMenuItems, ...defaultMenuItems)
+  //     break
+  //   default:
+  //     menuItems.push(...defaultMenuItems)
+  //     break
+  // }
+
+  const handleMenuItemClick = (link: string) => {
+    navigate(link)
+    onClose() // Close the drawer after navigation
   }
 
   return (
@@ -100,10 +103,7 @@ function Navigation() {
                   padding={10}
                   rounded={0}
                   width="100%"
-                  onClick={() => {
-                    navigate(item.link)
-                    onClose()
-                  }}
+                  onClick={() => handleMenuItemClick(item.link)}
                   justifyContent="space-between"
                   bg={navBg}
                   fontWeight="medium"
