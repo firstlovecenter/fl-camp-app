@@ -35,33 +35,51 @@ function Navigation() {
   const { userInfo } = useAuth()
   const { navBg, sideBarBackground } = useCustomColors()
 
-  const menuItems: { name: string; link: string }[] = [
+  const menuItems: { name: string; link: string }[] = []
+
+  let homeLink = ''
+  switch (userProfile) {
+    case 'globalAdmin':
+      homeLink = '/global-admin'
+      break
+    case 'campusAdmin':
+    case 'countryAdmin':
+    case 'continentAdmin':
+      homeLink = '/admin'
+      break
+    case 'campCamper':
+      homeLink = '/camp-camper'
+      break
+    default:
+      homeLink = '/'
+      break
+  }
+
+  const defaultMenuItems = [
     {
       name: 'Home',
-      link: '/',
+      link: homeLink,
     },
+    { name: 'Switch Role', link: '/' },
+  ]
+  const adminMenuItems = [
     {
       name: 'Camps',
       link: '/camps',
     },
   ]
 
-  const defaultMenuItems = []
-  const globalAdminMenuItems = [
-    {
-      name: 'Camps',
-      link: '/camps',
-    },
-  ]
-
-  // switch (userProfile) {
-  //   case 'globalAdmin':
-  //     menuItems.push(...globalAdminMenuItems, ...defaultMenuItems)
-  //     break
-  //   default:
-  //     menuItems.push(...defaultMenuItems)
-  //     break
-  // }
+  switch (userProfile) {
+    case 'globalAdmin':
+    case 'campusAdmin':
+    case 'countryAdmin':
+    case 'continentAdmin':
+      menuItems.push(...defaultMenuItems, ...adminMenuItems)
+      break
+    default:
+      menuItems.push(...defaultMenuItems)
+      break
+  }
 
   const handleMenuItemClick = (link: string) => {
     navigate(link)

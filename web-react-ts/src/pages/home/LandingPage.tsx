@@ -9,19 +9,21 @@ import { useUserContext } from '../../contexts/UserContext'
 const LandingPage = () => {
   const { currentUser } = useAuth()
   const { userRoles, setUserRoles } = useUserContext()
-  const [roles, setRoles] = useState<string[]>([])
+  const [roles, setRoles] = useState<Role[]>([])
   const [loading, setLoading] = useState(true)
-  const allowedRoles = [
-    'globalAdmin',
-    'campCamper',
-    'countryAdmin',
-    'continentAdmin',
-    'campusAdmin',
-  ]
+
   const getRoles = async () => {
     try {
       const token = await currentUser?.getIdTokenResult()
       const newRoles = token?.claims?.roles || []
+
+      const allowedRoles = [
+        'globalAdmin',
+        'campCamper',
+        'countryAdmin',
+        'continentAdmin',
+        'campusAdmin',
+      ]
 
       const filteredRoles = newRoles.filter((role) =>
         allowedRoles.includes(role)
@@ -36,16 +38,24 @@ const LandingPage = () => {
   }
 
   useEffect(() => {
+    const allowedRoles = [
+      'globalAdmin',
+      'campCamper',
+      'countryAdmin',
+      'continentAdmin',
+      'campusAdmin',
+    ]
+
     if (userRoles.length === 0) {
       getRoles()
     } else {
       const filteredRoles = userRoles.filter((role) =>
         allowedRoles.includes(role)
       )
-      setRoles(filteredRoles)
+      setRoles(filteredRoles as Role[])
       setLoading(false)
     }
-  }, [currentUser, setUserRoles, userRoles, allowedRoles])
+  }, [currentUser, setUserRoles, userRoles])
 
   return (
     <ApolloWrapper data={roles} loading={loading}>
