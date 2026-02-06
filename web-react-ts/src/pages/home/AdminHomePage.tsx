@@ -5,7 +5,7 @@ import { Heading } from '@chakra-ui/react'
 import CampCard from '../../components/CampCard'
 import { useFirestore, useFirestoreDocData } from 'reactfire'
 import { doc, getDoc, DocumentData } from 'firebase/firestore'
-import { ApolloWrapper } from '@jaedag/admin-portal-react-core'
+import { ApolloWrapper } from '../../components/ui'
 import { FetchedCampData } from '../../../global'
 import CampCardSkeleton from '../../components/CampCardSkeleton'
 

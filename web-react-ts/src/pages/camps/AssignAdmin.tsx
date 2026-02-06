@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { Container, Heading } from '@chakra-ui/react'
 import AssignAdminUserSearch from '../../components/AssignAdminUserSearch'
-import { ApolloWrapper } from '@jaedag/admin-portal-react-core'
+import { ApolloWrapper } from '../../components/ui'
 import AssignCampAdminModal from '../../components/camps/AssignCampAdminModal'
 
 const AssignAdmin = () => {

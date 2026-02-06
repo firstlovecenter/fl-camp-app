@@ -24,7 +24,7 @@ import useCustomColors from '../../hooks/useCustomColors'
 import { collection, query, getDocs, doc, Timestamp } from 'firebase/firestore'
 import { useFirestore, useFirestoreDocData } from 'reactfire'
 import { db } from '../../firebase'
-import { ApolloWrapper } from '@jaedag/admin-portal-react-core'
+import { ApolloWrapper } from '../../components/ui'
 import { useNavigate } from 'react-router-dom'
 
 import { useAuth } from '../../contexts/AuthContext'

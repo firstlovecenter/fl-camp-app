@@ -8,7 +8,7 @@ import {
   Center,
   Text,
 } from '@chakra-ui/react'
-import { ApolloWrapper } from '@jaedag/admin-portal-react-core'
+import { ApolloWrapper } from '../../components/ui'
 import CampCard from '../../components/CampCard'
 import { collection, DocumentData } from '@firebase/firestore'
 import { useFirestore, useFirestoreCollectionData } from 'reactfire'

@@ -7,7 +7,7 @@ import CampCard from '../../components/CampCard'
 import { useFirestore, useFirestoreDocData } from 'reactfire'
 import { collection, query, doc, getDoc, getDocs } from 'firebase/firestore'
 import { db } from '../../firebase'
-import { ApolloWrapper } from '@jaedag/admin-portal-react-core'
+import { ApolloWrapper } from '../../components/ui'
 import { FetchedCampDataCamper } from '../../../global'
 
 type UserRegistrationDetails = {

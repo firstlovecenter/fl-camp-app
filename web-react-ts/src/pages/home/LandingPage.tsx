@@ -2,40 +2,15 @@ import React, { useEffect, useState } from 'react'
 import { Heading, Text, Box, Container } from '@chakra-ui/react'
 import RoleCard from '../../components/RoleCard'
 import { useAuth } from '../../contexts/AuthContext'
-import { ApolloWrapper } from '@jaedag/admin-portal-react-core'
+import { ApolloWrapper } from '../../components/ui'
 import { Role } from '../../../global'
 import { useUserContext } from '../../contexts/UserContext'
 
 const LandingPage = () => {
   const { currentUser } = useAuth()
-  const { userRoles, setUserRoles } = useUserContext()
+  const { userRoles } = useUserContext()
   const [roles, setRoles] = useState<Role[]>([])
   const [loading, setLoading] = useState(true)
-
-  const getRoles = async () => {
-    try {
-      const token = await currentUser?.getIdTokenResult()
-      const newRoles = token?.claims?.roles || []
-
-      const allowedRoles = [
-        'globalAdmin',
-        'campCamper',
-        'countryAdmin',
-        'continentAdmin',
-        'campusAdmin',
-      ]
-
-      const filteredRoles = newRoles.filter((role) =>
-        allowedRoles.includes(role)
-      )
-
-      setRoles(filteredRoles)
-    } catch (error) {
-      console.error('Error fetching roles:', error)
-    } finally {
-      setLoading(false)
-    }
-  }
 
   useEffect(() => {
     const allowedRoles = [
@@ -46,6 +21,23 @@ const LandingPage = () => {
       'campusAdmin',
     ]
 
+    const getRoles = async () => {
+      try {
+        const token = await currentUser?.getIdTokenResult()
+        const newRoles = token?.claims?.roles || []
+
+        const filteredRoles = newRoles.filter((role: string) =>
+          allowedRoles.includes(role)
+        )
+
+        setRoles(filteredRoles)
+      } catch (error) {
+        console.error('Error fetching roles:', error)
+      } finally {
+        setLoading(false)
+      }
+    }
+
     if (userRoles.length === 0) {
       getRoles()
     } else {
@@ -55,7 +47,7 @@ const LandingPage = () => {
       setRoles(filteredRoles as Role[])
       setLoading(false)
     }
-  }, [currentUser, setUserRoles, userRoles])
+  }, [currentUser, userRoles])
 
   return (
     <ApolloWrapper data={roles} loading={loading}>

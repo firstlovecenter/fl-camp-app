@@ -17,7 +17,7 @@ import {
   MenuItem,
   HStack,
 } from '@chakra-ui/react'
-import { ApolloWrapper } from '@jaedag/admin-portal-react-core'
+import { ApolloWrapper } from '../../components/ui'
 import useClickCard from '../../hooks/useClickCard'
 import { useFirestore, useFirestoreDocData } from 'reactfire'
 import { doc } from '@firebase/firestore'
