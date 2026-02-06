@@ -4,7 +4,7 @@ import { Container, Heading } from '@chakra-ui/react'
 import { useChurchId } from '../../contexts/IdContext'
 import { collection, query, where } from '@firebase/firestore'
 import { useFirestore, useFirestoreCollectionData } from 'reactfire'
-import { ApolloWrapper } from '@jaedag/admin-portal-react-core'
+import { ApolloWrapper } from '../../components/ui'
 import useClickCard from '../../hooks/useClickCard'
 
 const ContinentsByPlanet = () => {

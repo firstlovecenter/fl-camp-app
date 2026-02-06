@@ -12,7 +12,7 @@ import {
   Box,
   useToast,
 } from '@chakra-ui/react'
-import { Select } from '@jaedag/admin-portal-react-core'
+import { Select } from '../ui'
 import { ModalProps, SelectOptions, UserCampData } from '../../../global'
 import * as Yup from 'yup'
 import { useForm } from 'react-hook-form'

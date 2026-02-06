@@ -28,7 +28,7 @@ import {
   useFirestoreDocData,
 } from 'reactfire'
 import { doc, collection } from 'firebase/firestore'
-import { ApolloWrapper } from '@jaedag/admin-portal-react-core'
+import { ApolloWrapper } from '../../components/ui'
 import useCustomColors from '../../hooks/useCustomColors'
 import UserCampsCard from '../../components/UserCampsCard'
 import { SelectOptions, UserCampData } from '../../../global'

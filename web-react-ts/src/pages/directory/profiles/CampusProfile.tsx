@@ -5,7 +5,7 @@ import DetailsCard from '../../../components/DetailsCard'
 import { doc } from '@firebase/firestore'
 import { useChurchId } from '../../../contexts/IdContext'
 import { useFirestore, useFirestoreDocData } from 'reactfire'
-import { ApolloWrapper } from '@jaedag/admin-portal-react-core'
+import { ApolloWrapper } from '../../components/ui'
 import useClickCard from '../../../hooks/useClickCard'
 
 const CampusProfile = () => {

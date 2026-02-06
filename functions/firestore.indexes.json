@@ -1,43 +1,38 @@
 {
   "indexes": [
     {
-      "collectionGroup": "continents",
+      "collectionGroup": "camp_participants",
       "queryScope": "COLLECTION",
       "fields": [
-        {
-          "fieldPath": "planetId",
-          "order": "ASCENDING"
-        },
-        {
-          "fieldPath": "name",
-          "order": "ASCENDING"
-        }
+        { "fieldPath": "campId", "order": "ASCENDING" },
+        { "fieldPath": "states.payment", "order": "ASCENDING" }
+      ]
+    },
+    {
+      "collectionGroup": "camp_participants",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "campId", "order": "ASCENDING" },
+        { "fieldPath": "states.room", "order": "ASCENDING" }
+      ]
+    },
+    {
+      "collectionGroup": "camp_participants",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "campId", "order": "ASCENDING" },
+        { "fieldPath": "personalInfo.phone", "order": "ASCENDING" }
+      ]
+    },
+    {
+      "collectionGroup": "rooms",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "campId", "order": "ASCENDING" },
+        { "fieldPath": "gender", "order": "ASCENDING" },
+        { "fieldPath": "capacity", "order": "DESCENDING" }
       ]
     }
   ],
-  "fieldOverrides": [
-    {
-      "collectionGroup": "camp_camper",
-      "fieldPath": "campId",
-      "ttl": false,
-      "indexes": [
-        {
-          "order": "ASCENDING",
-          "queryScope": "COLLECTION"
-        },
-        {
-          "order": "DESCENDING",
-          "queryScope": "COLLECTION"
-        },
-        {
-          "arrayConfig": "CONTAINS",
-          "queryScope": "COLLECTION"
-        },
-        {
-          "order": "ASCENDING",
-          "queryScope": "COLLECTION_GROUP"
-        }
-      ]
-    }
-  ]
+  "fieldOverrides": []
 }

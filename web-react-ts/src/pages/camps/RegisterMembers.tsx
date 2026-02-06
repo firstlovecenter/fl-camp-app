@@ -15,7 +15,7 @@ import { useFirestore, useFirestoreDocData } from 'reactfire'
 import { doc } from '@firebase/firestore'
 import useClickCard from '../../hooks/useClickCard'
 import NotRegisteredMembersSearch from '../../components/NotRegisteredMembersSearch'
-import { ApolloWrapper } from '@jaedag/admin-portal-react-core'
+import { ApolloWrapper } from '../../components/ui'
 
 const RegisterMembers = () => {
   let { campId } = useClickCard()

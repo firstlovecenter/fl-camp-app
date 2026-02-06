@@ -1,9 +1,20 @@
 import React, { useEffect, useState } from 'react'
-import { Container, Heading, Box, Button } from '@chakra-ui/react'
-import { Input, Select } from '@jaedag/admin-portal-react-core'
+import {
+  Container,
+  Heading,
+  Box,
+  Button,
+  FormControl,
+  Checkbox,
+  FormLabel,
+  NumberInput,
+  NumberInputField,
+  HStack,
+} from '@chakra-ui/react'
+import { Input, Select } from '../../components/ui'
 import * as Yup from 'yup'
 import { yupResolver } from '@hookform/resolvers/yup'
-import { useForm } from 'react-hook-form'
+import { useForm, Controller, useFieldArray } from 'react-hook-form'
 import { useNavigate } from 'react-router-dom'
 import {
   collection,
@@ -29,6 +40,19 @@ type InitialValues = {
   continent?: string
   country?: string
   campus?: string
+  enableSelfService: boolean
+  publicSlug?: string
+  maxParticipants: number
+  paymentMethods: string[]
+  paymentAmountDue: number
+  autoAssignRooms: boolean
+  genderSegregation: boolean
+  groupingDimensions: {
+    name: string
+    required: boolean
+    values: string[]
+    order: number
+  }[]
 }
 
 const campLevelReference = (campLevel: string, values: InitialValues) =>
@@ -68,6 +92,16 @@ const StartCampForm = () => {
     continent: '',
     country: '',
     campus: '',
+    enableSelfService: false,
+    publicSlug: '',
+    maxParticipants: 100,
+    paymentMethods: ['cash'],
+    paymentAmountDue: 0,
+    autoAssignRooms: false,
+    genderSegregation: true,
+    groupingDimensions: [
+      { name: 'Area', required: true, values: [], order: 1 },
+    ],
   }
 
   const validationSchema = Yup.object({
@@ -113,6 +147,33 @@ const StartCampForm = () => {
         ? schema.required('Campus is a required field')
         : schema
     }),
+    enableSelfService: Yup.boolean().required(
+      'Enable Self-Service Registration'
+    ),
+    publicSlug: Yup.string().when(
+      'enableSelfService',
+      ([enableSelfService], schema) => {
+        return enableSelfService
+          ? schema.required('Public Link Slug is a required field')
+          : schema.notRequired()
+      }
+    ),
+    maxParticipants: Yup.number().required(
+      'Max Participants is a required field'
+    ),
+    paymentMethods: Yup.array().required('Payment Methods is a required field'),
+    paymentAmountDue: Yup.number().required(
+      'Payment Amount Due is a required field'
+    ),
+    autoAssignRooms: Yup.boolean().required(
+      'Auto Assign Rooms is a required field'
+    ),
+    genderSegregation: Yup.boolean().required(
+      'Gender Segregation is a required field'
+    ),
+    groupingDimensions: Yup.array().required(
+      'Grouping Dimensions is a required field'
+    ),
   })
 
   const {
@@ -125,10 +186,16 @@ const StartCampForm = () => {
     defaultValues: initialValues,
   })
 
+  const { fields, append, remove } = useFieldArray({
+    control,
+    name: 'groupingDimensions',
+  })
+
   const watchCampLevel = watch('campLevel')
   const watchWorld = watch('planet')
   const watchContinent = watch('continent')
   const watchCountry = watch('country')
+  const watchEnableSelfService = watch('enableSelfService')
 
   const onSubmit = async (values: InitialValues) => {
     try {
@@ -358,6 +425,105 @@ const StartCampForm = () => {
             control={control}
             errors={errors}
           />
+        </Box>
+
+        <Box my={3}>
+          <FormControl>
+            <Controller
+              name="enableSelfService"
+              control={control}
+              render={({ field }) => (
+                <Checkbox
+                  isChecked={field.value}
+                  onChange={field.onChange}
+                  onBlur={field.onBlur}
+                >
+                  Enable Self-Service Registration
+                </Checkbox>
+              )}
+            />
+          </FormControl>
+        </Box>
+
+        {watchEnableSelfService && (
+          <Box my={3}>
+            <Input
+              name="publicSlug"
+              label="Public Link Slug"
+              placeholder="summer-camp-2026"
+              control={control}
+              errors={errors}
+            />
+          </Box>
+        )}
+
+        <Box my={3}>
+          <FormControl>
+            <FormLabel>Max Participants</FormLabel>
+            <Controller
+              name="maxParticipants"
+              control={control}
+              render={({ field }) => (
+                <NumberInput
+                  {...field}
+                  onChange={(_, val) => field.onChange(val)}
+                >
+                  <NumberInputField />
+                </NumberInput>
+              )}
+            />
+          </FormControl>
+        </Box>
+
+        <Box my={3}>
+          <FormLabel>Grouping Dimensions</FormLabel>
+          {fields.map((field, index) => (
+            <HStack key={field.id} mb={2}>
+              <Controller
+                name={`groupingDimensions.${index}.name`}
+                control={control}
+                render={({ field }) => (
+                  <Input
+                    {...field}
+                    placeholder="Dimension Name"
+                    label="Dimension Name"
+                    control={control}
+                    errors={errors}
+                  />
+                )}
+              />
+              <Controller
+                name={`groupingDimensions.${index}.required`}
+                control={control}
+                render={({ field }) => (
+                  <Checkbox
+                    isChecked={field.value}
+                    onChange={field.onChange}
+                    onBlur={field.onBlur}
+                  >
+                    Required
+                  </Checkbox>
+                )}
+              />
+              <Button onClick={() => remove(index)} size="sm">
+                Remove
+              </Button>
+            </HStack>
+          ))}
+          <Button
+            onClick={() =>
+              append({
+                name: '',
+                required: false,
+                values: [],
+                order: fields.length + 1,
+              })
+            }
+            size="sm"
+            mt={2}
+          >
+            Add Dimension
+          </Button>
         </Box>
 
         <Button

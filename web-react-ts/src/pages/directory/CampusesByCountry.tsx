@@ -8,7 +8,7 @@ import {
   useFirestoreCollectionData,
   useFirestoreDocData,
 } from 'reactfire'
-import { ApolloWrapper } from '@jaedag/admin-portal-react-core'
+import { ApolloWrapper } from '../../components/ui'
 import useClickCard from '../../hooks/useClickCard'
 
 const CampusesByCountry = () => {

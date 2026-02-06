@@ -1,19 +1,87 @@
 rules_version = '2';
-
 service cloud.firestore {
   match /databases/{database}/documents {
-
-    // This rule allows anyone with your Firestore database reference to view, edit,
-    // and delete all data in your Firestore database. It is useful for getting
-    // started, but it is configured to expire after 30 days because it
-    // leaves your app open to attackers. At that time, all client
-    // requests to your Firestore database will be denied.
-    //
-    // Make sure to write security rules for your app before that time, or else
-    // all client requests to your Firestore database will be denied until you Update
-    // your rules
-    match /{document=**} {
-      allow read, write: if request.time < timestamp.date(2024, 12, 30);
+    
+    // Helper functions
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+    
+    function hasGlobalRole(role) {
+      return isAuthenticated() && 
+             request.auth.token.roles != null &&
+             role in request.auth.token.roles;
+    }
+    
+    function hasCampRole(campId, role) {
+      return isAuthenticated() && 
+             request.auth.token.scopedRoles != null &&
+             request.auth.token.scopedRoles[campId] == role;
+    }
+    
+    function isSuperAdmin() {
+      return hasGlobalRole('super_admin') || hasGlobalRole('globalAdmin');
+    }
+    
+    function isCampAdmin(campId) {
+      return isSuperAdmin() || 
+             hasCampRole(campId, 'admin') || 
+             hasCampRole(campId, 'campAdmin');
+    }
+    
+    // Users collection
+    match /users/{userId} {
+      allow read: if isAuthenticated();
+      allow write: if isAuthenticated() && request.auth.uid == userId;
+      allow create: if isAuthenticated();
+    }
+    
+    // Camps collection
+    match /camps/{campId} {
+      allow read: if isAuthenticated();
+      allow create: if isSuperAdmin();
+      allow update, delete: if isCampAdmin(campId);
+      
+      // Camp subcollections (registrations, campuses, etc.)
+      match /{subcollection}/{docId} {
+        allow read: if isAuthenticated();
+        allow write: if isCampAdmin(campId);
+      }
+    }
+    
+    // Camp Participants (new collection)
+    match /camp_participants/{participantId} {
+      allow read: if isAuthenticated() && 
+                     (isCampAdmin(resource.data.campId) || 
+                      request.auth.uid == resource.data.userId);
+      allow create: if isAuthenticated(); // Self-service registration
+      allow update: if isCampAdmin(resource.data.campId) ||
+                       (request.auth.uid == resource.data.userId && 
+                        // Only allow self-updates to specific fields
+                        !request.resource.data.diff(resource.data).affectedKeys()
+                         .hasAny(['campId', 'states', 'paymentDetails']));
+      allow delete: if isCampAdmin(resource.data.campId);
+    }
+    
+    // Rooms collection (new)
+    match /rooms/{roomId} {
+      allow read: if isAuthenticated();
+      allow write: if isCampAdmin(resource.data.campId);
+    }
+    
+    // Payments collection (new, audit trail)
+    match /payments/{paymentId} {
+      allow read: if isAuthenticated() && 
+                     (isCampAdmin(resource.data.campId) || 
+                      request.auth.uid == resource.data.userId);
+      allow create: if isAuthenticated(); // Webhooks create
+      allow update: if isCampAdmin(resource.data.campId);
+    }
+    
+    // Registrations (legacy, keep for migration)
+    match /registrations/{registrationId} {
+      allow read: if isAuthenticated();
+      allow write: if isAuthenticated();
     }
   }
 }

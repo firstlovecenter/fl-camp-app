@@ -13,7 +13,7 @@ import {
 import { useAuth } from '../contexts/AuthContext'
 import * as Yup from 'yup'
 import { useState } from 'react'
-import { Input } from '@jaedag/admin-portal-react-core'
+import { Input } from '../components/ui'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { Link as RouterLink, useNavigate } from 'react-router-dom'
 import { useForm } from 'react-hook-form'

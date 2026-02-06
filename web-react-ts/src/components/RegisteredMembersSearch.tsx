@@ -8,7 +8,7 @@ import {
   searchCampRegistrations,
 } from '../queries/SearchQueries'
 import { NO_USERS_FOUND_TEXT } from '../utils/constants'
-import { ApolloWrapper } from '@jaedag/admin-portal-react-core'
+import { ApolloWrapper } from './ui'
 import RegisteredUsersCard from './RegisteredUsersCard'
 
 const RegisterMembersSearch = ({ campId }: { campId: string }) => {
